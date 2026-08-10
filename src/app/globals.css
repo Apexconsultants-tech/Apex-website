@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+/*
+  Palette: "Sprout" — a deliberate break from the navy/serif "Cloudline"
+  build and from the old site's generic corporate blue. One real color
+  (green) drives the whole UI; everything else is neutral grey/white/ink,
+  and "amber" is no longer a decorative accent — it's reserved strictly
+  for semantic warning/error states (form validation, draft-content
+  notices), which is the only place a second hue earns its keep. Display
+  type is a bold geometric sans (Sora) instead of a soft serif italic.
+*/
+:root {
+  --color-paper: #f7f9f7;
+  --color-surface: #ffffff;
+  --color-surface-2: #f0f3f0;
+  --color-ink: #14181a;
+  --color-ink-soft: #565f66;
+  --color-ink-faint: #6b7280;
+  --color-brand: #15803d;
+  --color-brand-deep: #166534;
+  --color-brand-tint: #dcfce7;
+  --color-amber: #dc2626;
+  --color-amber-tint: #fee2e2;
+  --color-line: #e2e6e3;
+}
+
+@theme inline {
+  --color-paper: var(--color-paper);
+  --color-surface: var(--color-surface);
+  --color-surface-2: var(--color-surface-2);
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+  --color-ink-faint: var(--color-ink-faint);
+  --color-brand: var(--color-brand);
+  --color-brand-deep: var(--color-brand-deep);
+  --color-brand-tint: var(--color-brand-tint);
+  --color-amber: var(--color-amber);
+  --color-amber-tint: var(--color-amber-tint);
+  --color-line: var(--color-line);
+
+  --font-display: var(--font-sora);
+  --font-sans: var(--font-public-sans);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  text-wrap: balance;
+}
+
+::selection {
+  background: var(--color-brand);
+  color: #fff;
+}
+
+a, button, [role="button"], input, select, textarea, summary {
+  outline-offset: 2px;
+}
+
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 32s linear infinite;
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
+@keyframes globe-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes orbit-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbit-spin-reverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+.animate-orbit {
+  animation: orbit-spin 40s linear infinite;
+}
+
+.animate-orbit-reverse {
+  animation: orbit-spin-reverse 55s linear infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.94); opacity: 0.5; }
+  70% { transform: scale(1.08); opacity: 0; }
+  100% { transform: scale(1.08); opacity: 0; }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 3.5s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
