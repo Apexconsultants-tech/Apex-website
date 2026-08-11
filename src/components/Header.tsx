@@ -13,15 +13,23 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-line/70 bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/80">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-3 lg:px-8">
-        <Link href="/" className="shrink-0" aria-label="Apex Consulting Services home">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-4 lg:px-8 lg:py-5">
+        <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="Apex Consulting Services home">
           <Image
-            src="/images/brand/apex-logo.webp"
-            alt="Apex Consulting Services"
-            width={168}
-            height={32}
+            src="/images/brand/apex-icon.webp"
+            alt=""
+            width={88}
+            height={91}
             priority
-            className="h-8 w-auto"
+            className="h-10 w-auto sm:h-11 lg:h-12"
+          />
+          <Image
+            src="/images/brand/apex-wordmark.webp"
+            alt=""
+            width={388}
+            height={91}
+            priority
+            className="h-7 w-auto sm:h-8"
           />
         </Link>
 
@@ -92,7 +100,7 @@ export default function Header() {
             href={contact.whatsappHref} data-track="whatsapp_click"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink-soft transition-colors hover:border-brand hover:text-brand"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-[#25D366] text-white shadow-sm shadow-[#25D366]/30 transition-all hover:-translate-y-0.5 hover:shadow-md hover:shadow-[#25D366]/40"
             aria-label="Chat on WhatsApp"
           >
             <WhatsAppIcon />
@@ -193,7 +201,7 @@ export default function Header() {
               href={contact.whatsappHref} data-track="whatsapp_click"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 rounded-full border border-line py-2.5 text-sm font-semibold text-ink"
+              className="flex items-center justify-center gap-2 rounded-full bg-[#25D366] py-2.5 text-sm font-semibold text-white shadow-sm shadow-[#25D366]/30"
             >
               <WhatsAppIcon /> Chat on WhatsApp
             </a>

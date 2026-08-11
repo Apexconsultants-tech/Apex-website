@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -17,10 +18,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const post = getBlogPost(slug);
   if (!post) return {};
   return {
-    title: `${post.title} | Apex Consulting Services`,
+    title: post.title,
     description: post.excerpt,
     alternates: { canonical: `/blogs/${slug}` },
-    openGraph: { title: post.title, description: post.excerpt, url: `/blogs/${slug}`, type: "article" },
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      url: `/blogs/${slug}`,
+      type: "article",
+      images: post.image ? [{ url: post.image }] : undefined,
+    },
   };
 }
 
@@ -30,6 +37,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
   if (!post) notFound();
 
   const others = blogPosts.filter((p) => p.slug !== post.slug);
+  const wordCount =
+    post.intro.split(/\s+/).length +
+    post.sections.reduce((sum, sec) => sum + sec.body.split(/\s+/).length, 0) +
+    (post.closing?.split(/\s+/).length ?? 0);
+  const readingMinutes = Math.max(1, Math.round(wordCount / 200));
 
   return (
     <>
@@ -46,10 +58,23 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       <article className="mx-auto max-w-3xl px-5 pb-16 pt-10 lg:px-8 lg:pt-14">
         <Breadcrumb current={post.title} />
         <Reveal className="mt-6">
-          <p className="text-xs font-medium text-ink-faint">{post.category} &middot; {post.date} &middot; 1 min read</p>
+          <p className="text-xs font-medium text-ink-faint">{post.category} &middot; {post.date} &middot; {readingMinutes} min read</p>
           <h1 className="mt-3 text-3xl font-semibold leading-tight text-ink sm:text-4xl">{post.title}</h1>
           <p className="mt-4 text-sm text-ink-faint">By Apex Consulting Services</p>
         </Reveal>
+
+        {post.image && (
+          <Reveal delay={60} className="mt-8 overflow-hidden rounded-2xl border border-line">
+            <Image
+              src={post.image}
+              alt={post.imageAlt ?? post.title}
+              width={1000}
+              height={667}
+              priority
+              className="h-56 w-full object-cover sm:h-80"
+            />
+          </Reveal>
+        )}
 
         <Reveal delay={80} className="mt-8">
           <p className="text-lg leading-relaxed text-ink-soft">{post.intro}</p>
@@ -67,6 +92,21 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         {post.closing && (
           <Reveal delay={140} className="mt-8">
             <p className="leading-relaxed text-ink-soft">{post.closing}</p>
+          </Reveal>
+        )}
+
+        {post.relatedLinks && post.relatedLinks.length > 0 && (
+          <Reveal delay={170} className="mt-8 border-t border-line pt-6">
+            <p className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-faint">Related reading</p>
+            <ul className="mt-3 space-y-2">
+              {post.relatedLinks.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="text-sm font-semibold text-brand hover:underline">
+                    {l.label} →
+                  </Link>
+                </li>
+              ))}
+            </ul>
           </Reveal>
         )}
 

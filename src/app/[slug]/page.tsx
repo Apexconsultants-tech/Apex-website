@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const destination = getDestination(slug);
   if (destination) {
-    const title = `Study in ${destination.name} Consultants in Pakistan | Apex Consultants`;
+    const title = `Study in ${destination.name}: Consultants in Pakistan`;
     const description = destination.intro.slice(0, 155);
     return {
       title,
@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
   const service = getService(slug);
   if (service) {
-    const title = `${service.name} | Apex Consultants`;
+    const title = service.name;
     const description = service.intro.slice(0, 155);
     return {
       title,

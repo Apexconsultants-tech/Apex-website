@@ -8,7 +8,7 @@ import { courses } from "@/lib/courses-data";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
-  title: "Study Abroad Courses | Apex Consulting Services",
+  title: "Study Abroad Courses",
   description:
     "Explore undergraduate, postgraduate, and diploma programs at Apex's partner universities across the UK, USA, and Australia.",
   alternates: { canonical: "/courses" },

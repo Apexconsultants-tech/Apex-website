@@ -312,7 +312,11 @@ export const destinations: Destination[] = [
       "Entrance exam or interview, required by some universities for MBBS/BDS",
     ],
     universities: [
-      { name: "30+ partner institutions", note: "MBBS, BDS, nursing, and engineering" },
+      { name: "Zhejiang University", note: "Top-ranked, broad program range" },
+      { name: "Huazhong University of Science and Technology", note: "Engineering and medicine" },
+      { name: "Southeast University", note: "Engineering and architecture" },
+      { name: "Dalian Medical University", note: "MBBS and BDS" },
+      { name: "30+ additional partner institutions", note: "MBBS, BDS, nursing, and engineering" },
     ],
     cost:
       "Annual tuition typically ranges from RMB 16,000 to RMB 40,000, depending on the program and university, with MBBS, BDS, and specialized engineering programs toward the higher end. Living expenses are notably lower in second-tier cities.",
@@ -499,7 +503,11 @@ export const destinations: Destination[] = [
       "Motivation letter and letter of recommendation",
     ],
     universities: [
-      { name: "Grandes Ecoles and public universities", note: "100+ partner institutions" },
+      { name: "Sorbonne Universite" },
+      { name: "Ecole Polytechnique", note: "Engineering" },
+      { name: "Ecole Normale Superieure" },
+      { name: "Sciences Po", note: "Politics, economics, international affairs" },
+      { name: "100+ additional public universities and Grandes Ecoles" },
     ],
     cost:
       "Public university tuition for non-EU/EEA students generally runs EUR 5,000 to 20,000+ per year. Private institutions and Grandes Ecoles often exceed EUR 20,000. Living expenses run EUR 850 to 1,400 per month depending on the city.",
@@ -528,29 +536,48 @@ export const destinations: Destination[] = [
     short: "UAE",
     flag: "ae",
     region: "More",
-    heroStats: ["Campuses in Dubai & Abu Dhabi", "English-taught programs across many fields"],
+    heroStats: ["120+ nationalities on campus", "AED 37,500 to AED 75,000 annual tuition", "1-year renewable student residence visa"],
     intro:
-      "The United Arab Emirates has become a leading study destination in the Middle East, offering modern campuses, English-taught degrees, and strong links to global industry. Apex Consulting Services helps Pakistani students choose the right UAE university and complete student visa requirements with confidence.",
+      "The United Arab Emirates has become a leading study destination in the Middle East, combining modern campuses and English-taught degrees with close ties to global industry across finance, aviation, and technology. Apex Consulting Services helps Pakistani students choose the right UAE university, from Abu Dhabi's research-focused institutions to Dubai's international branch campuses, and complete student visa requirements with confidence.",
     whyPoints: [
-      { title: "International branch campuses", body: "Local universities and branch campuses across Dubai and Abu Dhabi." },
-      { title: "English-medium programs", body: "Business, engineering, IT, hospitality, and more, taught in English." },
-      { title: "Proximity to major employers", body: "Strong exposure to finance, aviation, hospitality, and technology industries." },
+      { title: "A genuine mix of local and international branch campuses", body: "From nationally ranked institutions like Khalifa University to branch campuses of respected international universities, all offering recognised, internationally accredited degrees." },
+      { title: "English-medium programs across in-demand fields", body: "Business, engineering, IT, health sciences, and hospitality are widely taught in English, with minimal need for Arabic in most programs." },
+      { title: "Direct proximity to major regional employers", body: "Strong internship pipelines and graduate hiring in finance, aviation, logistics, hospitality, and technology, with many programs building industry placements into the curriculum." },
     ],
     requirements: [
-      "Academic transcripts and certificates",
-      "English proficiency scores, where required",
-      "Offer letter from a UAE institution",
+      "Academic transcripts and certificates, attested where required",
+      "English proficiency scores (IELTS/TOEFL), where the program requires them",
+      "Offer/admission letter from a UAE-accredited institution",
+      "Valid passport with at least 6 months validity",
+      "Passport-sized photographs and a completed application form",
     ],
-    universities: [{ name: "Branch campuses and local universities across Dubai and Abu Dhabi" }],
-    cost: "Tuition is competitive compared with many Western destinations, varying by university and program.",
-    scholarships: [],
-    visaName: "UAE Student Visa",
-    visaRequirements: ["Documentation and visa filing after you receive a university offer"],
+    universities: [
+      { name: "Khalifa University", note: "Abu Dhabi. Engineering, science, and health, strong research focus" },
+      { name: "United Arab Emirates University (UAEU)", note: "Al Ain. The UAE's founding national university" },
+      { name: "American University of Sharjah (AUS)", note: "Sharjah. Broad undergraduate and graduate programs" },
+      { name: "NYU Abu Dhabi", note: "Abu Dhabi. Selective liberal arts and sciences branch campus" },
+      { name: "Zayed University", note: "Dubai and Abu Dhabi campuses" },
+      { name: "Abu Dhabi University", note: "UAE's largest private university, multiple campuses" },
+    ],
+    cost:
+      "Undergraduate tuition for international students typically ranges from AED 37,500 to AED 70,000 per year, with postgraduate programs generally running AED 55,000 to AED 75,000. Living expenses in Dubai or Abu Dhabi typically add AED 3,000 to AED 4,500 per month, depending on lifestyle and accommodation.",
+    scholarships: [
+      "University merit-based tuition waivers, offered by most UAE universities based on academic results",
+      "Need-based financial aid at select institutions, assessed on a case-by-case basis",
+    ],
+    visaName: "UAE Student Visa (Residence Permit)",
+    visaRequirements: [
+      "Valid passport with at least 6 months validity and passport photographs",
+      "University admission letter and proof of tuition payment",
+      "Proof of financial means or a sponsor letter",
+      "Medical fitness certificate and valid health/travel insurance",
+    ],
     postStudyWork:
-      "Growing post-study career options exist across the Gulf region as UAE universities build stronger links to regional employers.",
+      "The student residence visa is typically valid for 1 year and renewable while studies continue. Post-study career options are growing across the Gulf region as UAE universities build stronger links to regional employers, though staying on to work after graduation generally requires securing an employer-sponsored work visa.",
     faqs: [
-      { q: "Is English widely used at UAE universities?", a: "Yes. Many undergraduate and postgraduate programs are taught in English, especially at international campuses." },
-      { q: "Can Apex help with UAE student visas?", a: "Yes. We support documentation, timelines, and visa guidance after you receive a university offer." },
+      { q: "Is English widely used at UAE universities?", a: "Yes. Most undergraduate and postgraduate programs at the universities we work with are taught in English, especially at international and branch campuses." },
+      { q: "How much does a UAE student visa cost?", a: "Budget roughly AED 5,500 to AED 8,500 in total for the student visa, covering the application fee (AED 3,000 to AED 5,000) and university processing charges (AED 500 to AED 1,500). Costs vary by institution and visa type." },
+      { q: "Can Apex help with UAE student visas?", a: "Yes. We support documentation, timelines, and visa guidance after you receive a university offer, working directly with your chosen institution's admissions office." },
     ],
   },
   {
@@ -605,24 +632,46 @@ export const destinations: Destination[] = [
     short: "Netherlands",
     flag: "nl",
     region: "More",
-    heroStats: ["Many English-taught programs", "Post-study orientation year for graduates"],
+    heroStats: ["Hundreds of English-taught programs", "EUR 8,000 to EUR 20,000+ annual tuition", "1-year post-study orientation permit"],
     intro:
-      "The Netherlands is one of Europe's most popular destinations for international students, known for English-taught degrees, practical teaching styles, and a high quality of life. Apex Consulting Services helps students from Pakistan shortlist Dutch universities and navigate student visa requirements.",
+      "The Netherlands is one of Europe's most popular destinations for international students, known for hundreds of English-taught degrees, practical and discussion-based teaching styles, and a high quality of life within easy reach of the rest of Europe. Apex Consulting Services helps students from Pakistan shortlist Dutch universities and navigate the MVV entry visa and residence permit process from application to arrival.",
     whyPoints: [
-      { title: "Hundreds of English-taught programs", body: "Across top Dutch universities, especially strong in engineering, business, and technology." },
-      { title: "Innovative, practice-oriented education", body: "Strong industry links throughout the curriculum." },
-      { title: "Post-study residence options", body: "Support for job searching after graduation." },
+      { title: "Hundreds of English-taught programs", body: "Across top Dutch universities, especially strong in engineering, business, technology, and design, so Dutch language skills are rarely required for admission." },
+      { title: "Innovative, practice-oriented education", body: "Small-group teaching, group projects, and strong industry links throughout the curriculum rather than lecture-and-exam-only formats." },
+      { title: "A clear post-study orientation pathway", body: "A dedicated residence permit lets graduates stay on to search for qualifying employment after finishing their degree." },
     ],
-    requirements: ["Academic transcripts and English proficiency scores", "Application through the university's own portal"],
-    universities: [{ name: "University of Amsterdam" }],
-    cost: "Tuition and living costs vary by institution and city; our team builds a realistic budget as part of admission guidance.",
-    scholarships: [],
-    visaName: "Dutch Student Visa/Residence Permit",
-    visaRequirements: ["Documentation and visa filing guided step by step after you receive an offer"],
+    requirements: [
+      "Academic transcripts (secondary school certificate or bachelor's degree, depending on program level)",
+      "English proficiency scores (IELTS/TOEFL), as required by the program",
+      "A Statement of Purpose and, for some master's programs, letters of recommendation",
+      "Application submitted through Studielink and the university's own portal",
+    ],
+    universities: [
+      { name: "University of Amsterdam" },
+      { name: "Delft University of Technology (TU Delft)", note: "Engineering and technology" },
+      { name: "Erasmus University Rotterdam", note: "Business, economics, law" },
+      { name: "Utrecht University" },
+      { name: "Leiden University", note: "The Netherlands' oldest university" },
+      { name: "Eindhoven University of Technology (TU/e)", note: "Engineering and design" },
+    ],
+    cost:
+      "Non-EU/EEA students typically pay institutional tuition of approximately EUR 8,000 to EUR 20,000+ per year, depending on the university and program level, considerably more than the statutory fee EU/EEA students pay. For your student visa, you'll need to show at least around EUR 12,000 to EUR 13,000 in financial resources to cover one year of study and living costs.",
+    scholarships: [
+      "Holland Scholarship, a one-time EUR 5,000 grant for the first year of study, open to non-EU/EEA students",
+      "University-specific scholarships, including some institutions' own OTS-branded awards for high-achieving applicants",
+    ],
+    visaName: "MVV Entry Visa & Residence Permit (VVR)",
+    visaRequirements: [
+      "An unconditional offer/admission letter from a recognised Dutch institution",
+      "Proof of financial means, roughly EUR 12,000 to EUR 13,000 for one year",
+      "Valid health insurance covering your stay in the Netherlands",
+      "Valid passport; your university typically applies to the IND on your behalf",
+    ],
     postStudyWork:
-      "A post-study orientation year is available for graduates, giving time to search for qualifying employment in the Netherlands.",
+      "Graduates can apply for the Netherlands' post-study orientation year (zoekjaar), a residence permit that gives time to search for qualifying employment or start a business, before transitioning to a work-related residence permit once a job offer is secured.",
     faqs: [
       { q: "Do I need Dutch language skills to study there?", a: "Many programs are fully English-taught. Dutch helps with daily life and part-time work but isn't always required for admission." },
+      { q: "Do I need an MVV entry visa, or just a residence permit?", a: "Most Pakistani students need both the MVV entry visa and the VVR residence permit; your university's international office typically applies for both on your behalf once you accept your offer." },
       { q: "Can Apex help with Netherlands student visas?", a: "Yes. After you receive an offer, we guide you through the documentation and visa process step by step." },
     ],
   },
@@ -921,3 +970,10 @@ export const popularDestinationSlugs = [
 export function getDestination(slug: string) {
   return destinations.find((d) => d.slug === slug);
 }
+
+/** Every destination slug follows "study-in-{name}", matching a verified,
+ * high-resolution landmark photo at the same {name} under /images/destinations. */
+export function destinationPhoto(slug: string) {
+  return `/images/destinations/${slug.replace("study-in-", "")}.webp`;
+}
+

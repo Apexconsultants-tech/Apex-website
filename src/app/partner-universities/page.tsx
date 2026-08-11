@@ -7,6 +7,7 @@ import Reveal from "@/components/Reveal";
 import TiltCard from "@/components/TiltCard";
 import { partnerUniversities } from "@/lib/universities-data";
 import { otherPartnerLogos } from "@/lib/partner-logo-data";
+import { flagSize } from "@/lib/flags";
 import { contact } from "@/lib/site-config";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
 
@@ -16,7 +17,7 @@ const logosByCountry = otherPartnerLogos.reduce<Record<string, typeof otherPartn
 }, {});
 
 export const metadata: Metadata = {
-  title: "Partner Universities Abroad | Apex Consultants Pakistan",
+  title: "Partner Universities Abroad for Pakistani Students",
   description:
     "Apex Consulting Services works directly with universities across 50+ countries as an authorized representative, not a third-party reseller.",
   alternates: { canonical: "/partner-universities" },
@@ -58,8 +59,7 @@ export default function PartnerUniversitiesPage() {
                       <Image
                         src={`/images/flags/${u.flag}.svg`}
                         alt={u.country}
-                        width={24}
-                        height={18}
+                        {...flagSize(u.flag, 18)}
                         className="mt-1 shrink-0 rounded-sm"
                       />
                     </div>

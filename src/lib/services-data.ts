@@ -15,6 +15,7 @@ export type ServiceData = {
   faqs: ServiceFaq[];
 };
 
+
 export const services: ServiceData[] = [
   {
     slug: "student-services",

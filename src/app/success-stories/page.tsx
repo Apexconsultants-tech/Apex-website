@@ -8,7 +8,7 @@ import { testimonials } from "@/lib/site-config";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
-  title: "Student Success Stories | Apex Consulting Services",
+  title: "Student Success Stories",
   description:
     "Meet students who secured admissions abroad with guidance from Apex Consulting Services, from applications and documentation to visa support.",
   alternates: { canonical: "/success-stories" },

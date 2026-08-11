@@ -8,6 +8,7 @@ import Reveal from "@/components/Reveal";
 import TiltCard from "@/components/TiltCard";
 import { coursesForUniversity } from "@/lib/courses-data";
 import { getDestination } from "@/lib/destinations-data";
+import { flagSize } from "@/lib/flags";
 import { contact } from "@/lib/site-config";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
 import { getUniversity, partnerUniversities } from "@/lib/universities-data";
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const u = getUniversity(slug);
   if (!u) return {};
-  const title = `${u.name} | Partner Universities | Apex Consulting Services`;
+  const title = `${u.name} | Partner Universities`;
   const description = `Apply to ${u.name} in ${u.city}, ${u.country} with free counseling, application handling, and visa guidance from Apex Consulting Services.`;
   return {
     title,
@@ -52,7 +53,7 @@ export default async function UniversityProfilePage({ params }: { params: Promis
         <Breadcrumb current={u.name} />
         <Reveal className="mt-6 max-w-3xl">
           <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">
-            <Image src={`/images/flags/${u.flag}.svg`} alt="" width={20} height={15} className="rounded-sm" />
+            <Image src={`/images/flags/${u.flag}.svg`} alt="" {...flagSize(u.flag, 15)} className="rounded-sm" />
             Partner University &middot; {u.country}
           </p>
           <h1 className="mt-3 text-4xl font-semibold leading-[1.06] text-ink sm:text-5xl">{u.name}</h1>

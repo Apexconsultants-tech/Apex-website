@@ -25,7 +25,7 @@ export default function PartnerLogoStrip() {
           delay={100}
           className="relative mt-10 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
         >
-          <div className="flex w-max animate-marquee gap-5 hover:[animation-play-state:paused]">
+          <div className="flex w-max animate-marquee gap-5 hover:[animation-play-state:paused]" aria-hidden="true">
             {marqueeLogos.map((u, i) => (
               <div
                 key={`${u.slug}-${i}`}

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
 import JsonLd from "@/components/JsonLd";
@@ -8,7 +9,7 @@ import { blogPosts } from "@/lib/blog-data";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
-  title: "Study Abroad Blog & Visa Tips | Apex Consultants",
+  title: "Study Abroad Blog & Visa Tips",
   description: "Practical guides on student visas, financial documentation, and settling in abroad, from Apex Consulting Services.",
   alternates: { canonical: "/blogs" },
 };
@@ -35,12 +36,23 @@ export default function BlogsPage() {
                 <TiltCard className="h-full" max={4}>
                   <Link
                     href={`/blogs/${p.slug}`}
-                    className="flex h-full flex-col rounded-2xl border border-line bg-surface p-6 transition-shadow hover:shadow-lg hover:shadow-ink/5"
+                    className="flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface transition-shadow hover:shadow-lg hover:shadow-ink/5"
                   >
-                    <p className="text-xs font-medium text-ink-faint">{p.category} &middot; {p.date}</p>
-                    <h2 className="mt-2 text-lg font-semibold leading-snug text-ink">{p.title}</h2>
-                    <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">{p.excerpt}</p>
-                    <span className="mt-4 inline-flex text-sm font-semibold text-brand">Read more →</span>
+                    {p.image && (
+                      <Image
+                        src={p.image}
+                        alt={p.imageAlt ?? p.title}
+                        width={600}
+                        height={340}
+                        className="h-40 w-full object-cover"
+                      />
+                    )}
+                    <div className="flex flex-1 flex-col p-6">
+                      <p className="text-xs font-medium text-ink-faint">{p.category} &middot; {p.date}</p>
+                      <h2 className="mt-2 text-lg font-semibold leading-snug text-ink">{p.title}</h2>
+                      <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">{p.excerpt}</p>
+                      <span className="mt-4 inline-flex text-sm font-semibold text-brand">Read more →</span>
+                    </div>
                   </Link>
                 </TiltCard>
               </Reveal>

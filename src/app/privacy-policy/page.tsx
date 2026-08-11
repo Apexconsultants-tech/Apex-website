@@ -4,7 +4,7 @@ import Reveal from "@/components/Reveal";
 import { contact, offices, site } from "@/lib/site-config";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy | Apex Consultants",
+  title: "Privacy Policy",
   description: "How Apex Consulting Services collects, uses, and protects your personal information.",
   robots: { index: false, follow: true },
   alternates: { canonical: "/privacy-policy" },

@@ -70,12 +70,15 @@ export function faqJsonLd(faqs: readonly { q: string; a: string }[]) {
   };
 }
 
-export function articleJsonLd(post: { title: string; date: string; excerpt: string; slug: string }) {
+export function articleJsonLd(post: { title: string; isoDate: string; excerpt: string; slug: string; image?: string }) {
   return {
     "@context": "https://schema.org",
-    "@type": "Article",
+    "@type": "BlogPosting",
     headline: post.title,
     description: post.excerpt,
+    image: `${site.url}${post.image ?? "/images/brand/apex-logo.webp"}`,
+    datePublished: post.isoDate,
+    dateModified: post.isoDate,
     author: { "@type": "Organization", name: site.name },
     publisher: { "@type": "Organization", name: site.name },
     url: `${site.url}/blogs/${post.slug}`,

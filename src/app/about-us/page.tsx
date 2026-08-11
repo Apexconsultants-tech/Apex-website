@@ -3,12 +3,14 @@ import Image from "next/image";
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
 import JsonLd from "@/components/JsonLd";
+import LuggageIllustration from "@/components/LuggageIllustration";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
 import StatStrip from "@/components/StatStrip";
 import TiltCard from "@/components/TiltCard";
 import { aboutSections, contact, coreValues, journey, offices, site, socials } from "@/lib/site-config";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
+import { getDestination, popularDestinationSlugs } from "@/lib/destinations-data";
 
 export const metadata: Metadata = {
   title: "About Apex Consultants | Study Abroad Since 2009",
@@ -20,6 +22,9 @@ export const metadata: Metadata = {
 const detailSections = [
   { id: "story", label: "Our Story", ...aboutSections.story },
   { id: "mission", label: "Our Mission", ...aboutSections.mission },
+  { id: "vision", label: "Our Vision", ...aboutSections.vision },
+  { id: "student-first", label: "Student-First Approach", ...aboutSections.studentFirst },
+  { id: "global-focus", label: "Global Education Focus", ...aboutSections.globalFocus },
   { id: "why", label: "Why Choose Apex", ...aboutSections.whyChoose },
 ] as const;
 
@@ -94,15 +99,58 @@ export default function AboutUsPage() {
               </Reveal>
             ))}
           </div>
+          <Reveal delay={200} className="mt-8">
+            <TiltCard className="overflow-hidden rounded-3xl border border-line shadow-lg shadow-ink/10" max={3}>
+              <Image
+                src="/images/stock/students-group.webp"
+                alt="A diverse group of international students studying together"
+                width={1200}
+                height={675}
+                className="h-56 w-full object-cover sm:h-72"
+              />
+            </TiltCard>
+          </Reveal>
         </div>
+      </section>
+
+      {/* Advisor photo band */}
+      <section className="mx-auto max-w-7xl px-5 pt-20 lg:px-8">
+        <Reveal className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
+          <TiltCard className="overflow-hidden rounded-3xl border border-line shadow-lg shadow-ink/10" max={4}>
+            <Image
+              src="/images/stock/advisor-consultation.webp"
+              alt="Apex counselors reviewing a student's application together"
+              width={1000}
+              height={667}
+              className="h-64 w-full object-cover sm:h-80"
+            />
+          </TiltCard>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">How we work</p>
+            <p className="mt-3 text-xl font-semibold leading-snug text-ink sm:text-2xl">
+              Every file gets a counselor who actually reads it, not a queue.
+            </p>
+            <p className="mt-4 text-ink-soft leading-relaxed">
+              From your first consultation to the day you land, the same team stays with your
+              application, so you are never re-explaining your situation to someone new.
+            </p>
+          </div>
+        </Reveal>
       </section>
 
       {/* Story / Mission / Why choose */}
       <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
         <div className="flex flex-col gap-14">
-          {detailSections.map((sec) => (
-            <Reveal key={sec.id}>
-              <div id={sec.id} className="grid grid-cols-1 gap-8 lg:grid-cols-[220px_1fr]">
+          {detailSections.map((sec, i) => {
+            // Our Story / Mission / Vision get a slightly stronger
+            // pop-into-place treatment (scale + more lift) than the rest —
+            // a deliberate depth cue for the three sections the brief
+            // calls out specifically, staggered so they settle one after
+            // another rather than all landing on top of each other.
+            const isFeatured = sec.id === "story" || sec.id === "mission" || sec.id === "vision";
+            return (
+              <Reveal key={sec.id} y={isFeatured ? 32 : 16} scale={isFeatured ? 0.95 : 1} delay={isFeatured ? i * 90 : 0}>
+                <div id={sec.id} className="grid grid-cols-1 gap-8 lg:grid-cols-[220px_1fr]">
                 <h2 className="text-2xl font-semibold text-ink">{sec.label}</h2>
                 <div className="max-w-2xl border-t border-line pt-6 lg:border-t-0 lg:border-l lg:pl-8 lg:pt-0">
                   <p className="text-ink-soft leading-relaxed">{sec.intro}</p>
@@ -117,6 +165,26 @@ export default function AboutUsPage() {
                       </li>
                     ))}
                   </ul>
+                  {sec.id === "global-focus" && (
+                    <div className="mt-6">
+                      <p className="text-xs font-semibold uppercase tracking-[0.12em] text-ink-faint">Popular destination guides</p>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        {popularDestinationSlugs.map((slug) => {
+                          const dest = getDestination(slug);
+                          if (!dest) return null;
+                          return (
+                            <Link
+                              key={slug}
+                              href={`/${slug}`}
+                              className="rounded-full border border-line bg-surface px-3.5 py-1.5 text-xs font-medium text-ink-soft transition-colors hover:border-brand hover:text-brand"
+                            >
+                              {dest.short}
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                   {sec.id === "why" && (
                     <p className="mt-5 text-sm text-ink-soft">
                       Helpline:{" "}
@@ -127,8 +195,9 @@ export default function AboutUsPage() {
                   )}
                 </div>
               </div>
-            </Reveal>
-          ))}
+              </Reveal>
+            );
+          })}
 
           {/* Offices */}
           <Reveal>
@@ -161,6 +230,92 @@ export default function AboutUsPage() {
             </div>
           </Reveal>
         </div>
+      </section>
+
+      {/* Community photo pair */}
+      <section className="border-y border-line bg-surface-2/60 py-16">
+        <div className="mx-auto max-w-7xl px-5 lg:px-8">
+          <Reveal>
+            <SectionHeading eyebrow="Who we work with" title="Every background, one goal" lead="Students from different cities, fields, and starting points, all working toward the same next chapter." />
+          </Reveal>
+          <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <Reveal delay={80}>
+              <TiltCard className="overflow-hidden rounded-3xl border border-line shadow-lg shadow-ink/10" max={4}>
+                <Image
+                  src="/images/stock/south-asian-students.webp"
+                  alt="Two students reviewing coursework together before their applications"
+                  width={1000}
+                  height={667}
+                  className="h-64 w-full object-cover"
+                />
+              </TiltCard>
+            </Reveal>
+            <Reveal delay={140}>
+              <TiltCard className="overflow-hidden rounded-3xl border border-line shadow-lg shadow-ink/10" max={4}>
+                <Image
+                  src="/images/stock/community-hands.webp"
+                  alt="A diverse group of people joining hands, representing the community of students Apex supports"
+                  width={1000}
+                  height={667}
+                  className="h-64 w-full object-cover"
+                />
+              </TiltCard>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* Graduation photo band */}
+      <section className="mx-auto max-w-7xl px-5 pb-4 lg:px-8">
+        <Reveal className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
+          <div className="order-2 lg:order-1">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">The moment it&apos;s for</p>
+            <p className="mt-3 text-xl font-semibold leading-snug text-ink sm:text-2xl">
+              Every application, every document, every visa form leads here.
+            </p>
+            <p className="mt-4 text-ink-soft leading-relaxed">
+              We stay focused on the outcome from day one: a student who made it, on their own
+              merit, with a team that never lost sight of why the paperwork mattered.
+            </p>
+          </div>
+          <TiltCard className="order-1 overflow-hidden rounded-3xl border border-line shadow-lg shadow-ink/10 lg:order-2" max={4}>
+            <Image
+              src="/images/stock/graduation.webp"
+              alt="Graduates celebrating at a graduation ceremony"
+              width={1000}
+              height={667}
+              className="h-64 w-full object-cover sm:h-80"
+            />
+          </TiltCard>
+        </Reveal>
+      </section>
+
+      {/* Pack Your Ambition */}
+      <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+        <Reveal>
+          <div className="relative overflow-hidden rounded-3xl border border-line bg-gradient-to-br from-surface-2 to-surface px-8 py-14 sm:px-14">
+            <div className="pointer-events-none absolute -left-10 -top-10 h-56 w-56 rounded-full bg-[radial-gradient(circle,rgba(21,128,61,0.16),transparent_70%)] blur-2xl" />
+            <div className="relative grid grid-cols-1 items-center gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+              <div className="order-2 flex justify-center lg:order-1">
+                <LuggageIllustration className="h-48 w-48 animate-float sm:h-56 sm:w-56" />
+              </div>
+              <div className="order-1 text-center lg:order-2 lg:text-left">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">Ready when you are</p>
+                <h2 className="mt-2 text-3xl font-semibold text-ink sm:text-4xl">Pack Your Ambition</h2>
+                <p className="mx-auto mt-4 max-w-lg text-ink-soft leading-relaxed lg:mx-0">
+                  Everything else, the paperwork, the planning, the visa filing, is what we&apos;re here for.
+                  Bring the ambition. We&apos;ll help you carry it the rest of the way.
+                </p>
+                <Link
+                  href="/contact-us"
+                  className="mt-7 inline-flex rounded-full bg-gradient-to-b from-brand to-brand-deep px-6 py-3 text-sm font-semibold text-white shadow-md shadow-brand/20 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand/30"
+                >
+                  Book free consultation
+                </Link>
+              </div>
+            </div>
+          </div>
+        </Reveal>
       </section>
 
       {/* Journey */}

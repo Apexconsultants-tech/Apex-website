@@ -1,4 +1,5 @@
-﻿import Link from "next/link";
+﻿import Image from "next/image";
+import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
 import FaqAccordion from "@/components/FaqAccordion";
 import Reveal from "@/components/Reveal";
@@ -6,10 +7,12 @@ import SectionHeading from "@/components/SectionHeading";
 import TiltCard from "@/components/TiltCard";
 import type { ServiceData } from "@/lib/services-data";
 import { services } from "@/lib/services-data";
+import { serviceImage } from "@/lib/service-photos.server";
 import { contact } from "@/lib/site-config";
 
 export default function ServiceTemplate({ s }: { s: ServiceData }) {
   const otherServices = services.filter((o) => o.slug !== s.slug);
+  const image = serviceImage(s.slug);
 
   return (
     <>
@@ -18,27 +21,44 @@ export default function ServiceTemplate({ s }: { s: ServiceData }) {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--color-brand-tint),transparent_55%)]" />
         <div className="mx-auto max-w-7xl px-5 pb-16 pt-10 lg:px-8 lg:pt-14">
           <Breadcrumb current={s.name} />
-          <Reveal className="mt-6 max-w-3xl">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">What We Do</p>
-            <h1 className="mt-3 text-4xl font-semibold leading-[1.08] text-ink sm:text-5xl">{s.headline}</h1>
-            <p className="mt-6 text-base leading-relaxed text-ink-soft sm:text-lg">{s.intro}</p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href="/contact-us"
-                className="rounded-full bg-gradient-to-b from-brand to-brand-deep px-6 py-3 text-sm font-semibold text-white shadow-md shadow-brand/20 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand/30"
-              >
-                Book free consultation
-              </Link>
-              <a
-                href={contact.whatsappHref} data-track="whatsapp_click"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full border border-line px-6 py-3 text-sm font-semibold text-ink transition-all hover:-translate-y-0.5 hover:border-brand hover:text-brand"
-              >
-                Chat on WhatsApp
-              </a>
-            </div>
-          </Reveal>
+          <div className={`mt-6 grid grid-cols-1 items-center gap-10 ${image ? "lg:grid-cols-[1.05fr_0.95fr]" : ""}`}>
+            <Reveal className={image ? "" : "max-w-3xl"}>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">What We Do</p>
+              <h1 className="mt-3 text-4xl font-semibold leading-[1.08] text-ink sm:text-5xl">{s.headline}</h1>
+              <p className="mt-6 text-base leading-relaxed text-ink-soft sm:text-lg">{s.intro}</p>
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Link
+                  href="/contact-us"
+                  className="rounded-full bg-gradient-to-b from-brand to-brand-deep px-6 py-3 text-sm font-semibold text-white shadow-md shadow-brand/20 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand/30"
+                >
+                  Book free consultation
+                </Link>
+                <a
+                  href={contact.whatsappHref} data-track="whatsapp_click"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="rounded-full border border-line px-6 py-3 text-sm font-semibold text-ink transition-all hover:-translate-y-0.5 hover:border-brand hover:text-brand"
+                >
+                  Chat on WhatsApp
+                </a>
+              </div>
+            </Reveal>
+            {image && (
+              <Reveal delay={140}>
+                <TiltCard className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-line shadow-lg shadow-ink/10" max={4}>
+                  <Image
+                    src={image}
+                    alt={s.name}
+                    fill
+                    priority
+                    sizes="(min-width: 1024px) 45vw, 90vw"
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+                </TiltCard>
+              </Reveal>
+            )}
+          </div>
         </div>
       </section>
 

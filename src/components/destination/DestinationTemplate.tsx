@@ -1,15 +1,119 @@
 ﻿import Image from "next/image";
 import Link from "next/link";
-import DestinationSkyline from "@/components/DestinationSkyline";
 import FaqAccordion from "@/components/FaqAccordion";
+import PassportStamp from "@/components/PassportStamp";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
 import TiltCard from "@/components/TiltCard";
 import Breadcrumb from "@/components/Breadcrumb";
 import type { Destination } from "@/lib/destinations-data";
+import { destinationPhoto } from "@/lib/destinations-data";
+import { destinationLifePhoto } from "@/lib/destination-photos.server";
+import { flagSize } from "@/lib/flags";
 import { contact } from "@/lib/site-config";
 
+function stampCode(d: Destination) {
+  return d.short.toUpperCase();
+}
+
+// First sentence only — d.cost and d.postStudyWork are full paragraphs
+// written for their own sections; timeline cards need a clause, not a repeat
+// of that whole paragraph.
+function firstClause(text: string) {
+  const match = text.match(/^[^.]+\./);
+  return match ? match[0] : text;
+}
+
+// Lowercases only the very first letter of the very first item — the one
+// that actually starts the mid-sentence clause — and leaves every other
+// item's own capitalization alone, so a later item like "English proficiency
+// scores" doesn't get incorrectly lowercased just because it's in the list,
+// and acronyms like CAS/TB/IHS never get mangled into "cas"/"tb"/"ihs".
+function lowerFirstItem(items: string[]) {
+  return items.map((item, i) => (i === 0 ? item.charAt(0).toLowerCase() + item.slice(1) : item));
+}
+
+// Every step below pulls from d's own real, already fact-checked fields
+// (requirements, universities, visaRequirements, cost, scholarships,
+// postStudyWork) rather than repeating identical copy with only the country
+// name swapped in — so the process genuinely differs from one destination
+// page to the next, the way applying to different countries actually does.
+// Where the underlying requirement can vary by university or program, that's
+// said explicitly rather than presented as a fixed guarantee.
+function buildTimeline(d: Destination) {
+  const uniNames = d.universities.slice(0, 2).map((u) => u.name);
+  const uniLine =
+    uniNames.length > 0
+      ? `institutions like ${uniNames.join(" and ")} (the exact shortlist depends on your grades, budget, and course)`
+      : `universities in ${d.name} that genuinely fit your goals`;
+
+  const reqSample = lowerFirstItem(d.requirements.slice(0, 2));
+  const reqLine =
+    reqSample.length > 0
+      ? `Most ${d.name} universities ask for ${reqSample.join(" and ")}, though the exact list and deadlines vary by institution and program`
+      : `Requirements vary by institution and program`;
+
+  const scholarshipCount = d.scholarships.length;
+  const costClause = firstClause(d.cost);
+
+  const visaSample = lowerFirstItem(d.visaRequirements.slice(0, 2));
+  const visaLine =
+    visaSample.length > 0
+      ? `including ${visaSample.join(" and ")}`
+      : "and every required supporting document";
+
+  const postStudyClause = firstClause(d.postStudyWork);
+
+  return [
+    {
+      title: "Research & shortlisting",
+      body: `We assess your academic profile and budget, then shortlist from ${uniLine}.`,
+    },
+    {
+      title: "Admission requirements & applications",
+      body: `${reqLine} — we confirm exactly what your shortlisted universities need before you apply, then prepare and track every application.`,
+    },
+    {
+      title: "Offer & financial planning",
+      body: `${costClause} Once you have an offer, we help you plan for it${scholarshipCount > 0 ? ` and check your eligibility across ${scholarshipCount} scholarship route${scholarshipCount > 1 ? "s" : ""} we track for ${d.name}` : ""}.`,
+    },
+    {
+      title: "Visa filing",
+      body: `We prepare your ${d.visaName} application ${visaLine}, staying current on requirements as they change.`,
+    },
+    {
+      title: "Pre-departure preparation",
+      body: `Guidance on accommodation, travel documentation, packing, and what to expect in your first weeks in ${d.name}.`,
+    },
+    {
+      title: "Arrival & after",
+      body: `Support with local registration and settling in from day one. ${postStudyClause}`,
+    },
+  ];
+}
+
 export default function DestinationTemplate({ d }: { d: Destination }) {
+  const timeline = buildTimeline(d);
+
+  const studentLife = [
+    {
+      title: "Types of institutions",
+      body: `${d.name} offers a mix of public/state universities, private universities, and specialised or applied-science institutions. The right type depends on your budget, field, and career goals, we help you compare them directly.`,
+    },
+    {
+      title: "Accommodation",
+      body: "Most students choose between university halls of residence, private student accommodation, or shared housing near campus. We guide you toward options that fit your budget before you arrive.",
+    },
+    {
+      title: "Student life",
+      body: "Expect an academic calendar built around lectures, seminars, and independent study, alongside student societies, clubs, and campus events that make it easier to settle in and build a network.",
+    },
+    {
+      title: "Working while studying",
+      body: "Most study visas allow part-time work during term and longer hours during scheduled breaks, though exact limits vary by destination and visa type. We confirm the current rules for your specific visa before you apply.",
+    },
+  ];
+
   return (
     <>
       {/* Hero */}
@@ -50,16 +154,31 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
                 </a>
               </div>
             </Reveal>
-            <Reveal delay={140}>
+            <Reveal delay={140} className="relative">
               <TiltCard
-                className="relative aspect-[4/3] overflow-hidden rounded-3xl border-2 border-dashed border-brand/25 shadow-lg shadow-ink/10"
+                className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-line shadow-lg shadow-ink/10"
                 max={4}
               >
-                <DestinationSkyline slug={d.slug} />
+                <Image
+                  src={destinationPhoto(d.slug)}
+                  alt={`${d.name} skyline`}
+                  fill
+                  priority
+                  sizes="(min-width: 1024px) 45vw, 90vw"
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
                 <div className="absolute left-4 top-4 rotate-[-6deg] rounded-sm border border-ink/10 bg-white/95 p-1.5 shadow-sm">
-                  <Image src={`/images/flags/${d.flag}.svg`} alt="" width={28} height={20} className="block h-5 w-7 rounded-[1px]" />
+                  <Image src={`/images/flags/${d.flag}.svg`} alt="" {...flagSize(d.flag, 20)} className="block rounded-[1px]" />
                 </div>
               </TiltCard>
+              {/* Passport-stamp motif: a genuine ink-stamp layout, not a
+                  photo crop, so every destination gets the same authentic
+                  stamp template with just its own code. */}
+              <PassportStamp
+                code={stampCode(d)}
+                className="absolute -bottom-6 -right-4 h-24 w-24 drop-shadow-lg sm:-bottom-8 sm:-right-6 sm:h-28 sm:w-28"
+              />
             </Reveal>
           </div>
         </div>
@@ -82,6 +201,32 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* Campus life photo band */}
+      <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+        <Reveal className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
+          <TiltCard className="overflow-hidden rounded-3xl border border-line shadow-lg shadow-ink/10" max={4}>
+            <Image
+              src={destinationLifePhoto(d.slug)}
+              alt={`Students on campus in ${d.name}`}
+              width={1000}
+              height={667}
+              className="h-64 w-full object-cover object-center sm:h-80"
+            />
+          </TiltCard>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">Life as a student in {d.name}</p>
+            <p className="mt-3 text-xl font-semibold leading-snug text-ink sm:text-2xl">
+              Beyond the classroom: campus life, new friendships, and a genuinely global environment.
+            </p>
+            <p className="mt-4 text-ink-soft leading-relaxed">
+              Every destination we support comes with real academic culture, student societies, and a
+              community of international students navigating the same journey as you. We help you find
+              the university where that fits best.
+            </p>
+          </div>
+        </Reveal>
       </section>
 
       {/* Requirements + Universities */}
@@ -171,6 +316,45 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
         </div>
       </section>
 
+      {/* Application timeline */}
+      <section className="border-y border-line bg-surface-2/60 py-20">
+        <div className="mx-auto max-w-7xl px-5 lg:px-8">
+          <Reveal>
+            <SectionHeading eyebrow="How it works" title={`Your application timeline for ${d.name}`} lead="A typical path from first consultation to arrival. Apex works alongside you at every step." />
+          </Reveal>
+          <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {timeline.map((step, i) => (
+              <Reveal key={step.title} delay={i * 70}>
+                <TiltCard className="h-full rounded-2xl border border-line bg-surface p-6" max={4}>
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-tint font-display text-sm font-bold text-brand">
+                    {i + 1}
+                  </span>
+                  <h3 className="mt-4 text-base font-semibold text-ink">{step.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-ink-soft">{step.body}</p>
+                </TiltCard>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Student life practicalities */}
+      <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+        <Reveal>
+          <SectionHeading eyebrow="Life in your new city" title="Settling in, working, and studying" />
+        </Reveal>
+        <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {studentLife.map((topic, i) => (
+            <Reveal key={topic.title} delay={i * 70}>
+              <TiltCard className="h-full rounded-2xl border border-line bg-surface p-6" max={4}>
+                <h3 className="text-base font-semibold text-ink">{topic.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-soft">{topic.body}</p>
+              </TiltCard>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
       {/* FAQ */}
       <section className="border-t border-line bg-surface-2/60 py-20">
         <div className="mx-auto max-w-3xl px-5 lg:px-8">
@@ -186,15 +370,23 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
       {/* Final CTA */}
       <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
         <Reveal>
-          <div className="flex flex-col items-start justify-between gap-8 rounded-3xl bg-brand px-8 py-12 sm:px-12 lg:flex-row lg:items-center">
-            <div>
+          <div className="relative flex flex-col items-start justify-between gap-8 overflow-hidden rounded-3xl px-8 py-12 sm:px-12 lg:flex-row lg:items-center">
+            <Image
+              src="/images/stock/graduation.webp"
+              alt=""
+              fill
+              className="object-cover"
+              aria-hidden="true"
+            />
+            <div className="absolute inset-0 bg-gradient-to-br from-brand/95 to-brand-deep/95" />
+            <div className="relative">
               <h2 className="text-3xl font-semibold text-white sm:text-4xl">Ready to study in {d.name}?</h2>
               <p className="mt-3 max-w-lg text-white/80">
                 Book a free consultation with our Study in {d.name} Consultants and let our experienced
                 counsellors guide you from university selection to visa approval.
               </p>
             </div>
-            <div className="flex shrink-0 flex-wrap gap-3">
+            <div className="relative flex shrink-0 flex-wrap gap-3">
               <Link
                 href="/contact-us"
                 className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-brand-deep transition-all hover:-translate-y-0.5 hover:bg-white/90"
@@ -224,5 +416,5 @@ function CheckIcon() {
 }
 
 function FlagIcon({ code }: { code: string }) {
-  return <Image src={`/images/flags/${code}.svg`} alt="" width={20} height={15} className="rounded-sm" />;
+  return <Image src={`/images/flags/${code}.svg`} alt="" {...flagSize(code, 15)} className="rounded-sm" />;
 }

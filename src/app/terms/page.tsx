@@ -4,7 +4,7 @@ import Reveal from "@/components/Reveal";
 import { contact, icef, site } from "@/lib/site-config";
 
 export const metadata: Metadata = {
-  title: "Terms of Service | Apex Consultants",
+  title: "Terms of Service",
   description: "Terms governing the use of the Apex Consulting Services website and consultancy services.",
   robots: { index: false, follow: true },
   alternates: { canonical: "/terms" },

@@ -128,6 +128,31 @@ summary:focus-visible {
   animation: pulse-ring 3.5s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
 }
 
+/* Waypoints trace the same curve as the static dashed flight-path arc
+   (a quadratic bezier from 8,72 to 92,30 via control point 50,-6). */
+@keyframes flight-plane {
+  0% { left: 8%; top: 72%; opacity: 0; transform: translate(-50%, -50%) rotate(-38deg); }
+  8% { opacity: 1; }
+  25% { left: 29%; top: 40%; transform: translate(-50%, -50%) rotate(-52deg); }
+  50% { left: 50%; top: 22.5%; transform: translate(-50%, -50%) rotate(-8deg); }
+  75% { left: 71%; top: 19%; transform: translate(-50%, -50%) rotate(18deg); }
+  92% { opacity: 1; }
+  100% { left: 92%; top: 30%; opacity: 0; transform: translate(-50%, -50%) rotate(28deg); }
+}
+
+.animate-flight-plane {
+  animation: flight-plane 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@keyframes slide-in-right {
+  from { transform: translateX(calc(100% + 24px)); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

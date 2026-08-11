@@ -67,7 +67,7 @@ export default function CourseFinder() {
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget as Node)) setFocused(false);
       }}
-      className={`relative -rotate-1 rounded-2xl border-2 border-dashed bg-surface p-0 shadow-xl shadow-brand-deep/10 transition-all duration-300 sm:-rotate-[0.6deg] ${
+      className={`relative rounded-2xl border-2 border-dashed bg-surface p-0 shadow-xl shadow-brand-deep/10 transition-shadow duration-300 ${
         focused ? "border-brand shadow-brand/10" : "border-line"
       }`}
     >

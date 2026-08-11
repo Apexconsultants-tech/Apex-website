@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Public_Sans, Sora } from "next/font/google";
 import Analytics from "@/components/Analytics";
+import FloatingLuggageTag from "@/components/FloatingLuggageTag";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import JsonLd from "@/components/JsonLd";
@@ -61,6 +62,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <main id="main-content" className="flex-1 pb-14 lg:pb-0">{children}</main>
         <Footer />
         <StickyContactBar />
+        <FloatingLuggageTag />
         <Analytics />
       </body>
     </html>

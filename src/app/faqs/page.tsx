@@ -8,7 +8,7 @@ import { contact, faqs } from "@/lib/site-config";
 import { breadcrumbJsonLd, faqJsonLd } from "@/lib/structured-data";
 
 export const metadata: Metadata = {
-  title: "Frequently Asked Questions | Apex Consultants",
+  title: "Frequently Asked Questions",
   description:
     "Answers to common questions about studying abroad with Apex Consulting Services: visas, scholarships, accreditation, and getting started.",
   alternates: { canonical: "/faqs" },
