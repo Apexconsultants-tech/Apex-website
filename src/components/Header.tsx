@@ -13,15 +13,30 @@ export default function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-line/70 bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/80">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-4 lg:px-8 lg:py-5">
+      {/* Only the icon/abbreviation mark grows here — the wordmark stays
+          at its original size. Vertical padding shrinks by exactly the
+          same amount the icon grows at every breakpoint, so the header's
+          total row height is unchanged even though the mark itself is
+          ~40% taller than the original pre-redesign size. */}
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-2 lg:px-8 lg:py-2.5">
         <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="Apex Consulting Services home">
+          {/* unoptimized: Next's built-in image optimizer was flattening
+              this file's alpha channel onto white when it re-encoded it
+              for each responsive size — verified by fetching the actual
+              /_next/image bytes it served and checking hasAlpha === false,
+              even though the source file on disk is genuinely transparent.
+              Skipping optimization serves the real file as-is, at every
+              breakpoint, with no white box. These are tiny brand assets
+              (a few KB), so there's no real cost to not resizing them
+              server-side. */}
           <Image
             src="/images/brand/apex-icon.webp"
             alt=""
             width={88}
             height={91}
             priority
-            className="h-10 w-auto sm:h-11 lg:h-12"
+            unoptimized
+            className="h-14 w-auto sm:h-[62px] lg:h-[68px]"
           />
           <Image
             src="/images/brand/apex-wordmark.webp"
@@ -29,6 +44,7 @@ export default function Header() {
             width={388}
             height={91}
             priority
+            unoptimized
             className="h-7 w-auto sm:h-8"
           />
         </Link>

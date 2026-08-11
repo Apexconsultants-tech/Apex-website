@@ -15,6 +15,7 @@ export default function Footer() {
               alt="Apex Consulting Services"
               width={168}
               height={32}
+              unoptimized
               className="h-8 w-auto"
             />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-soft">

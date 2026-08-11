@@ -6,6 +6,7 @@ import Globe from "@/components/Globe";
 import IcefSection from "@/components/IcefSection";
 import PartnerLogoStrip from "@/components/PartnerLogoStrip";
 import Reveal from "@/components/Reveal";
+import ScrollPopGroup from "@/components/ScrollPopGroup";
 import SectionHeading from "@/components/SectionHeading";
 import StatStrip from "@/components/StatStrip";
 import TestimonialCarousel from "@/components/TestimonialCarousel";
@@ -30,19 +31,41 @@ export default function HomePage() {
     <>
       {/* Hero */}
       <section className="relative overflow-hidden">
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--color-brand-tint),transparent_60%)]" />
-        <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(115deg,transparent_40%,rgba(21,128,61,0.05)_100%)]" />
-        <div className="pointer-events-none absolute -right-24 top-1/4 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,rgba(21,128,61,0.18),transparent_70%)] blur-2xl" />
-        <div className="mx-auto max-w-7xl px-5 pb-10 pt-14 lg:px-8 lg:pb-16 lg:pt-20">
+        {/* Cinematic full-bleed background photo — a real, high-resolution
+            airport departure scene rather than a flat brand-tinted
+            background. Everything else in the hero (headline, globe,
+            boarding pass) layers on top of it. */}
+        <div className="absolute inset-0">
+          <Image
+            src="/images/stock/hero-cinematic-bg.webp"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center"
+          />
+        </div>
+        {/* Readability stack: strong on the left where the headline sits,
+            fading out toward the globe on the right so the photo still
+            reads as photography rather than disappearing under a flat
+            wash. A faint brand tint keeps it tied to the site's palette,
+            and a bottom fade blends the photo into the page's normal
+            background instead of ending in a hard edge. */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/20" />
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/10" />
+        <div className="pointer-events-none absolute inset-0 bg-brand-deep/10" />
+        <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[var(--color-paper)]" />
+
+        <div className="relative mx-auto max-w-7xl px-5 pb-10 pt-14 lg:px-8 lg:pb-16 lg:pt-20">
           <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
             <Reveal>
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/70">
                 Overseas education consultants since 2009
               </p>
-              <h1 className="mt-3 text-4xl font-semibold leading-[1.06] text-ink sm:text-5xl lg:text-6xl">
-                Where Futures <span className="text-brand">Cross Continents</span>
+              <h1 className="mt-3 text-4xl font-semibold leading-[1.06] text-white sm:text-5xl lg:text-6xl">
+                Where Futures <span className="text-brand-tint">Cross Continents</span>
               </h1>
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-ink-soft sm:text-lg">
+              <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
                 Since 2009, Apex Consulting Services has guided students from Karachi, Hyderabad, and
                 beyond into leading universities in the UK, USA, Canada, Australia, and more. As
                 ICEF-certified overseas education consultants, we build the right plan for your future,
@@ -59,7 +82,7 @@ export default function HomePage() {
                   href={contact.whatsappHref} data-track="whatsapp_click"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="rounded-full border border-line px-6 py-3 text-sm font-semibold text-ink transition-all hover:-translate-y-0.5 hover:border-brand hover:text-brand"
+                  className="rounded-full border border-white/40 px-6 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:border-white hover:bg-white/10"
                 >
                   Chat on WhatsApp
                 </a>
@@ -68,36 +91,6 @@ export default function HomePage() {
 
             <Reveal delay={120}>
               <div className="relative mx-auto aspect-square w-full max-w-lg">
-                {/* Photographic depth layer: a soft, radially-masked sky
-                    photo bleeding out from behind the globe so it isn't
-                    carrying all the visual weight alone. Masked to a
-                    feathered circle (no hard rectangular edge) and tinted
-                    toward the brand palette so it reads as atmosphere, not
-                    a separate photo competing for attention. Desktop only —
-                    on the single-column mobile layout this would sit behind
-                    the hero copy instead of beside it. */}
-                <div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -inset-20 hidden lg:block"
-                  style={{
-                    // Fully opaque from dead-center out to just past the
-                    // globe's own edge (~54% of this box's radius) — that
-                    // ring is where the orbit lines and ambient halo live,
-                    // so it's the only part actually visible past the
-                    // opaque globe — then fades out to blend into the page.
-                    maskImage: "radial-gradient(circle at 50% 45%, black 45%, black 75%, transparent 100%)",
-                    WebkitMaskImage: "radial-gradient(circle at 50% 45%, black 45%, black 75%, transparent 100%)",
-                  }}
-                >
-                  <Image
-                    src="/images/stock/hero-sky-glow.webp"
-                    alt=""
-                    fill
-                    sizes="700px"
-                    className="object-cover opacity-45"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-brand-tint/50 via-transparent to-transparent" />
-                </div>
                 <div className="animate-float">
                   <Globe />
                 </div>
@@ -386,11 +379,13 @@ export default function HomePage() {
       {/* Three-card CTA composition: each card animates in from its own
           side (or pops up, for the primary center card) but all settle into
           a clean, perfectly aligned row — the motion is the only thing
-          that's asymmetric, never the resting layout. */}
+          that's asymmetric, never the resting layout. See .card-left/
+          .card-center/.card-right in globals.css for why this isn't built
+          on the shared Reveal component or an overflow:hidden wrapper. */}
       <section className="mx-auto max-w-7xl px-5 pb-20 lg:px-8">
-        <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3 lg:gap-5">
+        <ScrollPopGroup className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3 lg:gap-5">
           {/* Left: boarding-pass style — browse destinations */}
-          <Reveal x={-56} y={0} className="lg:mt-6">
+          <div className="card-left lg:mt-6">
             <Link
               href="/partner-universities"
               className="group relative flex h-full flex-col overflow-hidden rounded-2xl border-2 border-dashed border-line bg-surface px-6 py-6 shadow-md shadow-ink/[0.04] transition-all hover:-translate-y-1 hover:border-brand hover:shadow-xl hover:shadow-ink/10"
@@ -410,10 +405,10 @@ export default function HomePage() {
                 <span className="transition-transform group-hover:translate-x-1">→</span>
               </span>
             </Link>
-          </Reveal>
+          </div>
 
           {/* Center: passport style — the primary CTA, visually strongest */}
-          <Reveal y={36} scale={0.94} delay={100} className="relative z-10 lg:-my-2">
+          <div className="card-center relative z-10 lg:-my-2">
             <Link
               href="/contact-us"
               className="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-br from-brand-deep to-ink px-7 py-8 shadow-2xl shadow-ink/25 transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-ink/35"
@@ -432,10 +427,10 @@ export default function HomePage() {
                 <span className="transition-transform group-hover:translate-x-1">→</span>
               </span>
             </Link>
-          </Reveal>
+          </div>
 
           {/* Right: acceptance/consultation style — talk to a human now */}
-          <Reveal x={56} y={0} delay={180} className="lg:mt-6">
+          <div className="card-right lg:mt-6">
             <a
               href={contact.whatsappHref}
               data-track="whatsapp_click"
@@ -459,8 +454,8 @@ export default function HomePage() {
                 <span className="transition-transform group-hover:translate-x-1">→</span>
               </span>
             </a>
-          </Reveal>
-        </div>
+          </div>
+        </ScrollPopGroup>
       </section>
 
       {/* Testimonials */}

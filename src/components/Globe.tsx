@@ -52,12 +52,13 @@ function PlaneMark() {
   );
 }
 
-// The map asset's own aspect ratio (2600×1127 = 2.307:1). This drives every
-// percentage below — get this wrong and the pan either shows the same
-// narrow sliver twice (the previous bug: `fill`+`object-cover` inside a
-// square box crops a 2.3:1 image down to its centered ~43% and both
-// "copies" end up showing that same crop) or drifts out of sync with drag.
-const MAP_ASPECT = 2600 / 1127;
+// The map asset's own aspect ratio (2600×1300 = 2:1, a standard
+// equirectangular projection). This drives every percentage below — get
+// this wrong and the pan either shows the same narrow sliver twice (the
+// original bug: `fill`+`object-cover` inside a square box crops a wide
+// image down to its centered slice and both "copies" end up showing that
+// same crop) or drifts out of sync with drag.
+const MAP_ASPECT = 2600 / 1300;
 
 // Two copies sit side by side, each rendered at its natural aspect ratio
 // (height = 100% of the circular window, width = height × MAP_ASPECT, no
@@ -74,12 +75,11 @@ const MOMENTUM_FLOOR = 0.004;
 // of drag = 100/(2×MAP_ASPECT) percent of the reel.
 const REEL_PERCENT_PER_WRAP_WIDTH = 100 / (2 * MAP_ASPECT);
 
-// A real, recolored world map (public domain, Wikimedia Commons / Natural
-// Earth data) panning behind a circular mask reads unambiguously as
-// "Earth" — no dot-particle rendering. Two copies sit side by side inside a
-// translating strip so the pan loops seamlessly; each copy carries its own
-// destination pins so they travel correctly with the map instead of
-// sliding independently.
+// A real satellite photograph of Earth (NASA Blue Marble source data, via
+// Solar System Scope's CC BY 4.0 day-map texture) panning behind a circular
+// mask — genuine terrain, oceans, and coastlines, not a flat recolored
+// vector map or dot-particle rendering. Two copies sit side by side inside
+// a translating strip so the pan loops seamlessly.
 export default function Globe() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const reelRef = useRef<HTMLDivElement>(null);
@@ -161,43 +161,51 @@ export default function Globe() {
 
   return (
     <div className="relative aspect-square w-full">
-      {/* ambient halo behind everything */}
-      <div className="pointer-events-none absolute -inset-8 rounded-full bg-[radial-gradient(circle,rgba(21,128,61,0.22),transparent_65%)] blur-2xl" />
-      <div className="pointer-events-none absolute -inset-6 rounded-full bg-[radial-gradient(circle_at_65%_70%,rgba(37,99,235,0.14),transparent_55%)] blur-2xl" />
+      {/* ambient halo behind everything — shifted toward a sky-blue
+          atmosphere tone now that the globe itself carries real satellite
+          color, with a touch of brand green retained for site identity */}
+      <div className="pointer-events-none absolute -inset-10 rounded-full bg-[radial-gradient(circle,rgba(56,142,220,0.22),transparent_65%)] blur-2xl" />
+      <div className="pointer-events-none absolute -inset-6 rounded-full bg-[radial-gradient(circle_at_65%_70%,rgba(21,128,61,0.13),transparent_55%)] blur-2xl" />
 
       {/* decorative orbit rings — plain lines, no riding markers */}
       <div className="pointer-events-none absolute -inset-[7%] animate-orbit rounded-full border border-dashed border-brand/25" />
       <div className="pointer-events-none absolute -inset-[15%] animate-orbit-reverse rounded-full border border-dashed border-brand/15" />
 
-      {/* flight path — a single subtle route arcing past the globe. The dashed
-          curve is static; only the plane moves, via a plain CSS animation so
-          it inherits the same global prefers-reduced-motion handling as
-          every other animation on the site. */}
+      {/* flight path — a single, very subtle route arcing past the globe,
+          kept faint so it never competes with the satellite imagery. The
+          dashed curve is static; only the plane moves, via a plain CSS
+          animation so it inherits the same global prefers-reduced-motion
+          handling as every other animation on the site. */}
       <svg className="pointer-events-none absolute -inset-[6%] overflow-visible" viewBox="0 0 100 100" aria-hidden="true">
         <path
           d="M8,72 Q50,-6 92,30"
           fill="none"
           stroke="var(--color-brand)"
-          strokeOpacity="0.35"
-          strokeWidth="0.6"
+          strokeOpacity="0.22"
+          strokeWidth="0.5"
           strokeDasharray="1.2 2.6"
           strokeLinecap="round"
         />
       </svg>
       <div className="pointer-events-none absolute -inset-[6%]" aria-hidden="true">
         <div className="absolute h-4 w-4 animate-flight-plane">
-          <svg width="16" height="16" viewBox="-4 -4 8 8" className="h-4 w-4">
+          <svg width="16" height="16" viewBox="-4 -4 8 8" className="h-4 w-4 opacity-70">
             <PlaneMark />
           </svg>
         </div>
       </div>
 
-      {/* the globe itself: a circular window onto a panning world map */}
+      {/* atmosphere rim — a thin bright glow hugging the globe's own edge,
+          distinct from the soft outer halo above; this is what actually
+          reads as "atmosphere" rather than just ambient page glow */}
+      <div className="pointer-events-none absolute -inset-[2.5%] rounded-full bg-[radial-gradient(circle,transparent_92%,rgba(147,197,253,0.55)_97%,transparent_100%)]" />
+
+      {/* the globe itself: a circular window onto a panning satellite map */}
       <div
         ref={wrapRef}
         className="absolute inset-0 cursor-grab touch-none overflow-hidden rounded-full shadow-[inset_0_0_40px_rgba(0,0,0,0.35)] animate-[globe-in_0.8s_ease-out]"
         role="img"
-        aria-label="World map globe highlighting Apex's study destinations, including the UK, USA, Canada, Australia, and Ireland"
+        aria-label="Satellite view of Earth highlighting Apex's study destinations, including the UK, USA, Canada, Australia, and Ireland"
       >
         {/* Reel width is intentionally NOT set — with no flex-grow on its
             children, a flex container sizes to the sum of its children's
@@ -210,10 +218,10 @@ export default function Globe() {
           {[0, 1].map((copy) => (
             <div key={copy} className="relative h-full shrink-0">
               <Image
-                src="/images/brand/world-map.webp"
+                src="/images/brand/earth-satellite.webp"
                 alt=""
                 width={2600}
-                height={1127}
+                height={1300}
                 priority={copy === 0}
                 draggable={false}
                 sizes="(min-width: 1024px) 620px, 420px"
@@ -225,10 +233,13 @@ export default function Globe() {
 
         {/* limb-darkening: fades the map toward the left/right edges, the
             same trick that makes a flat panning strip read as a curved
-            sphere instead of a scrolling banner */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_62%_100%_at_50%_50%,transparent_55%,rgba(10,20,15,0.55)_100%)]" />
-        {/* lighting highlight, upper-left, for a lit-sphere feel */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_32%_28%,rgba(255,255,255,0.35),transparent_55%)]" />
+            sphere instead of a scrolling banner. Neutral navy-black rather
+            than green-tinted now that the underlying texture is a real
+            photograph with its own color. */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_62%_100%_at_50%_50%,transparent_52%,rgba(6,10,18,0.58)_100%)]" />
+        {/* lighting highlight, upper-left, for a lit-sphere feel — a
+            genuine sunlit-hemisphere look against real terrain */}
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_32%_26%,rgba(255,255,255,0.4),transparent_52%)]" />
         {/* soft outer ring so the circle edge doesn't look clinically flat */}
         <div className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-inset ring-white/15" />
       </div>

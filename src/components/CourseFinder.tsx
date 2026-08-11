@@ -67,9 +67,18 @@ export default function CourseFinder() {
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget as Node)) setFocused(false);
       }}
-      className={`relative rounded-2xl border-2 border-dashed bg-surface p-0 shadow-xl shadow-brand-deep/10 transition-shadow duration-300 ${
-        focused ? "border-brand shadow-brand/10" : "border-line"
+      className={`relative rounded-2xl border-2 border-dashed bg-surface p-0 transition-shadow duration-300 ${
+        focused ? "border-brand" : "border-line"
       }`}
+      style={{
+        // Elevation shadow for the card lift itself, plus a soft, wide,
+        // low-opacity warm-gold glow further out — not a border, just a
+        // premium light source sitting behind the card. Slightly stronger
+        // on focus rather than swapping to a different color entirely.
+        boxShadow: focused
+          ? "0 20px 45px -12px rgba(20,24,26,0.16), 0 8px 70px -8px rgba(251,191,36,0.85)"
+          : "0 20px 45px -12px rgba(20,24,26,0.14), 0 8px 60px -10px rgba(251,191,36,0.7)",
+      }}
     >
       <div className="flex flex-wrap items-center justify-between gap-2 border-b border-dashed border-line px-5 py-3">
         <div className="flex items-center gap-2 text-ink-soft">

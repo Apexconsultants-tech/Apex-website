@@ -86,6 +86,81 @@ summary:focus-visible {
   animation: marquee 32s linear infinite;
 }
 
+/* Same 0 → -50% loop as .animate-marquee, just slower — testimonial cards
+   are wide and meant to be read, not skimmed like logo chips, so this
+   needs a comfortable, unhurried pace rather than the logo strip's speed. */
+.animate-marquee-slow {
+  animation: marquee 70s linear infinite;
+}
+
+/* Plain CSS :hover/:focus-within rather than Tailwind's
+   hover:[animation-play-state:paused] arbitrary-property variant — that
+   syntax silently failed to compile into any actual CSS rule under this
+   project's Tailwind v4 setup (verified: absent from every loaded
+   stylesheet), so the marquees never actually paused on hover despite the
+   class being present in markup. Plain rules avoid that toolchain gap. */
+.animate-marquee:hover,
+.animate-marquee-slow:hover,
+.animate-marquee-slow:focus-within {
+  animation-play-state: paused;
+}
+
+/* Explicit touch-driven pause (touch devices don't reliably sustain
+   :hover during a read the way mouse/keyboard do). !important so it wins
+   regardless of the animate-marquee-slow rule's own specificity. */
+.marquee-paused {
+  animation-play-state: paused !important;
+}
+
+/* Three-card CTA entrance (paired with ScrollPopGroup.tsx). Deliberately
+   NOT built on an overflow:hidden ancestor — overflow-x:hidden silently
+   forces a sibling overflow-y:visible to compute as overflow-y:auto (a
+   real CSS Overflow Module rule, not a bug), which was clipping the
+   center card against the section's own fixed height during its rise.
+   Horizontal safety comes from clamp() instead: the travel distance
+   scales with viewport width and is capped well inside any realistic
+   page gutter, so it can never push a card past the actual browser
+   viewport edge regardless of screen size — no clipping ancestor needed.
+   Duration is slow and deliberate (1.5s) with a gentle, evenly-paced
+   ease-out (not the site's usual ease-out-quint) specifically so the
+   travel reads as a steady glide across the whole duration rather than
+   snapping most of the way there in the first 300ms and quietly fading
+   in for the rest — a quint curve front-loads almost all the positional
+   change, which undercuts "make users notice the cards traveling." */
+.card-left,
+.card-center,
+.card-right {
+  opacity: 0;
+  transition:
+    opacity 1.5s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 1.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: transform, opacity;
+}
+
+.card-left {
+  transform: translateX(clamp(-180px, -18vw, -80px));
+  transition-delay: 0ms;
+}
+
+.card-right {
+  transform: translateX(clamp(80px, 18vw, 180px));
+  transition-delay: 120ms;
+}
+
+.card-center {
+  /* Starts lower (never above/outside the section) and slightly smaller,
+     so it visibly rises and settles rather than merely fading in. */
+  transform: translateY(90px) scale(0.88);
+  transition-delay: 240ms;
+}
+
+.card-group-revealed .card-left,
+.card-group-revealed .card-center,
+.card-group-revealed .card-right {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
 @keyframes float-slow {
   0%, 100% { transform: translateY(0px); }
   50% { transform: translateY(-10px); }
@@ -161,5 +236,14 @@ summary:focus-visible {
     animation-duration: 0.001ms !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+  /* The generic 0.001ms collapse above is fine for one-shot or short
+     decorative loops, but an *infinite* marquee at a near-zero duration
+     doesn't read as "stopped" — it reads as flickering, since the browser
+     still cycles the full 0%→100% keyframe range every 0.001ms. Marquees
+     get paused outright instead, landing wherever they happen to be. */
+  .animate-marquee,
+  .animate-marquee-slow {
+    animation-play-state: paused !important;
   }
 }
