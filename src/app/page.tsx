@@ -90,7 +90,7 @@ export default function HomePage() {
             </Reveal>
 
             <Reveal delay={120}>
-              <div className="relative mx-auto aspect-square w-full max-w-lg">
+              <div className="relative mx-auto aspect-square w-full max-w-md">
                 <div className="animate-float">
                   <Globe />
                 </div>
