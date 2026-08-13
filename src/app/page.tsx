@@ -1,7 +1,7 @@
 ﻿import Image from "next/image";
 import Link from "next/link";
 import FaqAccordion from "@/components/FaqAccordion";
-import HeroWorldMapSection from "@/components/HeroWorldMapSection";
+import HeroClassic from "@/components/HeroClassic";
 import IcefSection from "@/components/IcefSection";
 import PartnerLogoStrip from "@/components/PartnerLogoStrip";
 import Reveal from "@/components/Reveal";
@@ -27,7 +27,7 @@ const journeySteps = [
 export default function HomePage() {
   return (
     <>
-      <HeroWorldMapSection />
+      <HeroClassic />
 
       {/* ICEF */}
       <section className="mx-auto max-w-7xl px-5 pb-20 lg:px-8">

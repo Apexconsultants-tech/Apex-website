@@ -256,38 +256,6 @@ summary:focus-visible {
   animation: slide-in-right 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-@keyframes route-blink {
-  0%, 100% { opacity: 0.15; }
-  50% { opacity: 1; }
-}
-
-.animate-route-blink {
-  animation: route-blink 1.7s ease-in-out infinite;
-}
-
-@keyframes marker-blink {
-  0%, 100% { opacity: 0.4; transform: scale(0.85); }
-  50% { opacity: 1; transform: scale(1.15); }
-}
-
-.animate-marker-blink {
-  animation: marker-blink 1.7s ease-in-out infinite;
-  transform-box: fill-box;
-  transform-origin: center;
-}
-
-/* Map panel frame: mostly a quiet hairline, briefly flashing to a bright
-   brand-green glow once per cycle — a "still scanning" heartbeat rather
-   than a constant glow. */
-@keyframes map-border-glow {
-  0%, 78%, 100% { box-shadow: 0 0 0 1px var(--color-line); }
-  90% { box-shadow: 0 0 0 3px var(--color-brand), 0 0 28px 6px var(--color-brand-tint); }
-}
-
-.animate-map-border-glow {
-  animation: map-border-glow 5s ease-in-out infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
