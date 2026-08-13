@@ -53,7 +53,7 @@ export default function CoursesPage() {
 function MiniStat({ value, label }: { value: string; label: string }) {
   return (
     <div className="rounded-xl border border-line bg-surface px-3 py-3 text-center">
-      <p className="font-display text-lg font-semibold text-brand">{value}</p>
+      <p className="font-display text-lg font-semibold text-brand-text">{value}</p>
       <p className="mt-0.5 text-[11px] leading-tight text-ink-faint">{label}</p>
     </div>
   );

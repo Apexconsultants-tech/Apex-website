@@ -188,7 +188,7 @@ export default function AboutUsPage() {
                   {sec.id === "why" && (
                     <p className="mt-5 text-sm text-ink-soft">
                       Helpline:{" "}
-                      <a href={contact.phoneHref} data-track="phone_click" className="font-semibold text-brand hover:underline">
+                      <a href={contact.phoneHref} data-track="phone_click" className="font-semibold text-brand-text hover:underline">
                         {contact.phoneDisplay}
                       </a>
                     </p>
@@ -329,7 +329,7 @@ export default function AboutUsPage() {
               <Reveal key={j.year} delay={i * 90}>
                 <div className="rounded-2xl border border-white/15 bg-white/5 p-6">
                   <p className="font-display text-2xl font-semibold text-white">{j.year}</p>
-                  <p className="mt-2 text-sm leading-relaxed text-white/75">{j.text}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-white/90">{j.text}</p>
                 </div>
               </Reveal>
             ))}
@@ -344,11 +344,11 @@ export default function AboutUsPage() {
         </Reveal>
         <p className="mt-6 text-sm text-ink-faint">
           Follow us on{" "}
-          <a href={socials.facebook} target="_blank" rel="noopener noreferrer" className="text-brand hover:underline">
+          <a href={socials.facebook} target="_blank" rel="noopener noreferrer" className="text-brand-text underline underline-offset-2 hover:decoration-2">
             Facebook
           </a>{" "}
           and{" "}
-          <a href={socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-brand hover:underline">
+          <a href={socials.linkedin} target="_blank" rel="noopener noreferrer" className="text-brand-text underline underline-offset-2 hover:decoration-2">
             LinkedIn
           </a>{" "}
           for updates, events, and student success stories.

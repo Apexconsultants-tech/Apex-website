@@ -7,7 +7,7 @@ import { site } from "@/lib/site-config";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = site.url;
-  const now = new Date("2026-08-09");
+  const now = new Date();
 
   const staticPages: MetadataRoute.Sitemap = [
     { url: `${base}/`, lastModified: now, changeFrequency: "weekly", priority: 1 },
@@ -45,7 +45,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const blogPages: MetadataRoute.Sitemap = blogPosts.map((p) => ({
     url: `${base}/blogs/${p.slug}`,
-    lastModified: now,
+    lastModified: new Date(p.isoDate),
     changeFrequency: "yearly",
     priority: 0.5,
   }));

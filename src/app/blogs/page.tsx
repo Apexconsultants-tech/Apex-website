@@ -51,7 +51,7 @@ export default function BlogsPage() {
                       <p className="text-xs font-medium text-ink-faint">{p.category} &middot; {p.date}</p>
                       <h2 className="mt-2 text-lg font-semibold leading-snug text-ink">{p.title}</h2>
                       <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">{p.excerpt}</p>
-                      <span className="mt-4 inline-flex text-sm font-semibold text-brand">Read more →</span>
+                      <span className="mt-4 inline-flex text-sm font-semibold text-brand-text">Read more →</span>
                     </div>
                   </Link>
                 </TiltCard>

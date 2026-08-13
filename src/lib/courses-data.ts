@@ -1,6 +1,6 @@
-// Real course catalog extracted from apexconsultants.org/courses and the
-// per-destination "Popular courses" tables (crawled 2026-08-09). Duration is
-// included only where the source site displayed it explicitly.
+// Course catalog sourced from Apex's published courses listing and the
+// per-destination "Popular courses" tables. Duration is included only
+// where the source displayed it explicitly.
 
 export type CourseEntry = {
   slug: string;

@@ -7,7 +7,7 @@ import JsonLd from "@/components/JsonLd";
 import Reveal from "@/components/Reveal";
 import TiltCard from "@/components/TiltCard";
 import { coursesForUniversity } from "@/lib/courses-data";
-import { getDestination } from "@/lib/destinations-data";
+import { destinationPhoto, getDestination } from "@/lib/destinations-data";
 import { flagSize } from "@/lib/flags";
 import { contact } from "@/lib/site-config";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
@@ -23,11 +23,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!u) return {};
   const title = `${u.name} | Partner Universities`;
   const description = `Apply to ${u.name} in ${u.city}, ${u.country} with free counseling, application handling, and visa guidance from Apex Consulting Services.`;
+  const image = u.countrySlug ? destinationPhoto(u.countrySlug) : "/opengraph-image";
   return {
     title,
     description,
     alternates: { canonical: `/partner-universities/${slug}` },
-    openGraph: { title, description, url: `/partner-universities/${slug}` },
+    openGraph: { title, description, url: `/partner-universities/${slug}`, images: [image] },
+    twitter: { card: "summary_large_image", title, description, images: [image] },
   };
 }
 
@@ -59,7 +61,7 @@ export default async function UniversityProfilePage({ params }: { params: Promis
           <h1 className="mt-3 text-4xl font-semibold leading-[1.06] text-ink sm:text-5xl">{u.name}</h1>
           <p className="mt-3 text-ink-soft">{u.city}, {u.country}</p>
           <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-ink-soft">
-            <a href={u.homepage} target="_blank" rel="noopener noreferrer" className="font-semibold text-brand hover:underline">
+            <a href={u.homepage} target="_blank" rel="noopener noreferrer" className="font-semibold text-brand-text hover:underline">
               Official website →
             </a>
             {uniCourses.length > 0 && <span>{uniCourses.length} course{uniCourses.length > 1 ? "s" : ""} available</span>}
@@ -136,7 +138,7 @@ export default async function UniversityProfilePage({ params }: { params: Promis
               {destination && (
                 <Link
                   href={`/${destination.slug}`}
-                  className="rounded-full border border-brand/30 bg-brand-tint px-4 py-2 text-xs font-semibold text-brand"
+                  className="rounded-full border border-brand/30 bg-brand-tint px-4 py-2 text-xs font-semibold text-brand-text"
                 >
                   Study in {destination.name} destination guide
                 </Link>
@@ -160,7 +162,7 @@ export default async function UniversityProfilePage({ params }: { params: Promis
           <div className="flex flex-col items-start justify-between gap-8 rounded-3xl bg-brand px-8 py-12 sm:px-12 lg:flex-row lg:items-center">
             <div>
               <h2 className="text-3xl font-semibold text-white sm:text-4xl">Ready to apply to {u.name}?</h2>
-              <p className="mt-3 max-w-lg text-white/80">
+              <p className="mt-3 max-w-lg text-white">
                 Our counselors will check your eligibility, shortlist courses, and guide you through
                 every step, from application to visa.
               </p>

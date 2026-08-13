@@ -6,14 +6,12 @@ import type { testimonials } from "@/lib/site-config";
 
 type Props = { items: readonly (typeof testimonials)[number][] };
 
-// A genuinely continuous marquee, not a click-through slider: the track
-// renders the testimonial list twice back to back, then animates from
-// translateX(0) to translateX(-50%) — exactly one copy's width — so the
-// loop lands on an identical starting frame with no visible reset (the
-// same trick the globe's map-panning reel and the destination image reel
-// use elsewhere on this site). Pausing is CSS-first (:hover/:focus-within)
-// for mouse/keyboard, plus an explicit touch-driven class for touch
-// devices, which don't reliably sustain :hover during a read.
+// A continuous marquee, not a click-through slider: the track renders the
+// testimonial list twice back to back, then animates translateX(0) to
+// translateX(-50%) — exactly one copy's width — so the loop lands on an
+// identical starting frame with no visible reset. Pausing is CSS-first
+// (:hover/:focus-within) plus an explicit touch-driven class, since touch
+// devices don't reliably sustain :hover during a read.
 export default function TestimonialCarousel({ items }: Props) {
   const [touchPaused, setTouchPaused] = useState(false);
   const trackRef = useRef<HTMLDivElement>(null);

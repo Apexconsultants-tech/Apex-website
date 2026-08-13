@@ -33,6 +33,7 @@ export default function CoursesBrowser() {
           className="flex-1 rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink placeholder:text-ink-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
         />
         <select
+          aria-label="Filter by country"
           value={country}
           onChange={(e) => setCountry(e.target.value)}
           className="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
@@ -58,7 +59,7 @@ export default function CoursesBrowser() {
               <p className="mt-1 text-xs text-ink-soft">{c.university}</p>
               <div className="mt-3 flex items-center justify-between">
                 <span className="text-xs text-ink-faint">{c.country}</span>
-                {c.duration && <span className="text-xs font-medium text-brand">{c.duration}</span>}
+                {c.duration && <span className="text-xs font-medium text-brand-text">{c.duration}</span>}
               </div>
             </Link>
           </TiltCard>
@@ -68,7 +69,7 @@ export default function CoursesBrowser() {
       {filtered.length === 0 && (
         <p className="mt-8 rounded-2xl border border-line bg-surface p-8 text-center text-sm text-ink-soft">
           No courses match that search. Try a different name or country, or{" "}
-          <Link href="/contact-us" className="font-semibold text-brand hover:underline">
+          <Link href="/contact-us" className="font-semibold text-brand-text underline underline-offset-2 hover:decoration-2">
             talk to a counselor
           </Link>{" "}
           about programs beyond this list.

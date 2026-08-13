@@ -114,7 +114,7 @@ export default function FloatingLuggageTag() {
           <div className="absolute inset-y-0 flex flex-col justify-center gap-1 py-3 pr-5" style={{ left: NOTCH_X + 14, right: 0 }}>
             <div className="flex items-center justify-between">
               <span className="text-[9px] font-bold uppercase tracking-[0.16em] text-ink-faint">Boarding Pass</span>
-              <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-brand">Open</span>
+              <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-brand-text">Open</span>
             </div>
             <div className="mt-1 flex items-baseline gap-1.5">
               <span className="font-display text-sm font-bold text-ink">HOME</span>
@@ -122,7 +122,7 @@ export default function FloatingLuggageTag() {
               <span className="font-display text-sm font-bold text-ink">ABROAD</span>
             </div>
             <p className="text-[11px] leading-snug text-ink-soft">Book a free consultation</p>
-            <span className="mt-0.5 inline-flex items-center gap-1 text-[11px] font-semibold text-brand">
+            <span className="mt-0.5 inline-flex items-center gap-1 text-[11px] font-semibold text-brand-text">
               Explore countries
               <span className="transition-transform group-hover:translate-x-1">→</span>
             </span>

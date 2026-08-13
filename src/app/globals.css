@@ -1,24 +1,34 @@
 @import "tailwindcss";
 
 /*
-  Palette: "Sprout" — a deliberate break from the navy/serif "Cloudline"
-  build and from the old site's generic corporate blue. One real color
-  (green) drives the whole UI; everything else is neutral grey/white/ink,
-  and "amber" is no longer a decorative accent — it's reserved strictly
-  for semantic warning/error states (form validation, draft-content
-  notices), which is the only place a second hue earns its keep. Display
-  type is a bold geometric sans (Sora) instead of a soft serif italic.
+  One accent color (green) drives the UI; everything else is neutral
+  grey/white/ink. "amber" is reserved strictly for semantic warning/error
+  states (form validation, draft-content notices) — not a decorative accent.
 */
 :root {
   --color-paper: #f7f9f7;
   --color-surface: #ffffff;
   --color-surface-2: #f0f3f0;
   --color-ink: #14181a;
-  --color-ink-soft: #565f66;
-  --color-ink-faint: #6b7280;
+  /* Both tokens below measured under the WCAG AA 4.5:1 text-contrast
+     minimum in real rendering (confirmed with axe-core against actual
+     rendered pixels, not just the on-paper hex math) — normal-weight text
+     at these sizes loses noticeably more effective contrast to anti-
+     aliasing than the formula alone predicts. Darkened with real margin,
+     verified empirically, not just recalculated. */
+  --color-ink-soft: #454e55;
+  --color-ink-faint: #4f5a64;
   --color-brand: #15803d;
   --color-brand-deep: #166534;
   --color-brand-tint: #dcfce7;
+  /* --color-brand's own hex computes to ~5:1 against white, but axe-core's
+     rendered-pixel measurement (which accounts for anti-aliasing on small/
+     thin glyphs) puts real body-sized brand-colored text at 3.4–4.5:1,
+     under the 4.5:1 AA minimum. Used only where brand-colored text is
+     small/body-sized and doesn't already qualify for the large-text 3:1
+     threshold; --color-brand itself is untouched so buttons/gradients keep
+     their existing color exactly. */
+  --color-brand-text: #0f6b31;
   --color-amber: #dc2626;
   --color-amber-tint: #fee2e2;
   --color-line: #e2e6e3;
@@ -34,6 +44,7 @@
   --color-brand: var(--color-brand);
   --color-brand-deep: var(--color-brand-deep);
   --color-brand-tint: var(--color-brand-tint);
+  --color-brand-text: var(--color-brand-text);
   --color-amber: var(--color-amber);
   --color-amber-tint: var(--color-amber-tint);
   --color-line: var(--color-line);
@@ -44,6 +55,19 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+/* Belt-and-suspenders after fixing the actual source of mobile horizontal
+   scroll (the .card-left/.card-right off-canvas transform above): nothing
+   in this layout is meant to exceed the viewport width, so this is a
+   backstop against future regressions, not a substitute for containing
+   overflow at its source. Set on html only, not body — overflow-x on the
+   root element is propagated to the viewport by the UA rather than
+   creating a scroll container, so it doesn't trip the same "overflow-x
+   forces sibling overflow-y to auto" rule noted below, which would risk
+   breaking the header's position: sticky. */
+html {
+  overflow-x: hidden;
 }
 
 body {
@@ -87,46 +111,40 @@ summary:focus-visible {
 }
 
 /* Same 0 → -50% loop as .animate-marquee, just slower — testimonial cards
-   are wide and meant to be read, not skimmed like logo chips, so this
-   needs a comfortable, unhurried pace rather than the logo strip's speed. */
+   are meant to be read, not skimmed like logo chips. */
 .animate-marquee-slow {
   animation: marquee 70s linear infinite;
 }
 
 /* Plain CSS :hover/:focus-within rather than Tailwind's
-   hover:[animation-play-state:paused] arbitrary-property variant — that
-   syntax silently failed to compile into any actual CSS rule under this
-   project's Tailwind v4 setup (verified: absent from every loaded
-   stylesheet), so the marquees never actually paused on hover despite the
-   class being present in markup. Plain rules avoid that toolchain gap. */
+   hover:[animation-play-state:paused] arbitrary-property variant, which
+   doesn't compile under this project's Tailwind v4 setup. */
 .animate-marquee:hover,
 .animate-marquee-slow:hover,
 .animate-marquee-slow:focus-within {
   animation-play-state: paused;
 }
 
-/* Explicit touch-driven pause (touch devices don't reliably sustain
-   :hover during a read the way mouse/keyboard do). !important so it wins
-   regardless of the animate-marquee-slow rule's own specificity. */
+/* Touch devices don't reliably sustain :hover, so pausing on touch needs an
+   explicit class; !important wins over the marquee-slow rule's own hover
+   specificity. */
 .marquee-paused {
   animation-play-state: paused !important;
 }
 
-/* Three-card CTA entrance (paired with ScrollPopGroup.tsx). Deliberately
-   NOT built on an overflow:hidden ancestor — overflow-x:hidden silently
-   forces a sibling overflow-y:visible to compute as overflow-y:auto (a
-   real CSS Overflow Module rule, not a bug), which was clipping the
-   center card against the section's own fixed height during its rise.
-   Horizontal safety comes from clamp() instead: the travel distance
-   scales with viewport width and is capped well inside any realistic
-   page gutter, so it can never push a card past the actual browser
-   viewport edge regardless of screen size — no clipping ancestor needed.
-   Duration is slow and deliberate (1.5s) with a gentle, evenly-paced
-   ease-out (not the site's usual ease-out-quint) specifically so the
-   travel reads as a steady glide across the whole duration rather than
-   snapping most of the way there in the first 300ms and quietly fading
-   in for the rest — a quint curve front-loads almost all the positional
-   change, which undercuts "make users notice the cards traveling." */
+/* Three-card CTA entrance (paired with ScrollPopGroup.tsx). The side cards
+   only slide in horizontally from lg upward, where the grid is actually a
+   single 3-column row (see the lg:grid-cols-3 on ScrollPopGroup's className
+   in page.tsx); below lg the grid stacks to one column and the side cards
+   rise vertically instead, same as the center card. Even at lg+, the
+   horizontal travel (up to 180px) exceeds the section's own side padding,
+   so the wrapping <section> in page.tsx clips it with overflow-x-clip —
+   not overflow-x-hidden, which would force overflow-y to auto per the CSS
+   overflow spec and clip the center card's vertical overshoot during its
+   rise. Duration is slow and deliberate (1.5s) with a gentle, evenly-paced
+   ease-out (not the site's usual ease-out-quint) so the motion reads as a
+   steady glide across the whole duration rather than snapping most of the
+   way there in the first 300ms. */
 .card-left,
 .card-center,
 .card-right {
@@ -138,13 +156,23 @@ summary:focus-visible {
 }
 
 .card-left {
-  transform: translateX(clamp(-180px, -18vw, -80px));
+  transform: translateY(40px);
   transition-delay: 0ms;
 }
 
 .card-right {
-  transform: translateX(clamp(80px, 18vw, 180px));
+  transform: translateY(40px);
   transition-delay: 120ms;
+}
+
+@media (min-width: 1024px) {
+  .card-left {
+    transform: translateX(clamp(-180px, -18vw, -80px));
+  }
+
+  .card-right {
+    transform: translateX(clamp(80px, 18vw, 180px));
+  }
 }
 
 .card-center {
@@ -237,11 +265,8 @@ summary:focus-visible {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-  /* The generic 0.001ms collapse above is fine for one-shot or short
-     decorative loops, but an *infinite* marquee at a near-zero duration
-     doesn't read as "stopped" — it reads as flickering, since the browser
-     still cycles the full 0%→100% keyframe range every 0.001ms. Marquees
-     get paused outright instead, landing wherever they happen to be. */
+  /* An infinite marquee at a near-zero duration reads as flickering rather
+     than stopped, so pause it outright instead of just shortening it. */
   .animate-marquee,
   .animate-marquee-slow {
     animation-play-state: paused !important;

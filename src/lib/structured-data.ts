@@ -1,4 +1,5 @@
 import { contact, icef, offices, site } from "@/lib/site-config";
+import type { ServiceData } from "@/lib/services-data";
 
 export function organizationJsonLd() {
   return {
@@ -45,6 +46,15 @@ export function localBusinessJsonLd() {
   };
 }
 
+export function websiteJsonLd() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: site.name,
+    url: site.url,
+  };
+}
+
 export function breadcrumbJsonLd(items: { name: string; path: string }[]) {
   return {
     "@context": "https://schema.org",
@@ -67,6 +77,18 @@ export function faqJsonLd(faqs: readonly { q: string; a: string }[]) {
       name: f.q,
       acceptedAnswer: { "@type": "Answer", text: f.a },
     })),
+  };
+}
+
+export function serviceJsonLd(service: ServiceData) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: service.name,
+    description: service.intro,
+    provider: { "@type": "EducationalOrganization", name: site.name, url: site.url },
+    areaServed: "PK",
+    url: `${site.url}/${service.slug}`,
   };
 }
 

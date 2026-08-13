@@ -1,5 +1,4 @@
-// Real GA4 property confirmed live on apexconsultants.org during the site
-// audit (crawled 2026-08-09). Carried forward unchanged, not a new ID.
+// Apex's live GA4 property ID.
 export const GA_MEASUREMENT_ID = "G-59DYL2S7YT";
 
 declare global {

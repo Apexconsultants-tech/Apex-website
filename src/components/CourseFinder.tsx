@@ -15,11 +15,10 @@ const FIELDS = [
   "Arts & Design",
 ];
 
-// courses-data.ts has real course listings, but only for the countries in
-// courseCountries (UK, USA, Australia today). Where we have that data, this
-// actually searches it and shows a live match count. Everywhere else, it's
-// honest about not having a catalog and routes to the destination guide
-// instead of pretending to search one.
+// courses-data.ts only has listings for the countries in courseCountries
+// (UK, USA, Australia today). Where that data exists, this searches it and
+// shows a live match count; otherwise it routes to the destination guide
+// instead of a catalog that doesn't exist yet.
 function fieldToKeyword(field: string) {
   return field.split("&")[0].trim().toLowerCase();
 }
@@ -93,6 +92,7 @@ export default function CourseFinder() {
       <div className="grid grid-cols-1 gap-0 sm:grid-cols-[1.3fr_1fr_1.3fr_auto]">
         <FinderField label="Destination" borderClass="sm:border-r sm:border-dashed sm:border-line">
           <FinderSelect
+            label="Destination"
             value={destination}
             onChange={setDestination}
             options={destinations.map((d) => ({ value: d.slug, label: d.name }))}
@@ -100,10 +100,10 @@ export default function CourseFinder() {
           />
         </FinderField>
         <FinderField label="Class" borderClass="sm:border-r sm:border-dashed sm:border-line">
-          <FinderSelect value={level} onChange={setLevel} options={LEVELS.map((l) => ({ value: l, label: l }))} placeholder="Any level" />
+          <FinderSelect label="Class" value={level} onChange={setLevel} options={LEVELS.map((l) => ({ value: l, label: l }))} placeholder="Any level" />
         </FinderField>
         <FinderField label="Route" borderClass="sm:border-r sm:border-dashed sm:border-line">
-          <FinderSelect value={field} onChange={setField} options={FIELDS.map((f) => ({ value: f, label: f }))} placeholder="Any field" />
+          <FinderSelect label="Route" value={field} onChange={setField} options={FIELDS.map((f) => ({ value: f, label: f }))} placeholder="Any field" />
         </FinderField>
         <div className="flex items-center p-3 sm:p-2">
           <button
@@ -120,7 +120,7 @@ export default function CourseFinder() {
       {selectedDestination && (
         <div className="border-t border-dashed border-line px-5 py-2.5 text-xs">
           {hasCourseData ? (
-            <span className="font-medium text-brand">
+            <span className="font-medium text-brand-text">
               {matchCount} course{matchCount === 1 ? "" : "s"} match &mdash; view real listings on the next step
             </span>
           ) : (
@@ -152,11 +152,13 @@ function FinderField({
 }
 
 function FinderSelect({
+  label,
   value,
   onChange,
   options,
   placeholder,
 }: {
+  label: string;
   value: string;
   onChange: (v: string) => void;
   options: { value: string; label: string }[];
@@ -164,6 +166,7 @@ function FinderSelect({
 }) {
   return (
     <select
+      aria-label={label}
       value={value}
       onChange={(e) => onChange(e.target.value)}
       className="mt-1 w-full appearance-none bg-transparent py-1 text-sm font-medium text-ink focus:outline-none"

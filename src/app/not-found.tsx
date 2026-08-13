@@ -37,7 +37,7 @@ export default function NotFound() {
       </div>
       <p className="mt-8 text-sm text-ink-faint">
         Or call us directly at{" "}
-        <a href={contact.phoneHref} data-track="phone_click" className="font-semibold text-brand hover:underline">
+        <a href={contact.phoneHref} data-track="phone_click" className="font-semibold text-brand-text underline underline-offset-2 hover:decoration-2">
           {contact.phoneDisplay}
         </a>
       </p>

@@ -1,11 +1,10 @@
-// Partner university logo marks, supplied directly by Apex (2026-08-10) as
-// three logo sheets (UK, USA, and a mixed international set). These are
+// Partner university logo marks supplied directly by Apex. These are
 // separate from the richer `partnerUniversities` entries in
-// universities-data.ts, which have real per-university course/detail pages
-// crawled from the source site — no course or admissions data exists for
-// the universities below, so they get a logo + name only, not a full
-// profile page. `featured` marks the set shown on the homepage; everything
-// else appears on the partner-universities page.
+// universities-data.ts, which have full per-university detail pages — no
+// course or admissions data exists for the universities below, so they get
+// a logo + name only, not a full profile page. `featured` marks the set
+// shown on the homepage; everything else appears on the
+// partner-universities page.
 
 export type PartnerLogo = {
   slug: string;

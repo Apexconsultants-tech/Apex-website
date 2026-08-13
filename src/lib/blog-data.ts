@@ -1,5 +1,4 @@
-// Real blog posts extracted from apexconsultants.org/blogs (crawled 2026-08-09).
-// All three live posts, full body content, rewritten only to remove em dashes.
+// Blog post content sourced from Apex's published articles.
 
 export type BlogSection = { heading?: string; body: string };
 export type BlogLink = { label: string; href: string };

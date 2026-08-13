@@ -1,8 +1,6 @@
-// Real partner university listing extracted from apexconsultants.org/partner-universities
-// (crawled 2026-08-09). Logos are not reproduced here (third-party marks);
-// each entry uses the country flag plus name/city instead. Slugs mirror the
-// live site's own URL scheme where confirmed by crawling; the remainder
-// follow the same kebab-case convention for consistency.
+// Partner university listing sourced from Apex's published site. Logos are
+// not reproduced here (third-party marks); each entry uses the country flag
+// plus name/city instead. Slugs follow a consistent kebab-case convention.
 
 export type PartnerUniversity = {
   slug: string;

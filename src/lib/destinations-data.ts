@@ -1,8 +1,8 @@
-// Real per-country facts extracted from the live apexconsultants.org destination
-// pages (crawled 2026-08-09). Rewritten for clarity and to remove em dashes.
-// Nothing here is invented. UK/USA/Canada/Australia/New Zealand carry full
-// depth to match the source site; the remaining destinations are presented
-// at the depth the source content actually supports, honestly.
+// Per-country facts sourced from Apex's published destination guides.
+// UK/USA/Canada/Australia/New Zealand carry the most depth; the remaining
+// destinations are presented at the depth the source content supports.
+// Verify figures (tuition, visa requirements) with Apex before publishing
+// changes — they shift with policy and intake.
 
 export type FaqItem = { q: string; a: string };
 export type WhyPoint = { title: string; body: string };

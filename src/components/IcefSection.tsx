@@ -42,7 +42,7 @@ export default function IcefSection() {
       <div className="rounded-2xl bg-gradient-to-br from-brand-tint to-surface-2 p-6 text-center shadow-sm shadow-brand/10">
         <Image
           src="/images/brand/icef-accredited-badge.webp"
-          alt="ICEF Accredited Agency badge, trusted agency #4511"
+          alt="ICEF Accredited Agency badge"
           width={160}
           height={184}
           className="mx-auto h-auto w-40"
@@ -56,7 +56,7 @@ export default function IcefSection() {
           href={icef.agencyProfileUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-3 inline-block text-sm font-semibold text-brand hover:underline"
+          className="mt-3 inline-block text-sm font-semibold text-brand-text hover:underline"
         >
           View agency profile →
         </a>

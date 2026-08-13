@@ -22,6 +22,7 @@ export const FLAG_RATIO: Record<string, number> = {
   my: 2,
   kr: 1.5,
   cy: 1.5,
+  sg: 1.5,
 };
 
 /** Given a target height in px, returns the correctly proportioned width for this flag code. */

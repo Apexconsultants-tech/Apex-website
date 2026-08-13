@@ -59,13 +59,13 @@ export default function HomePage() {
         <div className="relative mx-auto max-w-7xl px-5 pb-10 pt-14 lg:px-8 lg:pb-16 lg:pt-20">
           <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
             <Reveal>
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/70">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/90">
                 Overseas education consultants since 2009
               </p>
               <h1 className="mt-3 text-4xl font-semibold leading-[1.06] text-white sm:text-5xl lg:text-6xl">
                 Where Futures <span className="text-brand-tint">Cross Continents</span>
               </h1>
-              <p className="mt-6 max-w-xl text-base leading-relaxed text-white/85 sm:text-lg">
+              <p className="mt-6 max-w-xl text-base leading-relaxed text-white/90 sm:text-lg">
                 Since 2009, Apex Consulting Services has guided students from Karachi, Hyderabad, and
                 beyond into leading universities in the UK, USA, Canada, Australia, and more. As
                 ICEF-certified overseas education consultants, we build the right plan for your future,
@@ -144,7 +144,7 @@ export default function HomePage() {
                   <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">{s.body}</p>
                   <Link
                     href={`/${s.slug}`}
-                    className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand hover:underline"
+                    className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-text hover:underline"
                   >
                     Learn more →
                   </Link>
@@ -202,7 +202,7 @@ export default function HomePage() {
             </TiltCard>
             <TiltCard className="mt-8 rounded-2xl bg-gradient-to-br from-ink to-[#0a0d0e] p-6 shadow-lg shadow-ink/20" max={5}>
               <p className="font-display text-3xl font-semibold text-white">3</p>
-              <p className="mt-1 text-sm text-white/70">Offices in Karachi, Hyderabad, and the UK</p>
+              <p className="mt-1 text-sm text-white/90">Offices in Karachi, Hyderabad, and the UK</p>
             </TiltCard>
             <TiltCard className="rounded-2xl border border-line bg-surface-2 p-6 shadow-sm shadow-ink/[0.03]" max={5}>
               <p className="font-display text-3xl font-semibold text-ink">19</p>
@@ -266,7 +266,7 @@ export default function HomePage() {
                       <span className="block text-sm font-semibold text-white">{d.short}</span>
                       <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 group-hover:grid-rows-[1fr]">
                         <div className="overflow-hidden">
-                          <p className="mt-1.5 text-[11px] leading-snug text-white/80">
+                          <p className="mt-1.5 text-[11px] leading-snug text-white/90">
                             Universities &middot; Applications &middot; Visa support
                           </p>
                           <span className="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-white">
@@ -378,11 +378,13 @@ export default function HomePage() {
 
       {/* Three-card CTA composition: each card animates in from its own
           side (or pops up, for the primary center card) but all settle into
-          a clean, perfectly aligned row — the motion is the only thing
-          that's asymmetric, never the resting layout. See .card-left/
-          .card-center/.card-right in globals.css for why this isn't built
-          on the shared Reveal component or an overflow:hidden wrapper. */}
-      <section className="mx-auto max-w-7xl px-5 pb-20 lg:px-8">
+          a clean, perfectly aligned row. overflow-x-clip (not overflow-x-
+          hidden) contains the side cards' horizontal travel at this
+          section's edge without forcing overflow-y to auto the way hidden
+          would — see .card-left/.card-center/.card-right in globals.css for
+          why the center card's vertical overshoot needs overflow-y to stay
+          visible. */}
+      <section className="mx-auto max-w-7xl px-5 pb-20 overflow-x-clip lg:px-8">
         <ScrollPopGroup className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3 lg:gap-5">
           {/* Left: boarding-pass style — browse destinations */}
           <div className="card-left lg:mt-6">
@@ -400,7 +402,7 @@ export default function HomePage() {
               <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">
                 Compare 19 country guides, from tuition and visas to scholarships and universities, before you commit.
               </p>
-              <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand">
+              <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-text">
                 Explore destinations
                 <span className="transition-transform group-hover:translate-x-1">→</span>
               </span>
@@ -415,11 +417,11 @@ export default function HomePage() {
             >
               <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/5 blur-2xl" />
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/60">Study Abroad Passport</span>
+                <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/90">Study Abroad Passport</span>
                 <PassportEmblem />
               </div>
               <p className="mt-5 font-display text-2xl font-semibold text-white">Start your journey</p>
-              <p className="mt-2 flex-1 text-sm text-white/70">
+              <p className="mt-2 flex-1 text-sm text-white/90">
                 One free consultation is all it takes to find out where you could go, and what it takes to get there.
               </p>
               <span className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-tint">
@@ -449,7 +451,7 @@ export default function HomePage() {
               <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">
                 Real answers, no obligation. Chat with a counsellor on WhatsApp, {contact.hours.toLowerCase()}.
               </p>
-              <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-amber-600">
+              <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-amber-700">
                 Chat on WhatsApp
                 <span className="transition-transform group-hover:translate-x-1">→</span>
               </span>
@@ -502,7 +504,7 @@ export default function HomePage() {
               <h2 className="text-3xl font-semibold text-white sm:text-4xl">
                 Get ready to begin <span className="text-brand-tint">your journey</span>
               </h2>
-              <p className="mt-3 max-w-lg text-white/80">
+              <p className="mt-3 max-w-lg text-white">
                 Apex Consulting Services is a trusted overseas education consultancy since 2009,
                 helping students reach leading universities abroad with transparent, end-to-end guidance.
               </p>
@@ -664,7 +666,7 @@ function SealIcon() {
 
 function PassportEmblem() {
   return (
-    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/30 text-white/80">
+    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/30 text-white/90">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.5" />
         <path d="M12 3c2.5 2.5 2.5 15.5 0 18M12 3c-2.5 2.5-2.5 15.5 0 18M3 12h18" stroke="currentColor" strokeWidth="1.2" />

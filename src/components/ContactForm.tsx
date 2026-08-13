@@ -3,9 +3,15 @@
 import Link from "next/link";
 import { useActionState, useEffect, useRef } from "react";
 import { useFormStatus } from "react-dom";
-import { initialEnquiryState, submitEnquiry } from "@/app/actions";
+import { submitEnquiry, type EnquiryState } from "@/app/actions";
 import { trackEvent } from "@/lib/analytics";
 import { contactFormDestinations } from "@/lib/site-config";
+
+// Defined locally rather than imported from actions.ts: a "use server" file
+// may only export async functions, so a plain state-object value can't live
+// there (Next's server-action runtime rejects it as soon as the action is
+// actually invoked, even though the module still imports and renders fine).
+const initialEnquiryState: EnquiryState = { status: "idle", message: "" };
 
 export default function ContactForm() {
   const [state, formAction] = useActionState(submitEnquiry, initialEnquiryState);
@@ -129,7 +135,7 @@ export default function ContactForm() {
         />
         <span>
           I consent to receiving calls, WhatsApp, and email from Apex to assist with this enquiry, per the{" "}
-          <Link href="/privacy-policy" className="font-semibold text-brand hover:underline">
+          <Link href="/privacy-policy" className="font-semibold text-brand-text underline underline-offset-2 hover:decoration-2">
             Privacy Policy
           </Link>
           .

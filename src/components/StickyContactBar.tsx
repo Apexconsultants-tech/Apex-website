@@ -14,7 +14,7 @@ export default function StickyContactBar() {
         href={contact.whatsappHref} data-track="whatsapp_click"
         target="_blank"
         rel="noopener noreferrer"
-        className="flex flex-1 items-center justify-center gap-2 bg-[#25D366] py-3 text-sm font-semibold text-white"
+        className="flex flex-1 items-center justify-center gap-2 bg-[#167e3d] py-3 text-sm font-semibold text-white"
       >
         <WhatsAppIcon /> WhatsApp
       </a>

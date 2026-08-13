@@ -14,26 +14,24 @@ export default function OfficeLocations() {
         {offices.map((o, i) => {
           const isActive = o.id === activeId;
           return (
-            <button
+            <div
               key={o.id}
-              type="button"
-              onClick={() => setActiveId(o.id)}
-              aria-pressed={isActive}
-              className={`rounded-2xl border px-5 py-4 text-left transition-colors ${
+              className={`rounded-2xl border px-5 py-4 transition-colors ${
                 isActive ? "border-brand bg-brand-tint" : "border-line bg-surface hover:border-brand/50"
               }`}
             >
-              <span className="text-xs font-semibold text-ink-faint">{String(i + 1).padStart(2, "0")}</span>
-              <h3 className="mt-1 text-base font-semibold text-ink">{o.name}</h3>
-              <p className="mt-1 text-sm text-ink-soft">{o.address}</p>
+              <button type="button" onClick={() => setActiveId(o.id)} aria-pressed={isActive} className="w-full text-left">
+                <span className="text-xs font-semibold text-ink-faint">{String(i + 1).padStart(2, "0")}</span>
+                <h3 className="mt-1 text-base font-semibold text-ink">{o.name}</h3>
+                <p className="mt-1 text-sm text-ink-soft">{o.address}</p>
+              </button>
               <a
                 href={contact.phoneHref} data-track="phone_click"
-                onClick={(e) => e.stopPropagation()}
-                className="mt-2 inline-block text-sm font-semibold text-brand hover:underline"
+                className="mt-2 inline-block text-sm font-semibold text-brand-text underline underline-offset-2 hover:decoration-2"
               >
                 {contact.phoneDisplay}
               </a>
-            </button>
+            </div>
           );
         })}
       </div>

@@ -66,7 +66,7 @@ export default function PartnerUniversitiesPage() {
                     <p className="mt-2 text-sm text-ink-soft">
                       {u.country} &middot; {u.city}
                     </p>
-                    <span className="mt-3 inline-flex text-xs font-semibold text-brand">
+                    <span className="mt-3 inline-flex text-xs font-semibold text-brand-text">
                       View courses and details →
                     </span>
                   </TiltCard>
@@ -119,7 +119,7 @@ export default function PartnerUniversitiesPage() {
           <div className="flex flex-col items-start justify-between gap-8 rounded-3xl bg-brand px-8 py-12 sm:px-12 lg:flex-row lg:items-center">
             <div>
               <h2 className="text-3xl font-semibold text-white sm:text-4xl">Not sure which university fits you?</h2>
-              <p className="mt-3 max-w-lg text-white/80">
+              <p className="mt-3 max-w-lg text-white">
                 Tell us your grades, budget, and goals, and we will match you to the right program.
               </p>
             </div>
@@ -149,7 +149,7 @@ export default function PartnerUniversitiesPage() {
 function MiniStat({ value, label }: { value: string; label: string }) {
   return (
     <div className="rounded-xl border border-line bg-surface px-3 py-3 text-center">
-      <p className="font-display text-lg font-semibold text-brand">{value}</p>
+      <p className="font-display text-lg font-semibold text-brand-text">{value}</p>
       <p className="mt-0.5 text-[11px] leading-tight text-ink-faint">{label}</p>
     </div>
   );

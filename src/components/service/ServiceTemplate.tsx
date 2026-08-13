@@ -151,7 +151,7 @@ export default function ServiceTemplate({ s }: { s: ServiceData }) {
               <h2 className="text-3xl font-semibold text-white sm:text-4xl">
                 Ready to get started with {s.name}?
               </h2>
-              <p className="mt-3 max-w-lg text-white/80">Book your free consultation today.</p>
+              <p className="mt-3 max-w-lg text-white">Book your free consultation today.</p>
             </div>
             <Link
               href="/contact-us"

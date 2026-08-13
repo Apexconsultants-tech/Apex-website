@@ -17,29 +17,22 @@ function stampCode(d: Destination) {
 }
 
 // First sentence only — d.cost and d.postStudyWork are full paragraphs
-// written for their own sections; timeline cards need a clause, not a repeat
-// of that whole paragraph.
+// written for their own sections; timeline cards need a clause.
 function firstClause(text: string) {
   const match = text.match(/^[^.]+\./);
   return match ? match[0] : text;
 }
 
-// Lowercases only the very first letter of the very first item — the one
-// that actually starts the mid-sentence clause — and leaves every other
-// item's own capitalization alone, so a later item like "English proficiency
-// scores" doesn't get incorrectly lowercased just because it's in the list,
-// and acronyms like CAS/TB/IHS never get mangled into "cas"/"tb"/"ihs".
+// Lowercases only the first item (it starts a mid-sentence clause); other
+// items keep their own capitalization so acronyms like CAS/TB/IHS survive.
 function lowerFirstItem(items: string[]) {
   return items.map((item, i) => (i === 0 ? item.charAt(0).toLowerCase() + item.slice(1) : item));
 }
 
-// Every step below pulls from d's own real, already fact-checked fields
-// (requirements, universities, visaRequirements, cost, scholarships,
-// postStudyWork) rather than repeating identical copy with only the country
-// name swapped in — so the process genuinely differs from one destination
-// page to the next, the way applying to different countries actually does.
-// Where the underlying requirement can vary by university or program, that's
-// said explicitly rather than presented as a fixed guarantee.
+// Pulls from d's own fields (requirements, universities, visaRequirements,
+// cost, scholarships, postStudyWork) rather than templated copy with just
+// the country name swapped in, so each destination's timeline reflects its
+// actual process.
 function buildTimeline(d: Destination) {
   const uniNames = d.universities.slice(0, 2).map((u) => u.name);
   const uniLine =
@@ -254,7 +247,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
                 </div>
               ))}
             </div>
-            <Link href="/partner-universities" className="mt-4 inline-flex text-sm font-semibold text-brand hover:underline">
+            <Link href="/partner-universities" className="mt-4 inline-flex text-sm font-semibold text-brand-text hover:underline">
               View all partner universities →
             </Link>
           </Reveal>
@@ -268,7 +261,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
             <Reveal>
               <h2 className="text-2xl font-semibold text-ink">Cost of studying in {d.name}</h2>
               <p className="mt-4 text-sm leading-relaxed text-ink-soft">{d.cost}</p>
-              <Link href="/financial-assistance" className="mt-4 inline-flex text-sm font-semibold text-brand hover:underline">
+              <Link href="/financial-assistance" className="mt-4 inline-flex text-sm font-semibold text-brand-text hover:underline">
                 Explore Financial Assistance →
               </Link>
             </Reveal>
@@ -302,14 +295,14 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
                 </li>
               ))}
             </ul>
-            <Link href="/student-visa-assistance" className="mt-4 inline-flex text-sm font-semibold text-brand hover:underline">
+            <Link href="/student-visa-assistance" className="mt-4 inline-flex text-sm font-semibold text-brand-text hover:underline">
               See Student Visa Assistance →
             </Link>
           </Reveal>
           <Reveal delay={100}>
             <h2 className="text-2xl font-semibold text-ink">Post-study work opportunities</h2>
             <p className="mt-4 text-sm leading-relaxed text-ink-soft">{d.postStudyWork}</p>
-            <Link href="/career-counseling" className="mt-4 inline-flex text-sm font-semibold text-brand hover:underline">
+            <Link href="/career-counseling" className="mt-4 inline-flex text-sm font-semibold text-brand-text hover:underline">
               See Career Counseling →
             </Link>
           </Reveal>
@@ -326,7 +319,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
             {timeline.map((step, i) => (
               <Reveal key={step.title} delay={i * 70}>
                 <TiltCard className="h-full rounded-2xl border border-line bg-surface p-6" max={4}>
-                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-tint font-display text-sm font-bold text-brand">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-tint font-display text-sm font-bold text-brand-text">
                     {i + 1}
                   </span>
                   <h3 className="mt-4 text-base font-semibold text-ink">{step.title}</h3>
@@ -381,7 +374,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
             <div className="absolute inset-0 bg-gradient-to-br from-brand/95 to-brand-deep/95" />
             <div className="relative">
               <h2 className="text-3xl font-semibold text-white sm:text-4xl">Ready to study in {d.name}?</h2>
-              <p className="mt-3 max-w-lg text-white/80">
+              <p className="mt-3 max-w-lg text-white">
                 Book a free consultation with our Study in {d.name} Consultants and let our experienced
                 counsellors guide you from university selection to visa approval.
               </p>

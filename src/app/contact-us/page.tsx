@@ -128,7 +128,7 @@ export default function ContactUsPage() {
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-5 lg:flex-row lg:items-center lg:px-8">
           <div>
             <h2 className="text-2xl font-semibold text-white">Connect with Apex online</h2>
-            <p className="mt-2 max-w-md text-white/75">
+            <p className="mt-2 max-w-md text-white/90">
               Follow us for admissions updates, visa tips, counseling events, and student success stories.
             </p>
           </div>

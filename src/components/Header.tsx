@@ -20,15 +20,11 @@ export default function Header() {
           ~40% taller than the original pre-redesign size. */}
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-2 lg:px-8 lg:py-2.5">
         <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="Apex Consulting Services home">
-          {/* unoptimized: Next's built-in image optimizer was flattening
-              this file's alpha channel onto white when it re-encoded it
-              for each responsive size — verified by fetching the actual
-              /_next/image bytes it served and checking hasAlpha === false,
-              even though the source file on disk is genuinely transparent.
-              Skipping optimization serves the real file as-is, at every
-              breakpoint, with no white box. These are tiny brand assets
-              (a few KB), so there's no real cost to not resizing them
-              server-side. */}
+          {/* unoptimized: Next's image optimizer flattens this file's alpha
+              channel onto white when re-encoding it, producing a visible
+              white box behind the logo. These are tiny brand assets, so
+              skipping optimization to serve the real transparent file has
+              no meaningful cost. */}
           <Image
             src="/images/brand/apex-icon.webp"
             alt=""
@@ -112,6 +108,11 @@ export default function Header() {
         </nav>
 
         <div className="hidden items-center gap-3 lg:flex">
+          {/* WhatsApp's official bright green (#25D366) is fine here — icon-only,
+              so it's judged on graphical contrast, not the stricter 4.5:1 text
+              rule. The mobile "Chat on WhatsApp" button below has visible text on
+              this same green and fails that rule at ~2:1, so it uses a darkened
+              variant instead (confirmed with axe-core). */}
           <a
             href={contact.whatsappHref} data-track="whatsapp_click"
             target="_blank"
@@ -170,7 +171,7 @@ export default function Header() {
               ))}
               <Link
                 href="/#destinations"
-                className="col-span-2 rounded-md px-2 py-2 text-sm font-medium text-brand"
+                className="col-span-2 rounded-md px-2 py-2 text-sm font-medium text-brand-text"
                 onClick={() => setMobileOpen(false)}
               >
                 View all destinations →
@@ -217,7 +218,7 @@ export default function Header() {
               href={contact.whatsappHref} data-track="whatsapp_click"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 rounded-full bg-[#25D366] py-2.5 text-sm font-semibold text-white shadow-sm shadow-[#25D366]/30"
+              className="flex items-center justify-center gap-2 rounded-full bg-[#167e3d] py-2.5 text-sm font-semibold text-white shadow-sm shadow-[#167e3d]/30"
             >
               <WhatsAppIcon /> Chat on WhatsApp
             </a>

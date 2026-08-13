@@ -1,8 +1,8 @@
-// Central source of truth for real, verified Apex Consulting Services facts.
-// Nothing in this file is invented; every value traces back to the live
-// apexconsultants.org site (crawled 2026-08-09) or a client-supplied fact.
-// See destinations-data.ts, services-data.ts, and universities-data.ts for
-// the larger structured content sets.
+// Central source of truth for Apex Consulting Services facts: contact
+// details, offices, stats, and site copy. Figures here are the client's
+// published information, not placeholders — confirm with Apex before
+// changing them. See destinations-data.ts, services-data.ts, and
+// universities-data.ts for the larger structured content sets.
 
 import { destinations as destinationList } from "./destinations-data";
 import { services as serviceList } from "./services-data";
@@ -62,10 +62,8 @@ export const icef = {
   aboutUrl: "https://www.icef.com/",
 };
 
-// Stats exactly as currently published by the client. The fourth figure is
-// intentionally qualitative: the source site avoids a specific percentage,
-// and we're not inventing one. Replace with a real number if the client
-// supplies verified data.
+// The fourth stat is intentionally qualitative rather than a made-up
+// percentage — replace with a real figure once Apex provides one.
 export const stats = [
   { value: "15+", label: "Years", sub: "Since 2009" },
   { value: "50+", label: "Countries Covered" },
@@ -214,11 +212,9 @@ export const serviceLinks = [
   { label: "Courses", slug: "courses" },
 ] as const;
 
-// Real students, real universities, reused with the same permission basis
-// as the source site (testimonial photography is the one image category
-// explicitly safe to carry forward). Two students from the full success
-// stories list do not have a usable photo on file; they render with an
-// initials avatar instead of a placeholder image.
+// Real students and universities, used with Apex's permission. Two students
+// from the full success-stories list don't have a usable photo on file, so
+// they're omitted here rather than shown with a placeholder image.
 export const testimonials = [
   { name: "Ali Hamza", program: "MSc Applied Ecology", university: "University of Hertfordshire", country: "United Kingdom", image: "/images/testimonials/ali-hamza.jpeg" },
   { name: "Zeeshan Ali Shah", program: "MSc Data Science", university: "University of Gloucestershire", country: "United Kingdom", image: "/images/testimonials/zeeshan-ali-shah.jpeg" },

@@ -7,7 +7,7 @@ import Header from "@/components/Header";
 import JsonLd from "@/components/JsonLd";
 import StickyContactBar from "@/components/StickyContactBar";
 import { site } from "@/lib/site-config";
-import { localBusinessJsonLd, organizationJsonLd } from "@/lib/structured-data";
+import { localBusinessJsonLd, organizationJsonLd, websiteJsonLd } from "@/lib/structured-data";
 import "./globals.css";
 
 const sora = Sora({
@@ -36,11 +36,13 @@ export const metadata: Metadata = {
     title: `${site.name} | Study Abroad Consultants`,
     description: site.description,
     url: site.url,
+    images: ["/opengraph-image"],
   },
   twitter: {
-    card: "summary",
+    card: "summary_large_image",
     title: `${site.name} | Study Abroad Consultants`,
     description: site.description,
+    images: ["/opengraph-image"],
   },
 };
 
@@ -57,7 +59,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Skip to main content
         </a>
-        <JsonLd data={[organizationJsonLd(), localBusinessJsonLd()]} />
+        <JsonLd data={[organizationJsonLd(), localBusinessJsonLd(), websiteJsonLd()]} />
         <Header />
         <main id="main-content" className="flex-1 pb-14 lg:pb-0">{children}</main>
         <Footer />

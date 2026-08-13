@@ -77,7 +77,7 @@ export default function PrivacyPolicyPage() {
             <p className="mt-2">
               You can ask us to update or delete the information you have shared with us, or to stop
               contacting you, at any time by emailing{" "}
-              <a href={`mailto:${contact.email}`} className="font-semibold text-brand hover:underline">
+              <a href={`mailto:${contact.email}`} className="font-semibold text-brand-text underline underline-offset-2 hover:decoration-2">
                 {contact.email}
               </a>{" "}
               or calling {contact.phoneDisplay}.

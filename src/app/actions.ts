@@ -8,8 +8,6 @@ export type EnquiryState = {
   fieldErrors?: Partial<Record<"firstName" | "lastName" | "email" | "mobile" | "destination" | "message", string>>;
 };
 
-export const initialEnquiryState: EnquiryState = { status: "idle", message: "" };
-
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function submitEnquiry(_prevState: EnquiryState, formData: FormData): Promise<EnquiryState> {

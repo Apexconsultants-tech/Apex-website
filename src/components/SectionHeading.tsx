@@ -15,7 +15,7 @@ export default function SectionHeading({ eyebrow, title, lead, align = "left", t
       {eyebrow && (
         <p
           className={`text-xs font-semibold uppercase tracking-[0.14em] ${
-            isWhite ? "text-white/70" : "text-ink-faint"
+            isWhite ? "text-white/90" : "text-ink-faint"
           }`}
         >
           {eyebrow}
@@ -29,7 +29,7 @@ export default function SectionHeading({ eyebrow, title, lead, align = "left", t
         {title}
       </h2>
       {lead && (
-        <p className={`mt-4 text-base leading-relaxed ${isWhite ? "text-white/80" : "text-ink-soft"}`}>
+        <p className={`mt-4 text-base leading-relaxed ${isWhite ? "text-white/90" : "text-ink-soft"}`}>
           {lead}
         </p>
       )}

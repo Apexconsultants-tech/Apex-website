@@ -7,10 +7,10 @@ import { flagSize } from "@/lib/flags";
 // Small flag chips that orbit the globe in screen space.
 type OrbitFlagConfig = { code: string; radius: number; duration: number; delay: number; reverse?: boolean };
 
-// One radius, one duration, one direction, evenly spaced — a single
-// symmetric ring of flags moving together, not scattered independent orbits.
-// nz dropped in favor of cn — Australia and New Zealand's flags both read as
-// "navy blue with a Union Jack canton" at 20px and looked like a duplicate.
+// One radius, one duration, one direction, evenly spaced around a single
+// ring. nz is dropped in favor of cn — Australia and New Zealand's flags
+// both read as "navy blue with a Union Jack canton" at this size and looked
+// like a duplicate.
 const FLAG_CODES = ["gb", "us", "ca", "au", "de", "cn", "fr", "ie"];
 const FLAG_RADIUS = 1.5;
 const FLAG_DURATION = 40;
@@ -53,19 +53,16 @@ function PlaneMark() {
 }
 
 // The map asset's own aspect ratio (2600×1300 = 2:1, a standard
-// equirectangular projection). This drives every percentage below — get
-// this wrong and the pan either shows the same narrow sliver twice (the
-// original bug: `fill`+`object-cover` inside a square box crops a wide
-// image down to its centered slice and both "copies" end up showing that
-// same crop) or drifts out of sync with drag.
+// equirectangular projection). Drives every percentage below — using
+// `fill`+`object-cover` inside a square box instead would crop the wide
+// image down to a centered slice and both "copies" would show the same crop.
 const MAP_ASPECT = 2600 / 1300;
 
 // Two copies sit side by side, each rendered at its natural aspect ratio
 // (height = 100% of the circular window, width = height × MAP_ASPECT, no
-// cropping at all) so each one is the *entire* world map, not a slice of
-// it. The reel's own width is then exactly 2× one copy's width, so
-// translateX(-50%) — 50% of the REEL's own width — pans exactly one full
-// copy across, landing back on an identical starting frame: a seamless loop.
+// cropping) so each one is the entire world map. The reel's width is then
+// exactly 2× one copy's width, so translateX(-50%) pans exactly one full
+// copy across and lands back on an identical starting frame.
 const AUTO_SPEED = 0.015; // % of reel width per frame (~50%/55s ≈ one lap a minute)
 const FRICTION = 0.94;
 const MOMENTUM_FLOOR = 0.004;
@@ -75,11 +72,9 @@ const MOMENTUM_FLOOR = 0.004;
 // of drag = 100/(2×MAP_ASPECT) percent of the reel.
 const REEL_PERCENT_PER_WRAP_WIDTH = 100 / (2 * MAP_ASPECT);
 
-// A real satellite photograph of Earth (NASA Blue Marble source data, via
-// Solar System Scope's CC BY 4.0 day-map texture) panning behind a circular
-// mask — genuine terrain, oceans, and coastlines, not a flat recolored
-// vector map or dot-particle rendering. Two copies sit side by side inside
-// a translating strip so the pan loops seamlessly.
+// Earth texture: NASA Blue Marble source data via Solar System Scope's
+// CC BY 4.0 day-map texture, panning behind a circular mask. Two copies sit
+// side by side inside a translating strip so the pan loops seamlessly.
 export default function Globe() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const reelRef = useRef<HTMLDivElement>(null);
@@ -207,13 +202,10 @@ export default function Globe() {
         role="img"
         aria-label="Satellite view of Earth highlighting Apex's study destinations, including the UK, USA, Canada, Australia, and Ireland"
       >
-        {/* Reel width is intentionally NOT set — with no flex-grow on its
-            children, a flex container sizes to the sum of its children's
-            natural widths, which is exactly what "two full-width map
-            copies side by side" needs. Setting an explicit width here was
-            the other half of the original bug (it forced each copy into a
-            50%-of-200% = 100%-of-square box, which is what made
-            object-cover crop to a sliver in the first place). */}
+        {/* Reel width is intentionally not set — with no flex-grow on its
+            children, the flex container sizes to the sum of its children's
+            natural widths, which is what "two full-width map copies side
+            by side" needs. */}
         <div ref={reelRef} className="absolute inset-y-0 left-0 flex h-full" style={{ willChange: "transform" }}>
           {[0, 1].map((copy) => (
             <div key={copy} className="relative h-full shrink-0">

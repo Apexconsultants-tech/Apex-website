@@ -30,7 +30,7 @@ export default function FaqsPage() {
           <p className="mt-6 text-base leading-relaxed text-ink-soft">
             We understand students often have many questions about studying abroad. Our experts provide
             clear, practical answers. For anything specific to your destination, each{" "}
-            <Link href="/#destinations" className="font-semibold text-brand hover:underline">
+            <Link href="/#destinations" className="font-semibold text-brand-text underline underline-offset-2 hover:decoration-2">
               destination page
             </Link>{" "}
             also has its own FAQ section.
@@ -50,7 +50,7 @@ export default function FaqsPage() {
         <Reveal>
           <div className="rounded-3xl bg-brand px-8 py-10 text-center">
             <h2 className="text-2xl font-semibold text-white">Still have questions?</h2>
-            <p className="mt-2 text-white/80">Talk to a counselor directly, no obligation.</p>
+            <p className="mt-2 text-white/90">Talk to a counselor directly, no obligation.</p>
             <div className="mt-6 flex flex-wrap justify-center gap-3">
               <Link
                 href="/contact-us"

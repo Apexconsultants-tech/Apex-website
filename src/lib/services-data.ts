@@ -1,5 +1,4 @@
-// Real per-service facts extracted from the live apexconsultants.org service
-// pages (crawled 2026-08-09), rewritten to remove em dashes.
+// Per-service facts sourced from Apex's published service pages.
 
 export type ServiceFaq = { q: string; a: string };
 export type ServiceInclude = { title: string; body: string };

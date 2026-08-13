@@ -26,7 +26,14 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       description: post.excerpt,
       url: `/blogs/${slug}`,
       type: "article",
-      images: post.image ? [{ url: post.image }] : undefined,
+      publishedTime: post.isoDate,
+      images: post.image ? [{ url: post.image }] : ["/opengraph-image"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: post.title,
+      description: post.excerpt,
+      images: post.image ? [post.image] : ["/opengraph-image"],
     },
   };
 }
@@ -101,7 +108,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             <ul className="mt-3 space-y-2">
               {post.relatedLinks.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="text-sm font-semibold text-brand hover:underline">
+                  <Link href={l.href} className="text-sm font-semibold text-brand-text hover:underline">
                     {l.label} →
                   </Link>
                 </li>
@@ -133,9 +140,9 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         <div className="mx-auto max-w-3xl px-5 lg:px-8">
           <p className="text-xs font-semibold uppercase tracking-[0.1em] text-ink-faint">Explore more</p>
           <div className="mt-4 flex flex-wrap gap-4">
-            <Link href="/blogs" className="text-sm font-semibold text-brand hover:underline">All articles</Link>
-            <Link href="/courses" className="text-sm font-semibold text-brand hover:underline">Browse courses</Link>
-            <Link href="/partner-universities" className="text-sm font-semibold text-brand hover:underline">Partner universities</Link>
+            <Link href="/blogs" className="text-sm font-semibold text-brand-text hover:underline">All articles</Link>
+            <Link href="/courses" className="text-sm font-semibold text-brand-text hover:underline">Browse courses</Link>
+            <Link href="/partner-universities" className="text-sm font-semibold text-brand-text hover:underline">Partner universities</Link>
           </div>
           {others.length > 0 && (
             <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">
