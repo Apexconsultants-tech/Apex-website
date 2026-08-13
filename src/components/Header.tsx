@@ -46,17 +46,20 @@ export default function Header() {
         </Link>
 
         <nav
-          className="hidden items-center gap-1 rounded-full bg-gradient-to-b from-brand to-brand-deep p-1.5 shadow-sm shadow-brand/20 lg:flex"
+          className="hidden shrink-0 items-center gap-1 rounded-full bg-gradient-to-b from-brand to-brand-deep p-1.5 shadow-sm shadow-brand/20 xl:flex"
           aria-label="Primary"
         >
-          <Link href="/" className="rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15">
+          <Link
+            href="/"
+            className="shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
+          >
             Home
           </Link>
 
-          <div className="group relative">
+          <div className="group relative shrink-0">
             <Link
               href="/#destinations"
-              className="flex items-center gap-1 rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
+              className="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
             >
               Study Abroad
               <ChevronDown />
@@ -76,10 +79,10 @@ export default function Header() {
             </div>
           </div>
 
-          <div className="group relative">
+          <div className="group relative shrink-0">
             <Link
               href="/#services"
-              className="flex items-center gap-1 rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
+              className="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
             >
               What We Do
               <ChevronDown />
@@ -99,18 +102,27 @@ export default function Header() {
             </div>
           </div>
 
-          <Link href="/about-us" className="rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15">
+          <Link
+            href="/about-us"
+            className="shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
+          >
             About Us
           </Link>
-          <Link href="/blogs" className="rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15">
+          <Link
+            href="/blogs"
+            className="shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
+          >
             Blog
           </Link>
-          <Link href="/contact-us" className="rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15">
+          <Link
+            href="/contact-us"
+            className="shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
+          >
             Contact Us
           </Link>
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden shrink-0 items-center gap-3 xl:flex">
           {/* WhatsApp's official bright green (#25D366) is fine here — icon-only,
               so it's judged on graphical contrast, not the stricter 4.5:1 text
               rule. The mobile "Chat on WhatsApp" button below has visible text on
@@ -135,7 +147,7 @@ export default function Header() {
 
         <button
           type="button"
-          className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink lg:hidden"
+          className="flex h-10 w-10 items-center justify-center rounded-full border border-line text-ink xl:hidden"
           aria-expanded={mobileOpen}
           aria-controls="mobile-nav"
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
@@ -146,7 +158,7 @@ export default function Header() {
       </div>
 
       {mobileOpen && (
-        <nav id="mobile-nav" className="border-t border-line bg-surface px-5 pb-6 pt-2 lg:hidden" aria-label="Mobile">
+        <nav id="mobile-nav" className="border-t border-line bg-surface px-5 pb-6 pt-2 xl:hidden" aria-label="Mobile">
           <Link href="/" className="block py-3 text-sm font-medium text-ink" onClick={() => setMobileOpen(false)}>
             Home
           </Link>
