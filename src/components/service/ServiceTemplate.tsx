@@ -43,20 +43,21 @@ export default function ServiceTemplate({ s }: { s: ServiceData }) {
                 </a>
               </div>
             </Reveal>
+            {/* Not wrapped in Reveal: this is the hero/LCP image and must
+                paint immediately rather than wait on hydration + an
+                IntersectionObserver. */}
             {image && (
-              <Reveal delay={140}>
-                <TiltCard className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-line shadow-lg shadow-ink/10" max={4}>
-                  <Image
-                    src={image}
-                    alt={s.name}
-                    fill
-                    priority
-                    sizes="(min-width: 1024px) 45vw, 90vw"
-                    className="object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
-                </TiltCard>
-              </Reveal>
+              <TiltCard className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-line shadow-lg shadow-ink/10" max={4}>
+                <Image
+                  src={image}
+                  alt={s.name}
+                  fill
+                  priority
+                  sizes="(min-width: 1024px) 45vw, 90vw"
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+              </TiltCard>
             )}
           </div>
         </div>

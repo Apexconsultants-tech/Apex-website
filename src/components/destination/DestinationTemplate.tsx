@@ -147,7 +147,12 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
                 </a>
               </div>
             </Reveal>
-            <Reveal delay={140} className="relative">
+            {/* Not wrapped in Reveal: this is the hero/LCP image, so it
+                must paint the instant it's decoded rather than sit at
+                opacity:0 until JS hydrates and an IntersectionObserver
+                fires — that gate was adding a real, visible delay on top
+                of the image's actual load time. */}
+            <div className="relative">
               <TiltCard
                 className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-line shadow-lg shadow-ink/10"
                 max={4}
@@ -172,7 +177,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
                 code={stampCode(d)}
                 className="absolute -bottom-6 -right-4 h-24 w-24 drop-shadow-lg sm:-bottom-8 sm:-right-6 sm:h-28 sm:w-28"
               />
-            </Reveal>
+            </div>
           </div>
         </div>
       </section>

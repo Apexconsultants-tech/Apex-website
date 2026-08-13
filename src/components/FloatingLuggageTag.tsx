@@ -58,7 +58,10 @@ export default function FloatingLuggageTag() {
 
   return (
     <div className="pointer-events-none fixed bottom-6 right-6 z-40 hidden lg:block">
-      <div className="animate-slide-in-right pointer-events-auto relative" style={{ width: W }}>
+      <div
+        className="animate-slide-in-right pointer-events-auto relative"
+        style={{ width: W, filter: "drop-shadow(0 10px 28px rgba(21,128,61,0.35))" }}
+      >
         <button
           type="button"
           onClick={() => {

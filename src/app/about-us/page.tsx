@@ -69,17 +69,17 @@ export default function AboutUsPage() {
               </a>
             </div>
           </Reveal>
-          <Reveal delay={140}>
-            <TiltCard className="overflow-hidden rounded-3xl border border-line" max={4}>
-              <Image
-                src="/images/gallery/best-consultancy-for-abroad-studies.webp"
-                alt="Apex Consulting Services counselors guiding a student"
-                width={800}
-                height={600}
-                className="h-full w-full object-cover"
-              />
-            </TiltCard>
-          </Reveal>
+          {/* Not wrapped in Reveal: hero/LCP image, must paint immediately. */}
+          <TiltCard className="overflow-hidden rounded-3xl border border-line" max={4}>
+            <Image
+              src="/images/gallery/best-consultancy-for-abroad-studies.webp"
+              alt="Apex Consulting Services counselors guiding a student"
+              width={800}
+              height={600}
+              priority
+              className="h-full w-full object-cover"
+            />
+          </TiltCard>
         </div>
       </section>
 

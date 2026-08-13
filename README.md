@@ -107,6 +107,8 @@ for the contact form to send email in production.
 - Destination and service hero photos are resolved by filename convention
   (`src/lib/destination-photos.server.ts`, `src/lib/service-photos.server.ts`)
   so adding a new photo is just adding a correctly named file.
+- See **[CONTENT-GUIDE.md](./CONTENT-GUIDE.md)** for step-by-step instructions
+  on adding testimonials, destinations, universities, and other content.
 
 ## Integrations
 

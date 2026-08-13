@@ -58,18 +58,17 @@ export default function ContactUsPage() {
                 </a>
               </div>
             </Reveal>
-            <Reveal delay={140}>
-              <TiltCard className="overflow-hidden rounded-3xl border border-line shadow-lg shadow-ink/10" max={4}>
-                <Image
-                  src="/images/stock/advisor-consultation.webp"
-                  alt="Apex counselors ready to help with your study abroad questions"
-                  width={1000}
-                  height={667}
-                  priority
-                  className="h-64 w-full object-cover sm:h-80"
-                />
-              </TiltCard>
-            </Reveal>
+            {/* Not wrapped in Reveal: hero/LCP image, must paint immediately. */}
+            <TiltCard className="overflow-hidden rounded-3xl border border-line shadow-lg shadow-ink/10" max={4}>
+              <Image
+                src="/images/stock/advisor-consultation.webp"
+                alt="Apex counselors ready to help with your study abroad questions"
+                width={1000}
+                height={667}
+                priority
+                className="h-64 w-full object-cover sm:h-80"
+              />
+            </TiltCard>
           </div>
         </div>
       </section>
