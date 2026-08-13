@@ -46,7 +46,7 @@ export default function Header() {
         </Link>
 
         <nav
-          className="hidden shrink-0 items-center gap-1 rounded-full bg-gradient-to-b from-brand to-brand-deep p-1.5 shadow-sm shadow-brand/20 xl:flex"
+          className="hidden shrink-0 items-center gap-2 rounded-full bg-gradient-to-b from-brand to-brand-deep p-1.5 shadow-sm shadow-brand/20 xl:flex"
           aria-label="Primary"
         >
           <Link

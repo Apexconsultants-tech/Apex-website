@@ -10,11 +10,13 @@ import { contact } from "@/lib/site-config";
 export default function HeroClassic() {
   return (
     <section className="relative overflow-hidden">
-      {/* Cinematic full-bleed background photo. Everything else in the
-          hero (headline, globe, boarding pass) layers on top of it. */}
+      {/* Cinematic full-bleed background photo — a real, high-resolution
+          airport departure scene rather than a flat brand-tinted
+          background. Everything else in the hero (headline, globe,
+          boarding pass) layers on top of it. */}
       <div className="absolute inset-0">
         <Image
-          src="/images/stock/hero-sky.webp"
+          src="/images/stock/hero-cinematic-bg.webp"
           alt=""
           fill
           priority
@@ -25,13 +27,11 @@ export default function HeroClassic() {
       {/* Readability stack: strong on the left where the headline sits,
           fading out toward the globe on the right so the photo still
           reads as photography rather than disappearing under a flat
-          wash. Lighter than before — the sky photo is uniformly bright,
-          so it doesn't need as heavy a wash to still read as legible
-          behind white text. A faint brand tint keeps it tied to the
-          site's palette, and a bottom fade blends the photo into the
-          page's normal background instead of ending in a hard edge. */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/65 via-black/40 to-black/10" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-black/10" />
+          wash. A faint brand tint keeps it tied to the site's palette,
+          and a bottom fade blends the photo into the page's normal
+          background instead of ending in a hard edge. */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/20" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/10" />
       <div className="pointer-events-none absolute inset-0 bg-brand-deep/10" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[var(--color-paper)]" />
 
@@ -73,7 +73,7 @@ export default function HeroClassic() {
                 beyond the globe's own box, and with CourseFinder sitting
                 right below with a tight top margin, the lowest flags were
                 getting clipped/hidden behind it. */}
-            <div className="relative mx-auto aspect-square w-full max-w-md lg:-mt-16">
+            <div className="relative mx-auto aspect-square w-full max-w-sm lg:-mt-16">
               <div className="animate-float">
                 <Globe />
               </div>
