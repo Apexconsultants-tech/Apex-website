@@ -45,15 +45,18 @@ export default function Header() {
           />
         </Link>
 
-        <nav className="hidden items-center gap-8 lg:flex" aria-label="Primary">
-          <Link href="/" className="text-sm font-medium text-ink-soft transition-colors hover:text-brand">
+        <nav
+          className="hidden items-center gap-1 rounded-full bg-gradient-to-b from-brand to-brand-deep p-1.5 shadow-sm shadow-brand/20 lg:flex"
+          aria-label="Primary"
+        >
+          <Link href="/" className="rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15">
             Home
           </Link>
 
           <div className="group relative">
             <Link
               href="/#destinations"
-              className="flex items-center gap-1 text-sm font-medium text-ink-soft transition-colors hover:text-brand"
+              className="flex items-center gap-1 rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
             >
               Study Abroad
               <ChevronDown />
@@ -76,7 +79,7 @@ export default function Header() {
           <div className="group relative">
             <Link
               href="/#services"
-              className="flex items-center gap-1 text-sm font-medium text-ink-soft transition-colors hover:text-brand"
+              className="flex items-center gap-1 rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
             >
               What We Do
               <ChevronDown />
@@ -96,13 +99,13 @@ export default function Header() {
             </div>
           </div>
 
-          <Link href="/about-us" className="text-sm font-medium text-ink-soft transition-colors hover:text-brand">
+          <Link href="/about-us" className="rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15">
             About Us
           </Link>
-          <Link href="/blogs" className="text-sm font-medium text-ink-soft transition-colors hover:text-brand">
+          <Link href="/blogs" className="rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15">
             Blog
           </Link>
-          <Link href="/contact-us" className="text-sm font-medium text-ink-soft transition-colors hover:text-brand">
+          <Link href="/contact-us" className="rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15">
             Contact Us
           </Link>
         </nav>
