@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
-import { flagSize } from "@/lib/flags";
 
 // Small flag chips that orbit the globe in screen space.
 type OrbitFlagConfig = { code: string; radius: number; duration: number; delay: number; reverse?: boolean };
@@ -29,11 +28,17 @@ function OrbitFlag({ code, radius, duration, delay, reverse }: OrbitFlagConfig) 
     <div className="pointer-events-none absolute" style={{ inset: `${-radius}%`, animationName: outerName, ...timing }}>
       <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
         <div style={{ animationName: innerName, ...timing }}>
+          {/* Fixed box + object-cover for every flag, rather than sizing
+              each to its own aspect ratio (as flagSize does elsewhere on
+              the site) — orbiting chips read as a matched set only if
+              they're actually the same size; a couple of pixels cropped
+              off a wider flag's edges is a fair trade for that here. */}
           <Image
             src={`/images/flags/${code}.svg`}
             alt=""
-            {...flagSize(code, 14)}
-            className="rounded-[2px] border border-white shadow-[0_2px_6px_rgba(20,24,26,0.3)]"
+            width={20}
+            height={14}
+            className="h-3.5 w-5 rounded-[2px] border border-white object-cover shadow-[0_2px_6px_rgba(20,24,26,0.3)]"
           />
         </div>
       </div>
