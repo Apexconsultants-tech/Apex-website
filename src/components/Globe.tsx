@@ -2,17 +2,22 @@
 
 import { useEffect, useRef } from "react";
 import Image from "next/image";
+import { flagSize } from "@/lib/flags";
 
-// Small flag chips that orbit the globe in screen space.
-type OrbitFlagConfig = { code: string; radius: number; duration: number; delay: number; reverse?: boolean };
+// Small flag chips that orbit the globe in screen space, back to one single
+// ring like the original design. nz is dropped in favor of cn — Australia
+// and New Zealand's flags both read as "navy blue with a Union Jack canton"
+// at this size and looked like a duplicate.
+type OrbitFlagConfig = { code: string; radius: number; duration: number; delay: number };
 
-// One radius, one duration, one direction, evenly spaced around a single
-// ring. nz is dropped in favor of cn — Australia and New Zealand's flags
-// both read as "navy blue with a Union Jack canton" at this size and looked
-// like a duplicate.
 const FLAG_CODES = ["gb", "us", "ca", "au", "de", "cn", "fr", "ie"];
 const FLAG_RADIUS = 1.5;
 const FLAG_DURATION = 40;
+// One shared height for every flag — each is still drawn at its own real
+// aspect ratio (via flagSize, the same helper the rest of the site uses)
+// rather than force-cropped into a fixed box, so nothing looks stretched or
+// sliced, but nothing looks bigger or smaller than its neighbors either.
+const FLAG_HEIGHT = 14;
 const ORBIT_FLAGS: OrbitFlagConfig[] = FLAG_CODES.map((code, i) => ({
   code,
   radius: FLAG_RADIUS,
@@ -20,25 +25,19 @@ const ORBIT_FLAGS: OrbitFlagConfig[] = FLAG_CODES.map((code, i) => ({
   delay: -(i * (FLAG_DURATION / FLAG_CODES.length)),
 }));
 
-function OrbitFlag({ code, radius, duration, delay, reverse }: OrbitFlagConfig) {
-  const outerName = reverse ? "orbit-spin-reverse" : "orbit-spin";
-  const innerName = reverse ? "orbit-spin" : "orbit-spin-reverse";
+function OrbitFlag({ code, radius, duration, delay }: OrbitFlagConfig) {
   const timing = { animationDuration: `${duration}s`, animationDelay: `${delay}s`, animationTimingFunction: "linear", animationIterationCount: "infinite" } as const;
+  const { width } = flagSize(code, FLAG_HEIGHT);
   return (
-    <div className="pointer-events-none absolute" style={{ inset: `${-radius}%`, animationName: outerName, ...timing }}>
+    <div className="pointer-events-none absolute" style={{ inset: `${-radius}%`, animationName: "orbit-spin", ...timing }}>
       <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
-        <div style={{ animationName: innerName, ...timing }}>
-          {/* Fixed box + object-cover for every flag, rather than sizing
-              each to its own aspect ratio (as flagSize does elsewhere on
-              the site) — orbiting chips read as a matched set only if
-              they're actually the same size; a couple of pixels cropped
-              off a wider flag's edges is a fair trade for that here. */}
+        <div style={{ animationName: "orbit-spin-reverse", ...timing }}>
           <Image
             src={`/images/flags/${code}.svg`}
             alt=""
-            width={20}
-            height={14}
-            className="h-3.5 w-5 rounded-[2px] border border-white object-cover shadow-[0_2px_6px_rgba(20,24,26,0.3)]"
+            width={width}
+            height={FLAG_HEIGHT}
+            className="block rounded-[2px] border border-white/95 shadow-[0_2px_6px_rgba(20,24,26,0.3)]"
           />
         </div>
       </div>
@@ -103,7 +102,7 @@ export default function Globe() {
       // Keep offset within [0, 50) — 50% of the reel is exactly one copy,
       // the seam where it can wrap without a visible jump.
       offset = ((offset % 50) + 50) % 50;
-      if (reel) reel.style.transform = `translateX(-${offset}%)`;
+      if (reel) reel.style.transform = `translate3d(-${offset}%, 0, 0)`;
     }
     apply();
 

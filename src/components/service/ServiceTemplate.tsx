@@ -126,7 +126,7 @@ export default function ServiceTemplate({ s }: { s: ServiceData }) {
           <h2 className="mt-1 text-xl font-semibold text-ink">Other services</h2>
           <div className="mt-5 flex flex-wrap gap-2">
             <Link
-              href="/partner-universities"
+              href="/#partner-logos"
               className="rounded-full border border-line bg-surface px-4 py-2 text-xs font-medium text-ink-soft transition-colors hover:border-brand hover:text-brand"
             >
               Partner Universities

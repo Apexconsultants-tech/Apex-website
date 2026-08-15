@@ -52,7 +52,7 @@ export default function CoursesBrowser() {
         {filtered.map((c) => (
           <TiltCard key={c.slug} className="h-full" max={4}>
             <Link
-              href={`/partner-universities/${c.universitySlug}`}
+              href="/contact-us"
               className="block h-full rounded-2xl border border-line bg-surface p-5 transition-shadow hover:shadow-lg hover:shadow-ink/5"
             >
               <p className="text-sm font-semibold text-ink">{c.name}</p>

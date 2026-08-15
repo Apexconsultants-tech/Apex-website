@@ -1,6 +1,7 @@
 ﻿import Image from "next/image";
 import Link from "next/link";
 import { contact, destinations, icef, offices, site, socials } from "@/lib/site-config";
+import { flagSize } from "@/lib/flags";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -8,16 +9,18 @@ export default function Footer() {
   return (
     <footer className="border-t border-line bg-surface">
       <div className="mx-auto max-w-7xl px-5 py-14 lg:px-8">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
-          <div>
-            <Image
-              src="/images/brand/apex-logo.webp"
-              alt="Apex Consulting Services"
-              width={168}
-              height={32}
-              unoptimized
-              className="h-8 w-auto"
-            />
+        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-12">
+          <div className="lg:col-span-3">
+            <Link href="/" aria-label="Apex Consulting Services home">
+              <Image
+                src="/images/brand/apex-logo.webp"
+                alt="Apex Consulting Services"
+                width={1520}
+                height={283}
+                unoptimized
+                className="h-8 w-auto"
+              />
+            </Link>
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-soft">
               Trusted overseas education consultancy since {site.foundedYear}. Admissions, visas, and
               student support from Pakistan to the world.
@@ -54,33 +57,39 @@ export default function Footer() {
             </a>
           </div>
 
-          <div>
+          <div className="lg:col-span-2">
             <h3 className="text-xs font-semibold uppercase tracking-wide text-ink-faint">Important Links</h3>
             <ul className="mt-4 space-y-2.5 text-sm text-ink-soft">
               <li><Link href="/about-us" className="hover:text-brand">About Us</Link></li>
               <li><Link href="/#services" className="hover:text-brand">Our Services</Link></li>
-              <li><Link href="/#destinations" className="hover:text-brand">Study Destinations</Link></li>
-              <li><Link href="/partner-universities" className="hover:text-brand">Partner Universities</Link></li>
+              <li><Link href="/destinations" className="hover:text-brand">Study Destinations</Link></li>
+              <li><Link href="/#partner-logos" className="hover:text-brand">Partner Universities</Link></li>
               <li><Link href="/success-stories" className="hover:text-brand">Success Stories</Link></li>
               <li><Link href="/faqs" className="hover:text-brand">FAQs</Link></li>
               <li><Link href="/contact-us" className="hover:text-brand">Contact Us</Link></li>
             </ul>
           </div>
 
-          <div>
+          <div className="lg:col-span-4">
             <h3 className="text-xs font-semibold uppercase tracking-wide text-ink-faint">Study Destinations</h3>
-            <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2.5 text-sm text-ink-soft">
-              {destinations.slice(0, 10).map((d) => (
+            <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-ink-soft sm:grid-cols-3">
+              {destinations.map((d) => (
                 <li key={d.slug}>
-                  <Link href={`/${d.slug}`} className="hover:text-brand">
-                    {d.short}
+                  <Link href={`/${d.slug}`} className="flex items-center gap-1.5 hover:text-brand">
+                    <Image
+                      src={`/images/flags/${d.flag}.svg`}
+                      alt=""
+                      {...flagSize(d.flag, 10)}
+                      className="shrink-0 rounded-[1px]"
+                    />
+                    <span className="truncate">{d.short}</span>
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div>
+          <div className="lg:col-span-3">
             <h3 className="text-xs font-semibold uppercase tracking-wide text-ink-faint">Contact Us</h3>
             <ul className="mt-4 space-y-3 text-sm text-ink-soft">
               {offices.slice(0, 2).map((o) => (

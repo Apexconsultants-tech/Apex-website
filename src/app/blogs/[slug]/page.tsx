@@ -142,7 +142,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           <div className="mt-4 flex flex-wrap gap-4">
             <Link href="/blogs" className="text-sm font-semibold text-brand-text hover:underline">All articles</Link>
             <Link href="/courses" className="text-sm font-semibold text-brand-text hover:underline">Browse courses</Link>
-            <Link href="/partner-universities" className="text-sm font-semibold text-brand-text hover:underline">Partner universities</Link>
+            <Link href="/#partner-logos" className="text-sm font-semibold text-brand-text hover:underline">Partner universities</Link>
           </div>
           {others.length > 0 && (
             <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2">

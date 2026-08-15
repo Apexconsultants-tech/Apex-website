@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 const DISMISS_KEY = "apex-luggage-tag-dismissed";
-const SHOW_AFTER_PX = 500;
+const SHOW_AFTER_MS = 900;
 
 // Card geometry, shared between the SVG outline and the HTML content
 // layered on top of it, so the perforation notches and the dashed divider
@@ -33,7 +33,8 @@ const CARD_PATH = `
 `.trim();
 
 // A luggage-tag-turned-boarding-ticket CTA that slides in from the right
-// once the visitor has actually scrolled into the page, not on arrival.
+// shortly after the page opens, every time, rather than waiting on a scroll
+// threshold that made it appear inconsistently between pages/sessions.
 // Desktop only — the mobile StickyContactBar already owns the bottom of
 // small screens. Once dismissed, it stays dismissed for the session.
 export default function FloatingLuggageTag() {
@@ -44,14 +45,8 @@ export default function FloatingLuggageTag() {
 
   useEffect(() => {
     if (dismissed) return;
-    function onScroll() {
-      if (window.scrollY > SHOW_AFTER_PX) {
-        setVisible(true);
-        window.removeEventListener("scroll", onScroll);
-      }
-    }
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const timer = setTimeout(() => setVisible(true), SHOW_AFTER_MS);
+    return () => clearTimeout(timer);
   }, [dismissed]);
 
   if (dismissed || !visible) return null;

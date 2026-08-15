@@ -45,10 +45,11 @@ export default function HeroClassic() {
               Where Futures <span className="text-brand-tint">Cross Continents</span>
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-white/90 sm:text-lg">
-              Since 2009, Apex Consulting Services has guided students from Karachi, Hyderabad, and
-              beyond into leading universities in the UK, USA, Canada, Australia, and more. As
-              ICEF-certified overseas education consultants, we build the right plan for your future,
-              from your first consultation to the day you land abroad.
+              Dreaming of a degree abroad but not sure where to even start? You&apos;re not alone, and
+              you don&apos;t have to figure it out by yourself. Since 2009, we&apos;ve walked students
+              from Karachi, Hyderabad, and beyond through every step, picking the right course,
+              acing the visa interview, and settling into life on a new campus, as ICEF-certified
+              consultants who stay with you from your first conversation to the day you land.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
@@ -68,12 +69,8 @@ export default function HeroClassic() {
             </div>
           </Reveal>
 
-          <Reveal delay={120}>
-            {/* Nudged up a bit: the orbiting flag chips ring slightly
-                beyond the globe's own box, and with CourseFinder sitting
-                right below with a tight top margin, the lowest flags were
-                getting clipped/hidden behind it. */}
-            <div className="relative mx-auto aspect-square w-full max-w-sm lg:-mt-16">
+          <Reveal delay={120} className="flex items-center justify-center">
+            <div className="relative mx-auto aspect-square w-full max-w-xs sm:max-w-sm lg:max-w-md">
               <div className="animate-float">
                 <Globe />
               </div>
@@ -81,7 +78,16 @@ export default function HeroClassic() {
           </Reveal>
         </div>
 
-        <Reveal delay={200} className="mt-6 lg:mt-2">
+        <Reveal delay={200} className="relative z-10 mt-20 lg:mt-24">
+          <div className="mb-6 flex flex-col items-center text-center">
+            <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] text-brand-deep shadow-lg shadow-black/10">
+              <SearchGlyph />
+              Course Finder
+            </span>
+            <h2 className="mt-4 max-w-xl text-2xl font-semibold leading-tight text-white sm:text-3xl">
+              Not sure where to start? <span className="text-brand-tint">Find your perfect course</span> in seconds
+            </h2>
+          </div>
           <CourseFinder />
         </Reveal>
 
@@ -90,5 +96,14 @@ export default function HeroClassic() {
         </Reveal>
       </div>
     </section>
+  );
+}
+
+function SearchGlyph() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2.2" />
+      <path d="m21 21-4.35-4.35" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+    </svg>
   );
 }

@@ -252,7 +252,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
                 </div>
               ))}
             </div>
-            <Link href="/partner-universities" className="mt-4 inline-flex text-sm font-semibold text-brand-text hover:underline">
+            <Link href="/#partner-logos" className="mt-4 inline-flex text-sm font-semibold text-brand-text hover:underline">
               View all partner universities →
             </Link>
           </Reveal>

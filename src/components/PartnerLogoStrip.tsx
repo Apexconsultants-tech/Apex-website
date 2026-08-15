@@ -1,56 +1,61 @@
 import Image from "next/image";
-import Link from "next/link";
 import SectionHeading from "@/components/SectionHeading";
 import Reveal from "@/components/Reveal";
-import { featuredPartnerLogos } from "@/lib/partner-logo-data";
+import { partnerLogos } from "@/lib/partner-logo-data";
 
-// Homepage trust strip: the most recognizable names from the partner logo
-// set Apex supplied, sliding in an infinite marquee (list is duplicated so
-// the loop is seamless). The full set (48 institutions) lives on the
-// partner-universities page — this is a curated subset, not the whole list.
-const marqueeLogos = [...featuredPartnerLogos, ...featuredPartnerLogos];
+// Homepage trust strip, styled after a competitor reference site's "Popular
+// and Partner Universities" section: a full-bleed tinted band with three
+// stacked marquee rows of plain logos, no per-logo card/border/shadow — see
+// reference-timesconsultant-competitor in project memory. Every logo sits in
+// an identically-sized frame (object-contain, not natural aspect ratio) so
+// a square emblem and a wide wordmark read as the same visual size instead
+// of the wordmark dominating; only the handful of white-only marks
+// (darkLogo: true, pulled from a dark website header) get an invert filter
+// instead of a background chip, so nothing needs a box.
+const rows: (typeof partnerLogos)[] = [[], [], []];
+partnerLogos.forEach((u, i) => rows[i % 3].push(u));
+const marqueeRows = rows.map((row) => [...row, ...row]);
+const rowDurations = ["70s", "85s", "100s"];
 
 export default function PartnerLogoStrip() {
   return (
-    <section className="border-t border-line py-20">
-      <div className="mx-auto max-w-7xl px-5 lg:px-8">
+    <section id="partner-logos" className="scroll-mt-20">
+      <div className="mx-auto max-w-7xl px-5 pt-20 lg:px-8">
         <Reveal>
           <SectionHeading
             eyebrow="Trusted network"
             title="Partner Universities"
-            lead="A selection of the universities we work with as an authorized representative, across the UK, USA, and Australia."
+            lead="The universities and institutions we work with as an authorized representative, across the UK, USA, Australia, Germany, and Ireland."
           />
         </Reveal>
-        <Reveal
-          delay={100}
-          className="relative mt-10 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
-        >
-          <div className="flex w-max animate-marquee gap-5" aria-hidden="true">
-            {marqueeLogos.map((u, i) => (
-              <div
-                key={`${u.slug}-${i}`}
-                className="flex h-36 w-56 shrink-0 flex-col items-center justify-center gap-4 rounded-2xl border border-line bg-surface p-6 text-center shadow-sm shadow-ink/[0.03] transition-shadow hover:shadow-lg hover:shadow-ink/[0.06]"
-              >
-                <Image
-                  src={`/images/university-logos/${u.logo}`}
-                  alt={u.name}
-                  width={200}
-                  height={80}
-                  className="h-16 w-auto max-w-[180px] object-contain"
-                />
-                <p className="text-xs font-medium leading-snug text-ink-soft">{u.name}</p>
-              </div>
-            ))}
-          </div>
-        </Reveal>
-        <Reveal delay={200} className="mt-8 text-center">
-          <Link
-            href="/partner-universities"
-            className="inline-flex rounded-full border border-line px-6 py-2.5 text-sm font-semibold text-ink transition-all hover:-translate-y-0.5 hover:border-brand hover:text-brand"
+      </div>
+      <div className="mt-10 space-y-14 bg-brand-tint/50 py-10">
+        {marqueeRows.map((row, r) => (
+          <Reveal
+            key={r}
+            delay={r * 100}
+            className="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
           >
-            View all partner universities →
-          </Link>
-        </Reveal>
+            <div
+              className="flex w-max animate-marquee items-center gap-6"
+              style={{ animationDuration: rowDurations[r], willChange: "transform" }}
+              aria-hidden="true"
+            >
+              {row.map((u, i) => (
+                <div key={`${u.slug}-${i}`} className="flex h-12 w-32 shrink-0 items-center justify-center sm:h-14 sm:w-36">
+                  <Image
+                    src={`/images/university-logos/${u.logo}`}
+                    alt={u.name}
+                    width={200}
+                    height={64}
+                    loading="eager"
+                    className={u.darkLogo ? "aspect-auto h-full w-full object-contain invert" : "aspect-auto h-full w-full object-contain"}
+                  />
+                </div>
+              ))}
+            </div>
+          </Reveal>
+        ))}
       </div>
     </section>
   );

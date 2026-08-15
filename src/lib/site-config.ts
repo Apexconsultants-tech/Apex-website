@@ -1,8 +1,8 @@
 // Central source of truth for Apex Consulting Services facts: contact
 // details, offices, stats, and site copy. Figures here are the client's
 // published information, not placeholders — confirm with Apex before
-// changing them. See destinations-data.ts, services-data.ts, and
-// universities-data.ts for the larger structured content sets.
+// changing them. See destinations-data.ts and services-data.ts for the
+// larger structured content sets.
 
 import { destinations as destinationList } from "./destinations-data";
 import { services as serviceList } from "./services-data";
@@ -23,7 +23,7 @@ export const contact = {
   phoneHref: "tel:+923346668227",
   whatsappHref: "https://api.whatsapp.com/send/?phone=923346668227&text=Hi&type=phone_number",
   email: "info@apexconsultants.org",
-  hours: "Monday to Friday, 9am to 5pm",
+  hours: "Monday to Friday, 10am to 6pm",
 };
 
 export const socials = {
@@ -208,7 +208,7 @@ export const destinations = destinationList.map((d) => ({
 
 export const serviceLinks = [
   ...serviceList.map((s) => ({ label: s.name, slug: s.slug })),
-  { label: "Partner Universities", slug: "partner-universities" },
+  { label: "Partner Universities", slug: "#partner-logos" },
   { label: "Courses", slug: "courses" },
 ] as const;
 

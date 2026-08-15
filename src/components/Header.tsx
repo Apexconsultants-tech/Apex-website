@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { contact, destinations, serviceLinks } from "@/lib/site-config";
+import { flagSize } from "@/lib/flags";
 
 const primaryDestinations = destinations.slice(0, 8);
 
@@ -28,20 +29,25 @@ export default function Header() {
           <Image
             src="/images/brand/apex-icon.webp"
             alt=""
-            width={88}
-            height={91}
+            width={224}
+            height={283}
             priority
             unoptimized
             className="h-14 w-auto sm:h-[62px] lg:h-[68px]"
           />
+          {/* Sized by width, not height: this mark's font is proportionally
+              wider than the old wordmark's, so a fixed height alone would
+              render it ~100px wider than before and push the nav into
+              overflow at in-between viewport widths. Matching the old
+              wordmark's actual footprint keeps the header layout stable. */}
           <Image
             src="/images/brand/apex-wordmark.webp"
             alt=""
-            width={388}
-            height={91}
+            width={1228}
+            height={191}
             priority
             unoptimized
-            className="h-10 w-auto sm:h-11 lg:h-12"
+            className="h-auto w-[170px] sm:w-[188px] lg:w-[205px]"
           />
         </Link>
 
@@ -58,7 +64,7 @@ export default function Header() {
 
           <div className="group relative shrink-0">
             <Link
-              href="/#destinations"
+              href="/destinations"
               className="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
             >
               Study Abroad
@@ -70,8 +76,14 @@ export default function Header() {
                   <Link
                     key={d.slug}
                     href={`/${d.slug}`}
-                    className="rounded-md px-2 py-1.5 text-sm text-ink-soft transition-colors hover:bg-brand-tint hover:text-brand"
+                    className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-ink-soft transition-colors hover:bg-brand-tint hover:text-brand"
                   >
+                    <Image
+                      src={`/images/flags/${d.flag}.svg`}
+                      alt=""
+                      {...flagSize(d.flag, 12)}
+                      className="shrink-0 rounded-[1px]"
+                    />
                     {d.name}
                   </Link>
                 ))}
@@ -178,14 +190,20 @@ export default function Header() {
                 <Link
                   key={d.slug}
                   href={`/${d.slug}`}
-                  className="rounded-md px-2 py-2 text-sm text-ink-soft"
+                  className="flex items-center gap-2 rounded-md px-2 py-2 text-sm text-ink-soft"
                   onClick={() => setMobileOpen(false)}
                 >
+                  <Image
+                    src={`/images/flags/${d.flag}.svg`}
+                    alt=""
+                    {...flagSize(d.flag, 12)}
+                    className="shrink-0 rounded-[1px]"
+                  />
                   {d.short}
                 </Link>
               ))}
               <Link
-                href="/#destinations"
+                href="/destinations"
                 className="col-span-2 rounded-md px-2 py-2 text-sm font-medium text-brand-text"
                 onClick={() => setMobileOpen(false)}
               >

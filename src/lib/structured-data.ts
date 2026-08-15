@@ -42,7 +42,7 @@ export function localBusinessJsonLd() {
       streetAddress: karachi.address,
       addressCountry: "PK",
     },
-    openingHours: "Mo-Fr 09:00-17:00",
+    openingHours: "Mo-Fr 10:00-18:00",
   };
 }
 

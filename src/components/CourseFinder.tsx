@@ -1,18 +1,48 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { destinations } from "@/lib/destinations-data";
 import { courseCountries, courses } from "@/lib/courses-data";
 
-const LEVELS = ["Bachelor's", "Master's", "PhD", "Diploma"];
+const LEVEL_GROUPS = [
+  {
+    group: "Undergraduate",
+    options: [
+      "Post-Secondary Certificate",
+      "Undergraduate Diploma",
+      "3-Year Bachelor's Degree",
+      "Top-up Degree",
+      "4-Year Bachelor's Degree",
+      "Integrated Master's",
+    ],
+  },
+  {
+    group: "Postgraduate",
+    options: ["Postgraduate Certificate", "Postgraduate Diploma", "Doctoral / PhD", "Non-Credential", "Master's Degree"],
+  },
+  {
+    group: "Elementary & High School",
+    options: Array.from({ length: 12 }, (_, i) => `Grade ${i + 1}`),
+  },
+];
 const FIELDS = [
   "Business & Management",
   "Engineering",
   "Computer Science & IT",
+  "Data Science & Analytics",
   "Medicine & Health Sciences",
+  "Nursing",
   "Law",
   "Arts & Design",
+  "Architecture & Construction",
+  "Hospitality & Tourism",
+  "Social Sciences",
+  "Psychology",
+  "Education & Teaching",
+  "Finance & Accounting",
+  "Media & Communication",
+  "Environmental Science & Agriculture",
 ];
 const INTAKES = ["Fall 2026", "Spring 2027", "Fall 2027", "Not sure yet"];
 const BUDGETS = ["Under $15,000/yr", "$15,000–$30,000/yr", "$30,000+/yr", "Not sure yet"];
@@ -108,8 +138,7 @@ export default function CourseFinder() {
 
       <div className="grid grid-cols-1 gap-0 sm:grid-cols-3">
         <FinderField label="Destination" borderClass="sm:border-r sm:border-dashed sm:border-black">
-          <FinderSelect
-            label="Destination"
+          <FlatDropdown
             value={destination}
             onChange={setDestination}
             options={destinations.map((d) => ({ value: d.slug, label: d.name }))}
@@ -117,19 +146,19 @@ export default function CourseFinder() {
           />
         </FinderField>
         <FinderField label="Class" borderClass="sm:border-r sm:border-dashed sm:border-black">
-          <FinderSelect label="Class" value={level} onChange={setLevel} options={LEVELS.map((l) => ({ value: l, label: l }))} placeholder="Any level" />
+          <LevelSelect value={level} onChange={setLevel} />
         </FinderField>
         <FinderField label="Route" borderClass="">
-          <FinderSelect label="Route" value={field} onChange={setField} options={FIELDS.map((f) => ({ value: f, label: f }))} placeholder="Any field" />
+          <FlatDropdown value={field} onChange={setField} options={FIELDS.map((f) => ({ value: f, label: f }))} placeholder="Any field" />
         </FinderField>
       </div>
 
       <div className="grid grid-cols-1 gap-0 border-t border-dashed border-black sm:grid-cols-[1fr_1fr_auto]">
         <FinderField label="Intake" borderClass="sm:border-r sm:border-dashed sm:border-black">
-          <FinderSelect label="Intake" value={intake} onChange={setIntake} options={INTAKES.map((i) => ({ value: i, label: i }))} placeholder="When?" />
+          <FlatDropdown value={intake} onChange={setIntake} options={INTAKES.map((i) => ({ value: i, label: i }))} placeholder="When?" />
         </FinderField>
         <FinderField label="Budget" borderClass="sm:border-r sm:border-dashed sm:border-black">
-          <FinderSelect label="Budget" value={budget} onChange={setBudget} options={BUDGETS.map((b) => ({ value: b, label: b }))} placeholder="Any budget" />
+          <FlatDropdown value={budget} onChange={setBudget} options={BUDGETS.map((b) => ({ value: b, label: b }))} placeholder="Any budget" />
         </FinderField>
         <div className="flex items-center p-3 sm:p-2">
           <button
@@ -171,39 +200,152 @@ function FinderField({
 }) {
   return (
     <div className={`border-b border-dashed border-black px-5 py-3 last:border-b-0 sm:border-b-0 ${borderClass}`}>
-      <span className="block text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-faint">{label}</span>
+      <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-text">{label}</span>
       {children}
     </div>
   );
 }
 
-function FinderSelect({
-  label,
+// Shared close-on-outside-click/Escape behavior for the custom dropdowns
+// below (not a native <select> — see LevelSelect's comment for why).
+function useDropdownClose(open: boolean, close: () => void) {
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    function onPointerDown(e: PointerEvent) {
+      if (rootRef.current && !rootRef.current.contains(e.target as Node)) close();
+    }
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") close();
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open, close]);
+
+  return rootRef;
+}
+
+// Custom dropdown (not a native <select>) for the level field — native
+// <optgroup> can't be given a background tint or extra spacing between
+// groups in any cross-browser way, and the ask here is specifically for the
+// UG/PG/school group headers to read as distinct light-green-tinted
+// sections with a full line of breathing room between them. The panel
+// scrolls internally past a max height so a long list never overflows the
+// page or gets clipped by whatever sits below it.
+function LevelSelect({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useDropdownClose(open, () => setOpen(false));
+
+  return (
+    <div ref={rootRef} className="relative mt-1">
+      <button
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+        className="flex w-full items-center justify-between gap-2 bg-transparent py-1 text-left text-sm font-medium text-ink focus:outline-none"
+      >
+        <span className={value ? "" : "text-ink-faint"}>{value || "Any level"}</span>
+        <ChevronIcon className={`shrink-0 text-ink-faint transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+
+      {open && (
+        <div
+          role="listbox"
+          className="absolute left-0 top-full z-20 mt-2 max-h-80 w-72 overflow-y-auto rounded-xl border border-line bg-surface p-2 shadow-xl shadow-ink/10"
+        >
+          {LEVEL_GROUPS.map((g, gi) => (
+            <div key={g.group} className={gi > 0 ? "mt-4" : ""}>
+              <div className="rounded-md bg-brand-tint px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-brand-text">
+                {g.group}
+              </div>
+              <div className="mt-1">
+                {g.options.map((o) => (
+                  <button
+                    key={o}
+                    type="button"
+                    role="option"
+                    aria-selected={value === o}
+                    onClick={() => {
+                      onChange(o);
+                      setOpen(false);
+                    }}
+                    className={`block w-full rounded-md px-2 py-1.5 text-left text-sm transition-colors ${
+                      value === o ? "bg-brand-tint font-semibold text-brand-text" : "text-ink hover:bg-surface-2"
+                    }`}
+                  >
+                    {o}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Same idea as LevelSelect but for flat (non-grouped) lists — Destination,
+// Route, Intake, and Budget.
+function FlatDropdown({
   value,
   onChange,
   options,
   placeholder,
 }: {
-  label: string;
   value: string;
   onChange: (v: string) => void;
   options: { value: string; label: string }[];
   placeholder: string;
 }) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useDropdownClose(open, () => setOpen(false));
+  const selected = options.find((o) => o.value === value);
+
   return (
-    <select
-      aria-label={label}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="mt-1 w-full appearance-none bg-transparent py-1 text-sm font-medium text-ink focus:outline-none"
-    >
-      <option value="">{placeholder}</option>
-      {options.map((o) => (
-        <option key={o.value} value={o.value}>
-          {o.label}
-        </option>
-      ))}
-    </select>
+    <div ref={rootRef} className="relative mt-1">
+      <button
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen((o) => !o)}
+        className="flex w-full items-center justify-between gap-2 bg-transparent py-1 text-left text-sm font-medium text-ink focus:outline-none"
+      >
+        <span className={selected ? "" : "text-ink-faint"}>{selected ? selected.label : placeholder}</span>
+        <ChevronIcon className={`shrink-0 text-ink-faint transition-transform ${open ? "rotate-180" : ""}`} />
+      </button>
+
+      {open && (
+        <div
+          role="listbox"
+          className="absolute left-0 top-full z-20 mt-2 max-h-80 w-64 overflow-y-auto rounded-xl border border-line bg-surface p-2 shadow-xl shadow-ink/10"
+        >
+          {options.map((o) => (
+            <button
+              key={o.value}
+              type="button"
+              role="option"
+              aria-selected={value === o.value}
+              onClick={() => {
+                onChange(o.value);
+                setOpen(false);
+              }}
+              className={`block w-full rounded-md px-2 py-1.5 text-left text-sm transition-colors ${
+                value === o.value ? "bg-brand-tint font-semibold text-brand-text" : "text-ink hover:bg-surface-2"
+              }`}
+            >
+              {o.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -220,6 +362,14 @@ function PlaneIcon() {
   return (
     <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5Z" />
+    </svg>
+  );
+}
+
+function ChevronIcon({ className }: { className?: string }) {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <path d="m6 9 6 6 6-6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }

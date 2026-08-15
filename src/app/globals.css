@@ -107,7 +107,7 @@ summary:focus-visible {
 }
 
 .animate-marquee {
-  animation: marquee 32s linear infinite;
+  animation: marquee 90s linear infinite;
 }
 
 /* Same 0 → -50% loop as .animate-marquee, just slower — testimonial cards
@@ -189,13 +189,27 @@ summary:focus-visible {
   transform: translate(0, 0) scale(1);
 }
 
+/* A true sine curve rather than 2 ease-in-out segments — a single midpoint
+   keyframe (0 / -10 / 0) eases in and out twice, once into 50% and once out
+   of it, which reads as a slow-fast-slow-fast-slow stutter rather than one
+   continuous bob. These extra stops trace translateY = -5*(1-cos(2*pi*t)),
+   so with linear interpolation between them the motion is only ever
+   slowing near the very top and bottom, same as real floating. */
 @keyframes float-slow {
-  0%, 100% { transform: translateY(0px); }
+  0% { transform: translateY(0px); }
+  12.5% { transform: translateY(-1.5px); }
+  25% { transform: translateY(-5px); }
+  37.5% { transform: translateY(-8.5px); }
   50% { transform: translateY(-10px); }
+  62.5% { transform: translateY(-8.5px); }
+  75% { transform: translateY(-5px); }
+  87.5% { transform: translateY(-1.5px); }
+  100% { transform: translateY(0px); }
 }
 
 .animate-float {
-  animation: float-slow 6s ease-in-out infinite;
+  animation: float-slow 7s linear infinite;
+  will-change: transform;
 }
 
 @keyframes globe-in {

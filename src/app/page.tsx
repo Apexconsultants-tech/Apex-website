@@ -1,5 +1,6 @@
 ﻿import Image from "next/image";
 import Link from "next/link";
+import AccreditationsStrip from "@/components/AccreditationsStrip";
 import FaqAccordion from "@/components/FaqAccordion";
 import HeroClassic from "@/components/HeroClassic";
 import IcefSection from "@/components/IcefSection";
@@ -126,8 +127,8 @@ export default function HomePage() {
               <p className="mt-1 text-sm text-white/90">Offices in Karachi, Hyderabad, and the UK</p>
             </TiltCard>
             <TiltCard className="rounded-2xl border border-line bg-surface-2 p-6 shadow-sm shadow-ink/[0.03]" max={5}>
-              <p className="font-display text-3xl font-semibold text-ink">19</p>
-              <p className="mt-1 text-sm text-ink-soft">Dedicated destination guides</p>
+              <p className="font-display text-3xl font-semibold text-ink">1000+</p>
+              <p className="mt-1 text-sm text-ink-soft">University partners</p>
             </TiltCard>
             <TiltCard className="mt-8 rounded-2xl border border-line bg-surface p-6 shadow-sm shadow-ink/[0.03]" max={5}>
               <p className="font-display text-3xl font-semibold text-ink">ICEF</p>
@@ -203,7 +204,7 @@ export default function HomePage() {
           </div>
           <Reveal delay={200} className="mt-8 text-center">
             <Link
-              href="/partner-universities"
+              href="/destinations"
               className="inline-flex rounded-full border border-white/30 px-6 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:border-white"
             >
               View all destinations
@@ -310,7 +311,7 @@ export default function HomePage() {
           {/* Left: boarding-pass style — browse destinations */}
           <div className="card-left lg:mt-6">
             <Link
-              href="/partner-universities"
+              href="/destinations"
               className="group relative flex h-full flex-col overflow-hidden rounded-2xl border-2 border-dashed border-line bg-surface px-6 py-6 shadow-md shadow-ink/[0.04] transition-all hover:-translate-y-1 hover:border-brand hover:shadow-xl hover:shadow-ink/10"
             >
               <div className="flex items-center justify-between border-b border-dashed border-line pb-4">
@@ -380,6 +381,8 @@ export default function HomePage() {
           </div>
         </ScrollPopGroup>
       </section>
+
+      <AccreditationsStrip />
 
       {/* Testimonials */}
       <section className="mx-auto max-w-7xl px-5 py-20 lg:px-8">
