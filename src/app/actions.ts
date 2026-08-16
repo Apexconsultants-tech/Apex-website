@@ -1,6 +1,7 @@
 "use server";
 
 import { isMailerConfigured, sendEnquiryEmail } from "@/lib/mailer";
+import { contactFormDestinations } from "@/lib/site-config";
 
 export type EnquiryState = {
   status: "idle" | "success" | "error";
@@ -26,11 +27,18 @@ export async function submitEnquiry(_prevState: EnquiryState, formData: FormData
 
   const fieldErrors: EnquiryState["fieldErrors"] = {};
   if (!firstName) fieldErrors.firstName = "Enter your first name.";
+  else if (firstName.length > 100) fieldErrors.firstName = "First name is too long.";
   if (!lastName) fieldErrors.lastName = "Enter your last name.";
+  else if (lastName.length > 100) fieldErrors.lastName = "Last name is too long.";
   if (!email || !EMAIL_RE.test(email)) fieldErrors.email = "Enter a valid email address.";
+  else if (email.length > 255) fieldErrors.email = "Email address is too long.";
   if (!mobile || mobile.replace(/\D/g, "").length < 7) fieldErrors.mobile = "Enter a valid mobile number.";
+  else if (mobile.length > 15) fieldErrors.mobile = "Mobile number is too long.";
   if (!destination) fieldErrors.destination = "Select a preferred destination.";
+  else if (!(contactFormDestinations as readonly string[]).includes(destination))
+    fieldErrors.destination = "Select a valid destination from the list.";
   if (!message || message.length < 10) fieldErrors.message = "Tell us a little more (at least 10 characters).";
+  else if (message.length > 2000) fieldErrors.message = "Message is too long (max 2000 characters).";
   if (!consent) fieldErrors.message = fieldErrors.message || "Please confirm consent to be contacted.";
 
   if (Object.keys(fieldErrors).length > 0) {
@@ -40,15 +48,13 @@ export async function submitEnquiry(_prevState: EnquiryState, formData: FormData
   const payload = { firstName, lastName, email, mobile, destination, message };
 
   if (!isMailerConfigured()) {
-    // Pre-launch state: SMTP_USER / SMTP_PASS aren't set yet, so we can't
-    // actually deliver mail via Hostinger. Nothing is silently discarded,
-    // the validated enquiry is logged server-side so it's still visible
-    // during development, and the UI is honest with the visitor.
-    console.warn("[contact] SMTP not configured, logging enquiry instead of sending:", payload);
+    // SMTP env vars aren't set. The enquiry is logged server-side so it's
+    // not silently lost, but the visitor must never be told this succeeded
+    // — no email was actually sent, so this is an error state.
+    console.error("[contact] SMTP not configured, enquiry NOT sent:", payload);
     return {
-      status: "success",
-      message:
-        "Thanks, your enquiry was received. (Email delivery isn't configured yet; this submission was logged on the server.)",
+      status: "error",
+      message: "Sorry, we couldn't send your enquiry right now. Please call or WhatsApp us directly.",
     };
   }
 

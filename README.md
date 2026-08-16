@@ -74,16 +74,19 @@ The site runs at `http://localhost:3000`.
 ## Environment variables
 
 Copy `.env.example` to `.env.local` and fill in real values for local SMTP
-testing. All are optional in development: without them, the contact form
-still validates submissions and logs them server-side instead of emailing.
+testing. The mailbox is hosted on HostGator/cPanel — see the comments in
+`.env.example` for exactly where to find each value. Without these set, the
+contact form still validates submissions and logs them server-side, but
+correctly returns an error to the visitor rather than claiming the enquiry
+was sent — no email is delivered until they're configured.
 
 | Variable           | Purpose                                    |
 | ------------------ | ------------------------------------------- |
-| `SMTP_HOST`         | SMTP server host (defaults to Hostinger)    |
+| `SMTP_HOST`         | SMTP server host (no default — must be set; see `.env.example`) |
 | `SMTP_PORT`          | SMTP port (defaults to `465`)                |
-| `SMTP_USER`           | SMTP account username                        |
+| `SMTP_USER`           | SMTP account username (the full mailbox address) |
 | `SMTP_PASS`            | SMTP account password                         |
-| `CONTACT_TO_EMAIL`     | Inbox that receives enquiries (defaults to `SMTP_USER`) |
+| `CONTACT_TO_EMAIL`     | Inbox that receives enquiries (`info@apexconsultants.org`) |
 
 ## Build and deployment
 
@@ -93,10 +96,10 @@ npm run start   # serve the production build locally
 npm run lint    # ESLint
 ```
 
-The app is a standard Next.js App Router project with no special
-infrastructure requirements — it deploys to any Next.js-compatible host
-(Vercel, Node server, etc.). Set the SMTP environment variables on the host
-for the contact form to send email in production.
+Production deploys to Netlify from this repo's `main` branch. Set the SMTP
+environment variables in the Netlify dashboard (Site configuration ->
+Environment variables) for the contact form to send email in production —
+see `.env.example` for the full list.
 
 ## Assets
 
