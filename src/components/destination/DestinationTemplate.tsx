@@ -373,6 +373,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
               src="/images/stock/graduation.webp"
               alt=""
               fill
+              sizes="100vw"
               className="object-cover"
               aria-hidden="true"
             />

@@ -8,10 +8,15 @@ import TiltCard from "@/components/TiltCard";
 import { blogPosts } from "@/lib/blog-data";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
 
+const blogsTitle = "Study Abroad Blog & Visa Tips";
+const blogsDescription = "Practical guides on student visas, financial documentation, and settling in abroad, from Apex Consulting Services.";
+
 export const metadata: Metadata = {
-  title: "Study Abroad Blog & Visa Tips",
-  description: "Practical guides on student visas, financial documentation, and settling in abroad, from Apex Consulting Services.",
+  title: blogsTitle,
+  description: blogsDescription,
   alternates: { canonical: "/blogs" },
+  openGraph: { title: blogsTitle, description: blogsDescription, url: "/blogs" },
+  twitter: { card: "summary_large_image", title: blogsTitle, description: blogsDescription },
 };
 
 export default function BlogsPage() {

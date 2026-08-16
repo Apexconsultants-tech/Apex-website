@@ -16,11 +16,16 @@ const logosByCountry = otherPartnerLogos.reduce<Record<string, typeof otherPartn
   return acc;
 }, {});
 
+const partnersTitle = "Partner Universities Abroad for Pakistani Students";
+const partnersDescription =
+  "Apex Consulting Services works directly with universities across 50+ countries as an authorized representative, not a third-party reseller.";
+
 export const metadata: Metadata = {
-  title: "Partner Universities Abroad for Pakistani Students",
-  description:
-    "Apex Consulting Services works directly with universities across 50+ countries as an authorized representative, not a third-party reseller.",
+  title: partnersTitle,
+  description: partnersDescription,
   alternates: { canonical: "/partner-universities" },
+  openGraph: { title: partnersTitle, description: partnersDescription, url: "/partner-universities" },
+  twitter: { card: "summary_large_image", title: partnersTitle, description: partnersDescription },
 };
 
 export default function PartnerUniversitiesPage() {
@@ -58,7 +63,7 @@ export default function PartnerUniversitiesPage() {
                       <h3 className="text-base font-semibold leading-snug text-ink">{u.name}</h3>
                       <Image
                         src={`/images/flags/${u.flag}.svg`}
-                        alt={u.country}
+                        alt=""
                         {...flagSize(u.flag, 18)}
                         className="mt-1 shrink-0 rounded-sm"
                       />

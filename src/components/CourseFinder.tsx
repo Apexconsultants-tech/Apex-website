@@ -139,6 +139,7 @@ export default function CourseFinder() {
       <div className="grid grid-cols-1 gap-0 sm:grid-cols-3">
         <FinderField label="Destination" borderClass="sm:border-r sm:border-dashed sm:border-black">
           <FlatDropdown
+            ariaLabel="Destination"
             value={destination}
             onChange={setDestination}
             options={destinations.map((d) => ({ value: d.slug, label: d.name }))}
@@ -146,19 +147,37 @@ export default function CourseFinder() {
           />
         </FinderField>
         <FinderField label="Class" borderClass="sm:border-r sm:border-dashed sm:border-black">
-          <LevelSelect value={level} onChange={setLevel} />
+          <LevelSelect ariaLabel="Class" value={level} onChange={setLevel} />
         </FinderField>
         <FinderField label="Route" borderClass="">
-          <FlatDropdown value={field} onChange={setField} options={FIELDS.map((f) => ({ value: f, label: f }))} placeholder="Any field" />
+          <FlatDropdown
+            ariaLabel="Route"
+            value={field}
+            onChange={setField}
+            options={FIELDS.map((f) => ({ value: f, label: f }))}
+            placeholder="Any field"
+          />
         </FinderField>
       </div>
 
       <div className="grid grid-cols-1 gap-0 border-t border-dashed border-black sm:grid-cols-[1fr_1fr_auto]">
         <FinderField label="Intake" borderClass="sm:border-r sm:border-dashed sm:border-black">
-          <FlatDropdown value={intake} onChange={setIntake} options={INTAKES.map((i) => ({ value: i, label: i }))} placeholder="When?" />
+          <FlatDropdown
+            ariaLabel="Intake"
+            value={intake}
+            onChange={setIntake}
+            options={INTAKES.map((i) => ({ value: i, label: i }))}
+            placeholder="When?"
+          />
         </FinderField>
         <FinderField label="Budget" borderClass="sm:border-r sm:border-dashed sm:border-black">
-          <FlatDropdown value={budget} onChange={setBudget} options={BUDGETS.map((b) => ({ value: b, label: b }))} placeholder="Any budget" />
+          <FlatDropdown
+            ariaLabel="Budget"
+            value={budget}
+            onChange={setBudget}
+            options={BUDGETS.map((b) => ({ value: b, label: b }))}
+            placeholder="Any budget"
+          />
         </FinderField>
         <div className="flex items-center p-3 sm:p-2">
           <button
@@ -237,7 +256,7 @@ function useDropdownClose(open: boolean, close: () => void) {
 // sections with a full line of breathing room between them. The panel
 // scrolls internally past a max height so a long list never overflows the
 // page or gets clipped by whatever sits below it.
-function LevelSelect({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+function LevelSelect({ ariaLabel, value, onChange }: { ariaLabel: string; value: string; onChange: (v: string) => void }) {
   const [open, setOpen] = useState(false);
   const rootRef = useDropdownClose(open, () => setOpen(false));
 
@@ -247,6 +266,7 @@ function LevelSelect({ value, onChange }: { value: string; onChange: (v: string)
         type="button"
         aria-haspopup="listbox"
         aria-expanded={open}
+        aria-label={ariaLabel}
         onClick={() => setOpen((o) => !o)}
         className="flex w-full items-center justify-between gap-2 bg-transparent py-1 text-left text-sm font-medium text-ink focus:outline-none"
       >
@@ -294,11 +314,13 @@ function LevelSelect({ value, onChange }: { value: string; onChange: (v: string)
 // Same idea as LevelSelect but for flat (non-grouped) lists — Destination,
 // Route, Intake, and Budget.
 function FlatDropdown({
+  ariaLabel,
   value,
   onChange,
   options,
   placeholder,
 }: {
+  ariaLabel: string;
   value: string;
   onChange: (v: string) => void;
   options: { value: string; label: string }[];
@@ -314,6 +336,7 @@ function FlatDropdown({
         type="button"
         aria-haspopup="listbox"
         aria-expanded={open}
+        aria-label={ariaLabel}
         onClick={() => setOpen((o) => !o)}
         className="flex w-full items-center justify-between gap-2 bg-transparent py-1 text-left text-sm font-medium text-ink focus:outline-none"
       >

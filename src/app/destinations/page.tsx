@@ -84,11 +84,16 @@ const destinationsFaqs = [
   },
 ] as const;
 
+const destinationsTitle = "Best Study Abroad Destinations for Pakistani Students";
+const destinationsDescription =
+  "Compare the best study abroad destinations for Pakistani students, universities, tuition fees, and post-study work visas for the UK, USA, Canada, Australia, and 14 more countries.";
+
 export const metadata: Metadata = {
-  title: "Best Study Abroad Destinations for Pakistani Students",
-  description:
-    "Compare the best study abroad destinations for Pakistani students, universities, tuition fees, and post-study work visas for the UK, USA, Canada, Australia, and 14 more countries.",
+  title: destinationsTitle,
+  description: destinationsDescription,
   alternates: { canonical: "/destinations" },
+  openGraph: { title: destinationsTitle, description: destinationsDescription, url: "/destinations" },
+  twitter: { card: "summary_large_image", title: destinationsTitle, description: destinationsDescription },
 };
 
 export default function DestinationsPage() {

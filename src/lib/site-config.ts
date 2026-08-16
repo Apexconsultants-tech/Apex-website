@@ -11,7 +11,7 @@ export const site = {
   name: "Apex Consulting Services",
   shortName: "Apex",
   domain: "apexconsultants.org",
-  url: "https://www.apexconsultants.org",
+  url: "https://apexconsultants.org",
   foundedYear: 2009,
   tagline: "Where Futures Cross Continents",
   description:
@@ -208,7 +208,7 @@ export const destinations = destinationList.map((d) => ({
 
 export const serviceLinks = [
   ...serviceList.map((s) => ({ label: s.name, slug: s.slug })),
-  { label: "Partner Universities", slug: "#partner-logos" },
+  { label: "Partner Universities", slug: "partner-universities" },
   { label: "Courses", slug: "courses" },
 ] as const;
 

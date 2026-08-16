@@ -10,11 +10,16 @@ import TiltCard from "@/components/TiltCard";
 import { contact, socials } from "@/lib/site-config";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
 
+const contactTitle = "Contact Us | Karachi, Hyderabad & UK";
+const contactDescription =
+  "Get in touch with Apex Consulting Services for a free study abroad consultation. Offices in Karachi (Head Office), Hyderabad & the UK. Call or WhatsApp.";
+
 export const metadata: Metadata = {
-  title: "Contact Apex Consultants | Karachi, Hyderabad & UK",
-  description:
-    "Get in touch with Apex Consultants for a free study abroad consultation. Offices in Karachi (Head Office), Hyderabad & the UK. Call or WhatsApp.",
+  title: contactTitle,
+  description: contactDescription,
   alternates: { canonical: "/contact-us" },
+  openGraph: { title: contactTitle, description: contactDescription, url: "/contact-us" },
+  twitter: { card: "summary_large_image", title: contactTitle, description: contactDescription },
 };
 
 export default function ContactUsPage() {

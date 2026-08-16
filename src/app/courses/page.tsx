@@ -7,11 +7,16 @@ import Reveal from "@/components/Reveal";
 import { courses } from "@/lib/courses-data";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
 
+const coursesTitle = "Study Abroad Courses";
+const coursesDescription =
+  "Explore undergraduate, postgraduate, and diploma programs at Apex's partner universities across the UK, USA, and Australia.";
+
 export const metadata: Metadata = {
-  title: "Study Abroad Courses",
-  description:
-    "Explore undergraduate, postgraduate, and diploma programs at Apex's partner universities across the UK, USA, and Australia.",
+  title: coursesTitle,
+  description: coursesDescription,
   alternates: { canonical: "/courses" },
+  openGraph: { title: coursesTitle, description: coursesDescription, url: "/courses" },
+  twitter: { card: "summary_large_image", title: coursesTitle, description: coursesDescription },
 };
 
 export default function CoursesPage() {

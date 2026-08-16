@@ -12,11 +12,16 @@ import { aboutSections, contact, coreValues, journey, offices, site, socials } f
 import { breadcrumbJsonLd } from "@/lib/structured-data";
 import { getDestination, popularDestinationSlugs } from "@/lib/destinations-data";
 
+const aboutTitle = "About Us | Study Abroad Since 2009";
+const aboutDescription =
+  "Apex Consulting Services has guided students abroad since 2009, with offices in Karachi (HQ), Hyderabad and the UK. ICEF Agency Status IAS #4511 certified.";
+
 export const metadata: Metadata = {
-  title: "About Apex Consultants | Study Abroad Since 2009",
-  description:
-    "Apex Consulting Services has guided students abroad since 2009, with offices in Karachi (HQ), Hyderabad and the UK. ICEF Agency Status IAS #4511 certified.",
+  title: aboutTitle,
+  description: aboutDescription,
   alternates: { canonical: "/about-us" },
+  openGraph: { title: aboutTitle, description: aboutDescription, url: "/about-us" },
+  twitter: { card: "summary_large_image", title: aboutTitle, description: aboutDescription },
 };
 
 const detailSections = [

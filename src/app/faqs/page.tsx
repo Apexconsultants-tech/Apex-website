@@ -7,11 +7,16 @@ import Reveal from "@/components/Reveal";
 import { contact, faqs } from "@/lib/site-config";
 import { breadcrumbJsonLd, faqJsonLd } from "@/lib/structured-data";
 
+const faqsTitle = "Frequently Asked Questions";
+const faqsDescription =
+  "Answers to common questions about studying abroad with Apex Consulting Services: visas, scholarships, accreditation, and getting started.";
+
 export const metadata: Metadata = {
-  title: "Frequently Asked Questions",
-  description:
-    "Answers to common questions about studying abroad with Apex Consulting Services: visas, scholarships, accreditation, and getting started.",
+  title: faqsTitle,
+  description: faqsDescription,
   alternates: { canonical: "/faqs" },
+  openGraph: { title: faqsTitle, description: faqsDescription, url: "/faqs" },
+  twitter: { card: "summary_large_image", title: faqsTitle, description: faqsDescription },
 };
 
 export default function FaqsPage() {

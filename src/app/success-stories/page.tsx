@@ -7,11 +7,16 @@ import TiltCard from "@/components/TiltCard";
 import { testimonials } from "@/lib/site-config";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
 
+const successTitle = "Student Success Stories";
+const successDescription =
+  "Meet students who secured admissions abroad with guidance from Apex Consulting Services, from applications and documentation to visa support.";
+
 export const metadata: Metadata = {
-  title: "Student Success Stories",
-  description:
-    "Meet students who secured admissions abroad with guidance from Apex Consulting Services, from applications and documentation to visa support.",
+  title: successTitle,
+  description: successDescription,
   alternates: { canonical: "/success-stories" },
+  openGraph: { title: successTitle, description: successDescription, url: "/success-stories" },
+  twitter: { card: "summary_large_image", title: successTitle, description: successDescription },
 };
 
 export default function SuccessStoriesPage() {
