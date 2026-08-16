@@ -15,8 +15,9 @@ form.
   `src/app/globals.css` (no separate `tailwind.config`, Tailwind v4 uses
   CSS-based configuration)
 - **Fonts:** `next/font` (Sora for display type, Public Sans for body text)
-- **Email:** [Nodemailer](https://nodemailer.com) over SMTP, invoked from a
-  server action
+- **Contact form:** [Netlify Forms](https://docs.netlify.com/manage/forms/setup/) —
+  detected at build time from the prerendered `/contact-us` HTML, submitted
+  via `fetch()` from the client, no backend code or SMTP required
 - **Analytics:** Google Analytics 4, loaded via `next/script`
 - **Linting:** ESLint with `eslint-config-next`
 
@@ -73,20 +74,10 @@ The site runs at `http://localhost:3000`.
 
 ## Environment variables
 
-Copy `.env.example` to `.env.local` and fill in real values for local SMTP
-testing. The mailbox is hosted on HostGator/cPanel — see the comments in
-`.env.example` for exactly where to find each value. Without these set, the
-contact form still validates submissions and logs them server-side, but
-correctly returns an error to the visitor rather than claiming the enquiry
-was sent — no email is delivered until they're configured.
-
-| Variable           | Purpose                                    |
-| ------------------ | ------------------------------------------- |
-| `SMTP_HOST`         | SMTP server host (no default — must be set; see `.env.example`) |
-| `SMTP_PORT`          | SMTP port (defaults to `465`)                |
-| `SMTP_USER`           | SMTP account username (the full mailbox address) |
-| `SMTP_PASS`            | SMTP account password                         |
-| `CONTACT_TO_EMAIL`     | Inbox that receives enquiries (`info@apexconsultants.org`) |
+None are currently required — see `.env.example`. The contact form uses
+Netlify Forms, which needs no application secrets; configure the
+notification email in the Netlify dashboard instead (Site configuration ->
+Forms -> Form notifications).
 
 ## Build and deployment
 
@@ -96,10 +87,11 @@ npm run start   # serve the production build locally
 npm run lint    # ESLint
 ```
 
-Production deploys to Netlify from this repo's `main` branch. Set the SMTP
-environment variables in the Netlify dashboard (Site configuration ->
-Environment variables) for the contact form to send email in production —
-see `.env.example` for the full list.
+Production deploys to Netlify from this repo's `main` branch. After the
+first deploy with the contact form in place, set the notification email in
+Netlify (Site configuration -> Forms -> Form notifications -> Email
+notification -> `info@apexconsultants.org`) so submissions actually reach
+an inbox.
 
 ## Assets
 

@@ -1,34 +1,126 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState, useEffect, useRef } from "react";
-import { useFormStatus } from "react-dom";
-import { submitEnquiry, type EnquiryState } from "@/app/actions";
+import { useRef, useState } from "react";
 import { trackEvent } from "@/lib/analytics";
 import { contactFormDestinations } from "@/lib/site-config";
 
-// Defined locally rather than imported from actions.ts: a "use server" file
-// may only export async functions, so a plain state-object value can't live
-// there (Next's server-action runtime rejects it as soon as the action is
-// actually invoked, even though the module still imports and renders fine).
-const initialEnquiryState: EnquiryState = { status: "idle", message: "" };
+type FieldErrors = Partial<Record<"firstName" | "lastName" | "email" | "mobile" | "destination" | "message", string>>;
+type Status = "idle" | "submitting" | "success" | "error";
+
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Netlify detects this form at build time from the prerendered HTML (this
+// page is statically generated) because of the name + data-netlify
+// attributes below, then processes POSTs to it — no server code needed.
+// Since the actual submission goes through fetch() rather than a native
+// form POST, form-name has to be included in the encoded body manually.
+const FORM_NAME = "contact";
+
+function encode(data: Record<string, string>) {
+  return Object.entries(data)
+    .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+    .join("&");
+}
 
 export default function ContactForm() {
-  const [state, formAction] = useActionState(submitEnquiry, initialEnquiryState);
-  const tracked = useRef(false);
+  const [status, setStatus] = useState<Status>("idle");
+  const [message, setMessage] = useState("");
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const formRef = useRef<HTMLFormElement>(null);
 
-  useEffect(() => {
-    if (state.status === "success" && !tracked.current) {
-      tracked.current = true;
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    // Honeypot: real users never fill this. Netlify's own honeypot filter
+    // (data-netlify-honeypot below) is the primary defense server-side;
+    // this just avoids the round-trip entirely for obvious bots.
+    if ((data.get("company") as string | null)?.trim()) {
+      setStatus("success");
+      setMessage("Thanks, our team will reach out shortly.");
+      return;
+    }
+
+    const firstName = ((data.get("first_name") as string) || "").trim();
+    const lastName = ((data.get("last_name") as string) || "").trim();
+    const email = ((data.get("email") as string) || "").trim();
+    const mobile = ((data.get("mobile") as string) || "").trim();
+    const destination = ((data.get("destination") as string) || "").trim();
+    const message_ = ((data.get("message") as string) || "").trim();
+    const consent = data.get("consent");
+
+    const errors: FieldErrors = {};
+    if (!firstName) errors.firstName = "Enter your first name.";
+    else if (firstName.length > 100) errors.firstName = "First name is too long.";
+    if (!lastName) errors.lastName = "Enter your last name.";
+    else if (lastName.length > 100) errors.lastName = "Last name is too long.";
+    if (!email || !EMAIL_RE.test(email)) errors.email = "Enter a valid email address.";
+    else if (email.length > 255) errors.email = "Email address is too long.";
+    if (!mobile || mobile.replace(/\D/g, "").length < 7) errors.mobile = "Enter a valid mobile number.";
+    else if (mobile.length > 15) errors.mobile = "Mobile number is too long.";
+    if (!destination) errors.destination = "Select a preferred destination.";
+    else if (!(contactFormDestinations as readonly string[]).includes(destination))
+      errors.destination = "Select a valid destination from the list.";
+    if (!message_ || message_.length < 10) errors.message = "Tell us a little more (at least 10 characters).";
+    else if (message_.length > 2000) errors.message = "Message is too long (max 2000 characters).";
+    if (!consent) errors.message = errors.message || "Please confirm consent to be contacted.";
+
+    if (Object.keys(errors).length > 0) {
+      setFieldErrors(errors);
+      setStatus("error");
+      setMessage("Please fix the highlighted fields.");
+      return;
+    }
+
+    setFieldErrors({});
+    setStatus("submitting");
+
+    try {
+      const res = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encode({
+          "form-name": FORM_NAME,
+          first_name: firstName,
+          last_name: lastName,
+          email,
+          mobile,
+          destination,
+          message: message_,
+          consent: consent ? "1" : "",
+        }),
+      });
+
+      if (!res.ok) throw new Error(`Netlify Forms responded ${res.status}`);
+
+      setStatus("success");
+      setMessage("Thanks, our team will reach out shortly, usually within one business day.");
       trackEvent("form_submit", { form_name: "contact_enquiry" });
+      formRef.current?.reset();
+    } catch (error) {
+      console.error("[contact] Failed to submit enquiry:", error);
+      setStatus("error");
+      setMessage("Sorry, we couldn't send your enquiry right now. Please call or WhatsApp us directly.");
     }
-    if (state.status !== "success") {
-      tracked.current = false;
-    }
-  }, [state.status]);
+  }
+
+  const pending = status === "submitting";
 
   return (
-    <form action={formAction} className="space-y-5" noValidate>
+    <form
+      ref={formRef}
+      name={FORM_NAME}
+      data-netlify="true"
+      data-netlify-honeypot="company"
+      onSubmit={handleSubmit}
+      className="space-y-5"
+      noValidate
+    >
+      {/* Required so Netlify routes a JS-submitted (fetch) POST to this form */}
+      <input type="hidden" name="form-name" value={FORM_NAME} />
+
       {/* Honeypot, hidden from real users and left empty by them */}
       <input
         type="text"
@@ -40,7 +132,7 @@ export default function ContactForm() {
       />
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <Field label="First Name" name="first_name" error={state.fieldErrors?.firstName} required>
+        <Field label="First Name" name="first_name" error={fieldErrors.firstName} required>
           <input
             id="first_name"
             name="first_name"
@@ -48,11 +140,11 @@ export default function ContactForm() {
             required
             maxLength={100}
             placeholder="Your first name"
-            className={inputClass(Boolean(state.fieldErrors?.firstName))}
+            className={inputClass(Boolean(fieldErrors.firstName))}
           />
         </Field>
 
-        <Field label="Last Name" name="last_name" error={state.fieldErrors?.lastName} required>
+        <Field label="Last Name" name="last_name" error={fieldErrors.lastName} required>
           <input
             id="last_name"
             name="last_name"
@@ -60,11 +152,11 @@ export default function ContactForm() {
             required
             maxLength={100}
             placeholder="Your last name"
-            className={inputClass(Boolean(state.fieldErrors?.lastName))}
+            className={inputClass(Boolean(fieldErrors.lastName))}
           />
         </Field>
 
-        <Field label="Email ID" name="email" error={state.fieldErrors?.email} required>
+        <Field label="Email ID" name="email" error={fieldErrors.email} required>
           <input
             id="email"
             name="email"
@@ -72,11 +164,11 @@ export default function ContactForm() {
             required
             maxLength={255}
             placeholder="you@email.com"
-            className={inputClass(Boolean(state.fieldErrors?.email))}
+            className={inputClass(Boolean(fieldErrors.email))}
           />
         </Field>
 
-        <Field label="Mobile Number" name="mobile" error={state.fieldErrors?.mobile} required>
+        <Field label="Mobile Number" name="mobile" error={fieldErrors.mobile} required>
           <input
             id="mobile"
             name="mobile"
@@ -84,18 +176,18 @@ export default function ContactForm() {
             required
             maxLength={15}
             placeholder="+92 300 0000000"
-            className={inputClass(Boolean(state.fieldErrors?.mobile))}
+            className={inputClass(Boolean(fieldErrors.mobile))}
           />
         </Field>
 
         <div className="sm:col-span-2">
-          <Field label="Preferred study destination" name="destination" error={state.fieldErrors?.destination} required>
+          <Field label="Preferred study destination" name="destination" error={fieldErrors.destination} required>
             <select
               id="destination"
               name="destination"
               required
               defaultValue=""
-              className={inputClass(Boolean(state.fieldErrors?.destination))}
+              className={inputClass(Boolean(fieldErrors.destination))}
             >
               <option value="" disabled>
                 Select destination
@@ -110,7 +202,7 @@ export default function ContactForm() {
         </div>
 
         <div className="sm:col-span-2">
-          <Field label="How can we help you?" name="message" error={state.fieldErrors?.message} required>
+          <Field label="How can we help you?" name="message" error={fieldErrors.message} required>
             <textarea
               id="message"
               name="message"
@@ -118,7 +210,7 @@ export default function ContactForm() {
               rows={5}
               maxLength={2000}
               placeholder="Tell us about your study plans, preferred intake, or any questions..."
-              className={inputClass(Boolean(state.fieldErrors?.message))}
+              className={inputClass(Boolean(fieldErrors.message))}
             />
           </Field>
         </div>
@@ -142,14 +234,20 @@ export default function ContactForm() {
         </span>
       </label>
 
-      <SubmitButton />
+      <button
+        type="submit"
+        disabled={pending}
+        className="w-full rounded-full bg-gradient-to-b from-brand to-brand-deep px-6 py-3 text-sm font-semibold text-white shadow-md shadow-brand/20 transition-all hover:shadow-xl hover:shadow-brand/30 disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none sm:w-auto"
+      >
+        {pending ? "Submitting…" : "Submit Enquiry"}
+      </button>
 
       <div role="status" aria-live="polite">
-        {state.status === "success" && (
-          <p className="rounded-lg bg-brand-tint px-4 py-3 text-sm text-brand-deep">{state.message}</p>
+        {status === "success" && (
+          <p className="rounded-lg bg-brand-tint px-4 py-3 text-sm text-brand-deep">{message}</p>
         )}
-        {state.status === "error" && !state.fieldErrors && (
-          <p className="rounded-lg bg-amber-tint px-4 py-3 text-sm text-amber">{state.message}</p>
+        {status === "error" && Object.keys(fieldErrors).length === 0 && (
+          <p className="rounded-lg bg-amber-tint px-4 py-3 text-sm text-amber">{message}</p>
         )}
       </div>
     </form>
@@ -181,19 +279,6 @@ function Field({
         </p>
       )}
     </div>
-  );
-}
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button
-      type="submit"
-      disabled={pending}
-      className="w-full rounded-full bg-gradient-to-b from-brand to-brand-deep px-6 py-3 text-sm font-semibold text-white shadow-md shadow-brand/20 transition-all hover:shadow-xl hover:shadow-brand/30 disabled:cursor-not-allowed disabled:opacity-60 disabled:shadow-none sm:w-auto"
-    >
-      {pending ? "Submitting…" : "Submit Enquiry"}
-    </button>
   );
 }
 
