@@ -19,7 +19,7 @@ export default function Header() {
           same amount the icon grows at every breakpoint, so the header's
           total row height is unchanged even though the mark itself is
           ~40% taller than the original pre-redesign size. */}
-      <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-2 lg:px-8 lg:py-2.5">
+      <div className="flex items-center justify-between gap-6 py-2 pl-3 pr-5 lg:py-2.5 lg:pl-4 lg:pr-[43px]">
         <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="Apex Consulting Services home">
           {/* unoptimized: Next's image optimizer flattens this file's alpha
               channel onto white when re-encoding it, producing a visible
@@ -47,92 +47,9 @@ export default function Header() {
             height={191}
             priority
             unoptimized
-            className="h-auto w-[146px] sm:w-[161px] lg:w-[176px]"
+            className="h-auto w-[175px] sm:w-[193px] lg:w-[212px]"
           />
         </Link>
-
-        <nav
-          className="absolute left-1/2 top-1/2 z-10 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-full bg-gradient-to-b from-brand to-brand-deep p-1.5 shadow-sm shadow-brand/20 xl:flex"
-          aria-label="Primary"
-        >
-          <Link
-            href="/"
-            className="shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
-          >
-            Home
-          </Link>
-
-          <div className="group relative shrink-0">
-            <Link
-              href="/destinations"
-              className="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
-            >
-              Study Abroad
-              <ChevronDown />
-            </Link>
-            <div className="invisible absolute left-1/2 top-full z-10 w-[560px] -translate-x-1/2 pt-3 opacity-0 transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-              <div className="grid grid-cols-2 gap-x-6 gap-y-1 rounded-xl border border-line bg-surface p-5 shadow-lg shadow-ink/5">
-                {destinations.map((d) => (
-                  <Link
-                    key={d.slug}
-                    href={`/${d.slug}`}
-                    className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-ink-soft transition-colors hover:bg-brand-tint hover:text-brand"
-                  >
-                    <Image
-                      src={`/images/flags/${d.flag}.svg`}
-                      alt=""
-                      {...flagSize(d.flag, 12)}
-                      className="shrink-0 rounded-[1px]"
-                    />
-                    {d.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <div className="group relative shrink-0">
-            <Link
-              href="/#services"
-              className="flex shrink-0 items-center gap-1 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
-            >
-              What We Do
-              <ChevronDown />
-            </Link>
-            <div className="invisible absolute left-1/2 top-full z-10 w-72 -translate-x-1/2 pt-3 opacity-0 transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
-              <div className="flex flex-col gap-1 rounded-xl border border-line bg-surface p-3 shadow-lg shadow-ink/5">
-                {serviceLinks.map((s) => (
-                  <Link
-                    key={s.slug}
-                    href={`/${s.slug}`}
-                    className="rounded-md px-3 py-2 text-sm text-ink-soft transition-colors hover:bg-brand-tint hover:text-brand"
-                  >
-                    {s.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          <Link
-            href="/about-us"
-            className="shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
-          >
-            About Us
-          </Link>
-          <Link
-            href="/blogs"
-            className="shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
-          >
-            Blog
-          </Link>
-          <Link
-            href="/contact-us"
-            className="shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
-          >
-            Contact Us
-          </Link>
-        </nav>
 
         <div className="hidden shrink-0 items-center gap-3 xl:flex">
           {/* WhatsApp's official bright green (#25D366) is fine here — icon-only,
@@ -168,6 +85,89 @@ export default function Header() {
           {mobileOpen ? <CloseIcon /> : <MenuIcon />}
         </button>
       </div>
+
+      <nav
+        className="absolute left-1/2 top-1/2 z-10 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-full bg-gradient-to-b from-brand to-brand-deep p-1.5 shadow-sm shadow-brand/20 xl:flex"
+        aria-label="Primary"
+      >
+        <Link
+          href="/"
+          className="shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
+        >
+          Home
+        </Link>
+
+        <div className="group relative shrink-0">
+          <Link
+            href="/destinations"
+            className="flex shrink-0 items-center gap-0.5 whitespace-nowrap rounded-full py-1.5 pl-4 pr-3 text-sm font-semibold text-white transition-colors hover:bg-white/15"
+          >
+            Study Abroad
+            <ChevronDown size={11} />
+          </Link>
+          <div className="invisible absolute left-1/2 top-full z-10 w-[560px] -translate-x-1/2 pt-3 opacity-0 transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+            <div className="grid grid-cols-2 gap-x-6 gap-y-1 rounded-xl border border-line bg-surface p-5 shadow-lg shadow-ink/5">
+              {destinations.map((d) => (
+                <Link
+                  key={d.slug}
+                  href={`/${d.slug}`}
+                  className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-ink-soft transition-colors hover:bg-brand-tint hover:text-brand"
+                >
+                  <Image
+                    src={`/images/flags/${d.flag}.svg`}
+                    alt=""
+                    {...flagSize(d.flag, 12)}
+                    className="shrink-0 rounded-[1px]"
+                  />
+                  {d.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="group relative shrink-0">
+          <Link
+            href="/#services"
+            className="flex shrink-0 items-center gap-0.5 whitespace-nowrap rounded-full py-1.5 pl-4 pr-3 text-sm font-semibold text-white transition-colors hover:bg-white/15"
+          >
+            What We Do
+            <ChevronDown size={11} />
+          </Link>
+          <div className="invisible absolute left-1/2 top-full z-10 w-72 -translate-x-1/2 pt-3 opacity-0 transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+            <div className="flex flex-col gap-1 rounded-xl border border-line bg-surface p-3 shadow-lg shadow-ink/5">
+              {serviceLinks.map((s) => (
+                <Link
+                  key={s.slug}
+                  href={`/${s.slug}`}
+                  className="rounded-md px-3 py-2 text-sm text-ink-soft transition-colors hover:bg-brand-tint hover:text-brand"
+                >
+                  {s.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <Link
+          href="/about-us"
+          className="shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
+        >
+          About Us
+        </Link>
+        <Link
+          href="/blogs"
+          className="shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
+        >
+          Blog
+        </Link>
+        <Link
+          href="/contact-us"
+          className="shrink-0 whitespace-nowrap rounded-full px-4 py-1.5 text-sm font-semibold text-white transition-colors hover:bg-white/15"
+        >
+          Contact Us
+        </Link>
+      </nav>
 
       {mobileOpen && (
         <nav id="mobile-nav" className="border-t border-line bg-surface px-5 pb-6 pt-2 xl:hidden" aria-label="Mobile">
@@ -269,9 +269,9 @@ export default function Header() {
   );
 }
 
-function ChevronDown() {
+function ChevronDown({ size = 14 }: { size?: number }) {
   return (
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
