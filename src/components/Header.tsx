@@ -19,7 +19,7 @@ export default function Header() {
           same amount the icon grows at every breakpoint, so the header's
           total row height is unchanged even though the mark itself is
           ~40% taller than the original pre-redesign size. */}
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-2 lg:px-8 lg:py-2.5">
+      <div className="relative mx-auto flex max-w-7xl items-center justify-between gap-6 px-5 py-2 lg:px-8 lg:py-2.5">
         <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="Apex Consulting Services home">
           {/* unoptimized: Next's image optimizer flattens this file's alpha
               channel onto white when re-encoding it, producing a visible
@@ -33,7 +33,7 @@ export default function Header() {
             height={283}
             priority
             unoptimized
-            className="h-14 w-auto sm:h-[62px] lg:h-[68px]"
+            className="h-12 w-auto sm:h-[54px] lg:h-[58px]"
           />
           {/* Sized by width, not height: this mark's font is proportionally
               wider than the old wordmark's, so a fixed height alone would
@@ -47,12 +47,12 @@ export default function Header() {
             height={191}
             priority
             unoptimized
-            className="h-auto w-[170px] sm:w-[188px] lg:w-[205px]"
+            className="h-auto w-[146px] sm:w-[161px] lg:w-[176px]"
           />
         </Link>
 
         <nav
-          className="hidden shrink-0 items-center gap-2 rounded-full bg-gradient-to-b from-brand to-brand-deep p-1.5 shadow-sm shadow-brand/20 xl:flex"
+          className="absolute left-1/2 top-1/2 z-10 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-2 rounded-full bg-gradient-to-b from-brand to-brand-deep p-1.5 shadow-sm shadow-brand/20 xl:flex"
           aria-label="Primary"
         >
           <Link
@@ -296,7 +296,7 @@ function CloseIcon() {
 function WhatsAppIcon() {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M12.04 2c-5.5 0-9.96 4.46-9.96 9.96 0 1.76.46 3.45 1.33 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.5 0 9.96-4.46 9.96-9.96S17.54 2 12.04 2Zm5.84 14.24c-.25.7-1.24 1.28-2.02 1.44-.55.11-1.26.2-3.67-.79-3.08-1.27-5.06-4.4-5.22-4.6-.15-.21-1.25-1.67-1.25-3.19 0-1.51.79-2.26 1.08-2.57.25-.27.6-.39.94-.39.11 0 .22 0 .32.01.28.01.42.02.6.44.23.54.78 1.87.85 2.01.07.14.11.3.02.48-.08.19-.13.3-.26.45-.14.16-.28.35-.4.47-.14.13-.28.28-.12.55.15.27.68 1.12 1.46 1.81 1 .89 1.84 1.17 2.11 1.3.28.14.44.12.6-.06.16-.18.68-.79.87-1.06.18-.27.36-.22.6-.13.25.09 1.58.75 1.85.89.28.14.46.2.53.32.07.12.07.68-.18 1.38Z" />
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.86 11.86 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413" />
     </svg>
   );
 }
