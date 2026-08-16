@@ -18,8 +18,8 @@ export const metadata: Metadata = {
   title: contactTitle,
   description: contactDescription,
   alternates: { canonical: "/contact-us" },
-  openGraph: { title: contactTitle, description: contactDescription, url: "/contact-us" },
-  twitter: { card: "summary_large_image", title: contactTitle, description: contactDescription },
+  openGraph: { title: contactTitle, description: contactDescription, url: "/contact-us", images: ["/opengraph-image"] },
+  twitter: { card: "summary_large_image", title: contactTitle, description: contactDescription, images: ["/opengraph-image"] },
 };
 
 export default function ContactUsPage() {

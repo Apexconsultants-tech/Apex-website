@@ -20,8 +20,8 @@ export const metadata: Metadata = {
   title: aboutTitle,
   description: aboutDescription,
   alternates: { canonical: "/about-us" },
-  openGraph: { title: aboutTitle, description: aboutDescription, url: "/about-us" },
-  twitter: { card: "summary_large_image", title: aboutTitle, description: aboutDescription },
+  openGraph: { title: aboutTitle, description: aboutDescription, url: "/about-us", images: ["/opengraph-image"] },
+  twitter: { card: "summary_large_image", title: aboutTitle, description: aboutDescription, images: ["/opengraph-image"] },
 };
 
 const detailSections = [

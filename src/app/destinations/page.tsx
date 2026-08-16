@@ -92,8 +92,8 @@ export const metadata: Metadata = {
   title: destinationsTitle,
   description: destinationsDescription,
   alternates: { canonical: "/destinations" },
-  openGraph: { title: destinationsTitle, description: destinationsDescription, url: "/destinations" },
-  twitter: { card: "summary_large_image", title: destinationsTitle, description: destinationsDescription },
+  openGraph: { title: destinationsTitle, description: destinationsDescription, url: "/destinations", images: ["/opengraph-image"] },
+  twitter: { card: "summary_large_image", title: destinationsTitle, description: destinationsDescription, images: ["/opengraph-image"] },
 };
 
 export default function DestinationsPage() {

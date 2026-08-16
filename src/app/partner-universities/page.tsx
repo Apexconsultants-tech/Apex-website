@@ -24,8 +24,8 @@ export const metadata: Metadata = {
   title: partnersTitle,
   description: partnersDescription,
   alternates: { canonical: "/partner-universities" },
-  openGraph: { title: partnersTitle, description: partnersDescription, url: "/partner-universities" },
-  twitter: { card: "summary_large_image", title: partnersTitle, description: partnersDescription },
+  openGraph: { title: partnersTitle, description: partnersDescription, url: "/partner-universities", images: ["/opengraph-image"] },
+  twitter: { card: "summary_large_image", title: partnersTitle, description: partnersDescription, images: ["/opengraph-image"] },
 };
 
 export default function PartnerUniversitiesPage() {

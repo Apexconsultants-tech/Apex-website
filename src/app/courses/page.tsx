@@ -15,8 +15,8 @@ export const metadata: Metadata = {
   title: coursesTitle,
   description: coursesDescription,
   alternates: { canonical: "/courses" },
-  openGraph: { title: coursesTitle, description: coursesDescription, url: "/courses" },
-  twitter: { card: "summary_large_image", title: coursesTitle, description: coursesDescription },
+  openGraph: { title: coursesTitle, description: coursesDescription, url: "/courses", images: ["/opengraph-image"] },
+  twitter: { card: "summary_large_image", title: coursesTitle, description: coursesDescription, images: ["/opengraph-image"] },
 };
 
 export default function CoursesPage() {

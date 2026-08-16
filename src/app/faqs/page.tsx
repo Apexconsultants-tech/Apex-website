@@ -15,8 +15,8 @@ export const metadata: Metadata = {
   title: faqsTitle,
   description: faqsDescription,
   alternates: { canonical: "/faqs" },
-  openGraph: { title: faqsTitle, description: faqsDescription, url: "/faqs" },
-  twitter: { card: "summary_large_image", title: faqsTitle, description: faqsDescription },
+  openGraph: { title: faqsTitle, description: faqsDescription, url: "/faqs", images: ["/opengraph-image"] },
+  twitter: { card: "summary_large_image", title: faqsTitle, description: faqsDescription, images: ["/opengraph-image"] },
 };
 
 export default function FaqsPage() {

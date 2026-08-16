@@ -15,8 +15,8 @@ export const metadata: Metadata = {
   title: successTitle,
   description: successDescription,
   alternates: { canonical: "/success-stories" },
-  openGraph: { title: successTitle, description: successDescription, url: "/success-stories" },
-  twitter: { card: "summary_large_image", title: successTitle, description: successDescription },
+  openGraph: { title: successTitle, description: successDescription, url: "/success-stories", images: ["/opengraph-image"] },
+  twitter: { card: "summary_large_image", title: successTitle, description: successDescription, images: ["/opengraph-image"] },
 };
 
 export default function SuccessStoriesPage() {

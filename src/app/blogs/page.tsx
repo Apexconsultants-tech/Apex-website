@@ -15,8 +15,8 @@ export const metadata: Metadata = {
   title: blogsTitle,
   description: blogsDescription,
   alternates: { canonical: "/blogs" },
-  openGraph: { title: blogsTitle, description: blogsDescription, url: "/blogs" },
-  twitter: { card: "summary_large_image", title: blogsTitle, description: blogsDescription },
+  openGraph: { title: blogsTitle, description: blogsDescription, url: "/blogs", images: ["/opengraph-image"] },
+  twitter: { card: "summary_large_image", title: blogsTitle, description: blogsDescription, images: ["/opengraph-image"] },
 };
 
 export default function BlogsPage() {
