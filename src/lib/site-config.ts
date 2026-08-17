@@ -216,18 +216,18 @@ export const serviceLinks = [
 // from the full success-stories list don't have a usable photo on file, so
 // they're omitted here rather than shown with a placeholder image.
 export const testimonials = [
-  { name: "Ali Hamza", program: "MSc Applied Ecology", university: "University of Hertfordshire", country: "United Kingdom", image: "/images/testimonials/ali-hamza.jpeg" },
-  { name: "Zeeshan Ali Shah", program: "MSc Data Science", university: "University of Gloucestershire", country: "United Kingdom", image: "/images/testimonials/zeeshan-ali-shah.jpeg" },
-  { name: "Fahad Shaikh", program: "International Foundation Year in Managing and Economics", university: "Royal Holloway, University of London", country: "United Kingdom", image: "/images/testimonials/fahad-shaikh.jpeg" },
-  { name: "Muhsin Hussain", program: "Master in Law", university: "University of Hertfordshire", country: "United Kingdom", image: "/images/testimonials/muhsin-hussain.jpeg" },
-  { name: "Sana Abbasi", program: "MSc Cyber Security", university: "University of Gloucestershire", country: "United Kingdom", image: "/images/testimonials/sana-abbasi.jpeg" },
-  { name: "Ali Jessani", program: undefined, university: "Teesside University", country: "United Kingdom", image: "/images/testimonials/ali-jessani.jpeg" },
-  { name: "Aqsa Ishaq", program: "MBA in Global Business", university: "University of Gloucestershire", country: "United Kingdom", image: "/images/testimonials/aqsa-ishaq.jpeg" },
-  { name: "Waqar Lund", program: "MSc Global Sustainability Engineering", university: "Heriot-Watt University", country: "United Kingdom", image: "/images/testimonials/waqar-lund.jpeg" },
-  { name: "Mr. Inayat Ali Mirza", program: "LLM (Master of Laws)", university: "University of Hertfordshire", country: "United Kingdom", image: "/images/testimonials/mr.inayat-ali-mirza.jpeg" },
-  { name: "Basit Ali", program: "BSc (Hons) Computer Science including International Year One (Computing)", university: "Teesside University", country: "United Kingdom", image: "/images/testimonials/basit-ali.jpeg" },
-  { name: "Tabish Shoukat", program: "International Year One Computing", university: "University of Sussex", country: "United Kingdom", image: "/images/testimonials/tabish-shoukat.jpeg" },
-  { name: "Mr. Muhammad Ali", program: "MSc International Business Management", university: "University of East London", country: "United Kingdom", image: "/images/testimonials/muhammad-ali.jpeg" },
+  { name: "Ali Hamza", program: "MSc Applied Ecology", university: "University of Hertfordshire", country: "United Kingdom", image: "/images/testimonials/ali-hamza.webp" },
+  { name: "Zeeshan Ali Shah", program: "MSc Data Science", university: "University of Gloucestershire", country: "United Kingdom", image: "/images/testimonials/zeeshan-ali-shah.webp" },
+  { name: "Fahad Shaikh", program: "International Foundation Year in Managing and Economics", university: "Royal Holloway, University of London", country: "United Kingdom", image: "/images/testimonials/fahad-shaikh.webp" },
+  { name: "Muhsin Hussain", program: "Master in Law", university: "University of Hertfordshire", country: "United Kingdom", image: "/images/testimonials/muhsin-hussain.webp" },
+  { name: "Sana Abbasi", program: "MSc Cyber Security", university: "University of Gloucestershire", country: "United Kingdom", image: "/images/testimonials/sana-abbasi.webp" },
+  { name: "Ali Jessani", program: undefined, university: "Teesside University", country: "United Kingdom", image: "/images/testimonials/ali-jessani.webp" },
+  { name: "Aqsa Ishaq", program: "MBA in Global Business", university: "University of Gloucestershire", country: "United Kingdom", image: "/images/testimonials/aqsa-ishaq.webp" },
+  { name: "Waqar Lund", program: "MSc Global Sustainability Engineering", university: "Heriot-Watt University", country: "United Kingdom", image: "/images/testimonials/waqar-lund.webp" },
+  { name: "Mr. Inayat Ali Mirza", program: "LLM (Master of Laws)", university: "University of Hertfordshire", country: "United Kingdom", image: "/images/testimonials/mr.inayat-ali-mirza.webp" },
+  { name: "Basit Ali", program: "BSc (Hons) Computer Science including International Year One (Computing)", university: "Teesside University", country: "United Kingdom", image: "/images/testimonials/basit-ali.webp" },
+  { name: "Tabish Shoukat", program: "International Year One Computing", university: "University of Sussex", country: "United Kingdom", image: "/images/testimonials/tabish-shoukat.webp" },
+  { name: "Mr. Muhammad Ali", program: "MSc International Business Management", university: "University of East London", country: "United Kingdom", image: "/images/testimonials/muhammad-ali.webp" },
 ] as const;
 
 export const faqs = [

@@ -216,8 +216,8 @@ export default function Globe() {
               <Image
                 src="/images/brand/earth-satellite.webp"
                 alt=""
-                width={2600}
-                height={1300}
+                width={1600}
+                height={800}
                 priority={copy === 0}
                 draggable={false}
                 sizes="(min-width: 1024px) 620px, 420px"
