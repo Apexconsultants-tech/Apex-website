@@ -270,6 +270,33 @@ summary:focus-visible {
   animation: slide-in-right 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* Same fade-and-lift look as the Reveal component, but pure CSS so it runs
+   on paint instead of waiting on JS to hydrate and an IntersectionObserver
+   to fire. Reserved for content that's already in the initial viewport on
+   load (the hero) — Reveal's scroll-triggered version stays reserved for
+   content genuinely below the fold, where the JS is actually needed to know
+   when the element scrolls into view. */
+@keyframes hero-in {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-hero-in {
+  animation: hero-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Skeleton placeholder shown for the brief window before the Globe
+   component's own JS chunk has loaded, so the hero shows a shaped
+   placeholder immediately instead of an empty gap. */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.85; }
+}
+
+.animate-skeleton-pulse {
+  animation: skeleton-pulse 1.8s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

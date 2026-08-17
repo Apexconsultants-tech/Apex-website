@@ -218,7 +218,6 @@ export default function Globe() {
                 alt=""
                 width={1600}
                 height={800}
-                priority={copy === 0}
                 draggable={false}
                 sizes="(min-width: 1024px) 620px, 420px"
                 className="h-full w-auto max-w-none select-none"

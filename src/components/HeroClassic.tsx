@@ -1,10 +1,19 @@
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import CourseFinder from "@/components/CourseFinder";
-import Globe from "@/components/Globe";
-import Reveal from "@/components/Reveal";
 import StatStrip from "@/components/StatStrip";
 import { contact } from "@/lib/site-config";
+
+// Code-split: the Globe's own JS (orbit-flag layout, drag/momentum
+// panning, flag data) is sizeable and irrelevant to the rest of the hero,
+// so it's fetched as its own chunk instead of bloating the bundle every
+// other above-the-fold element has to wait behind. The skeleton keeps the
+// hero's layout stable and shows something shaped immediately rather than
+// an empty gap while that chunk loads.
+const Globe = dynamic(() => import("@/components/Globe"), {
+  loading: () => <GlobeSkeleton />,
+});
 
 // The homepage hero: cinematic photo background with the orbiting Globe.
 export default function HeroClassic() {
@@ -37,7 +46,7 @@ export default function HeroClassic() {
 
       <div className="relative mx-auto max-w-7xl px-5 pb-10 pt-14 lg:px-8 lg:pb-16 lg:pt-20">
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
-          <Reveal>
+          <div className="animate-hero-in">
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/90">
               Overseas education consultants since 2009
             </p>
@@ -67,18 +76,18 @@ export default function HeroClassic() {
                 Chat on WhatsApp
               </a>
             </div>
-          </Reveal>
+          </div>
 
-          <Reveal delay={120} className="flex items-center justify-center">
+          <div className="flex items-center justify-center animate-hero-in" style={{ animationDelay: "120ms" }}>
             <div className="relative mx-auto aspect-square w-full max-w-xs sm:max-w-sm lg:max-w-md">
               <div className="animate-float">
                 <Globe />
               </div>
             </div>
-          </Reveal>
+          </div>
         </div>
 
-        <Reveal delay={200} className="relative z-10 mt-20 lg:mt-24">
+        <div className="relative z-10 mt-20 animate-hero-in lg:mt-24" style={{ animationDelay: "200ms" }}>
           <div className="mb-6 flex flex-col items-center rounded-3xl bg-black/35 px-6 py-6 text-center shadow-lg shadow-black/20 backdrop-blur-sm sm:px-10 sm:py-7">
             <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] text-brand-deep shadow-lg shadow-black/10">
               <SearchGlyph />
@@ -89,13 +98,28 @@ export default function HeroClassic() {
             </h2>
           </div>
           <CourseFinder />
-        </Reveal>
+        </div>
 
-        <Reveal delay={260} className="mt-14">
+        <div className="mt-14 animate-hero-in" style={{ animationDelay: "260ms" }}>
           <StatStrip />
-        </Reveal>
+        </div>
       </div>
     </section>
+  );
+}
+
+// Mirrors Globe's own outer shape (a circular window with the same ambient
+// halo tones) so swapping the skeleton out for the real thing once its
+// chunk loads doesn't shift the hero's layout.
+function GlobeSkeleton() {
+  return (
+    <div className="relative aspect-square w-full">
+      <div className="pointer-events-none absolute -inset-10 rounded-full bg-[radial-gradient(circle,rgba(56,142,220,0.22),transparent_65%)] blur-2xl" />
+      <div
+        className="absolute inset-0 animate-skeleton-pulse rounded-full bg-gradient-to-br from-brand/25 via-brand-deep/20 to-black/30 shadow-[inset_0_0_40px_rgba(0,0,0,0.35)]"
+        aria-hidden="true"
+      />
+    </div>
   );
 }
 
