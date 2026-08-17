@@ -1,0 +1,34 @@
+# Site-wide rate limiting to blunt scraping/bot abuse without affecting
+# normal visitors. This is a passthrough redirect (to = "/:splat", the same
+# path the request already targets) purely to attach Netlify's native
+# rate_limit gate on top of normal routing — it doesn't change where any
+# request is served from, so it should sit underneath the Next.js Runtime's
+# own routing (pages, /_next/* assets, image optimization, API routes)
+# rather than replacing it.
+#
+# Netlify's current documented syntax for this:
+# https://docs.netlify.com/manage/security/secure-access-to-sites/rate-limiting/
+[[redirects]]
+  from = "/*"
+  to = "/:splat"
+  # Default status (301) is a true HTTP redirect, which would send every
+  # under-limit request through a same-URL redirect. 200 makes this a
+  # rewrite/proxy instead — no URL change, no redirect-loop risk — for any
+  # request the rate_limit block below doesn't block. force is deliberately
+  # left unset (defaults to false): force would make this rule override
+  # content/routing that already matched the request, which is exactly the
+  # Next.js Runtime interference this rule is meant to avoid.
+  status = 200
+
+  [redirects.rate_limit]
+    # Default action; explicit here for clarity. Returns HTTP 429 once the
+    # limit is exceeded, rather than rewriting to a different response.
+    action = "rate_limit"
+    # ["domain"] alone pools one shared quota across every visitor (and is
+    # an enterprise-only option). ["ip", "domain"] gives each visitor IP
+    # its own quota against this domain, which is what actually targets a
+    # single abusive client instead of capping the whole site's traffic.
+    aggregate_by = ["ip", "domain"]
+    # 300 requests per 60-second window, per IP.
+    window_limit = 300
+    window_size = 60
