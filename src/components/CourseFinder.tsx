@@ -103,22 +103,11 @@ export default function CourseFinder() {
       onBlur={(e) => {
         if (!e.currentTarget.contains(e.relatedTarget as Node)) setFocused(false);
       }}
-      className={`relative rounded-2xl border-2 border-dashed bg-surface p-0 transition-shadow duration-300 ${
-        focused ? "border-brand" : "border-black"
-      } ${focused ? "" : "animate-finder-glow"}`}
-      style={
-        // Elevation shadow for the card lift itself, plus a soft, wide,
-        // low-opacity warm-gold glow further out — not a border, just a
-        // premium light source sitting behind the card. On focus this
-        // holds steady at its brightest instead of continuing to pulse,
-        // since the pulse's job (catch the eye) is done once someone's
-        // actually using it.
-        focused
-          ? { boxShadow: "0 20px 45px -12px rgba(20,24,26,0.16), 0 12px 85px -6px rgba(251,191,36,1)" }
-          : undefined
-      }
+      className={`relative rounded-2xl border-4 border-brand bg-surface p-0 shadow-xl shadow-ink/10 transition-shadow duration-300 ${
+        focused ? "shadow-2xl shadow-brand/20" : ""
+      }`}
     >
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-dashed border-black px-5 py-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-black px-5 py-4">
         <div className="flex items-center gap-3">
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand to-brand-deep text-white shadow-sm shadow-brand/30">
             <SearchIcon />
@@ -137,7 +126,7 @@ export default function CourseFinder() {
       </div>
 
       <div className="grid grid-cols-1 gap-0 sm:grid-cols-3">
-        <FinderField label="Destination" borderClass="sm:border-r sm:border-dashed sm:border-black">
+        <FinderField label="Destination" borderClass="sm:border-r sm:border-black">
           <FlatDropdown
             ariaLabel="Destination"
             value={destination}
@@ -146,7 +135,7 @@ export default function CourseFinder() {
             placeholder="Where to?"
           />
         </FinderField>
-        <FinderField label="Class" borderClass="sm:border-r sm:border-dashed sm:border-black">
+        <FinderField label="Class" borderClass="sm:border-r sm:border-black">
           <LevelSelect ariaLabel="Class" value={level} onChange={setLevel} />
         </FinderField>
         <FinderField label="Route" borderClass="">
@@ -160,8 +149,8 @@ export default function CourseFinder() {
         </FinderField>
       </div>
 
-      <div className="grid grid-cols-1 gap-0 border-t border-dashed border-black sm:grid-cols-[1fr_1fr_auto]">
-        <FinderField label="Intake" borderClass="sm:border-r sm:border-dashed sm:border-black">
+      <div className="grid grid-cols-1 gap-0 border-t border-black sm:grid-cols-[1fr_1fr_auto]">
+        <FinderField label="Intake" borderClass="sm:border-r sm:border-black">
           <FlatDropdown
             ariaLabel="Intake"
             value={intake}
@@ -170,7 +159,7 @@ export default function CourseFinder() {
             placeholder="When?"
           />
         </FinderField>
-        <FinderField label="Budget" borderClass="sm:border-r sm:border-dashed sm:border-black">
+        <FinderField label="Budget" borderClass="sm:border-r sm:border-black">
           <FlatDropdown
             ariaLabel="Budget"
             value={budget}
@@ -192,7 +181,7 @@ export default function CourseFinder() {
       </div>
 
       {selectedDestination && (
-        <div className="border-t border-dashed border-black px-5 py-2.5 text-xs">
+        <div className="border-t border-black px-5 py-2.5 text-xs">
           {hasCourseData ? (
             <span className="font-medium text-brand-text">
               {matchCount} course{matchCount === 1 ? "" : "s"} match &mdash; view real listings on the next step
@@ -218,7 +207,7 @@ function FinderField({
   children: React.ReactNode;
 }) {
   return (
-    <div className={`border-b border-dashed border-black px-5 py-3 last:border-b-0 sm:border-b-0 ${borderClass}`}>
+    <div className={`border-b border-black px-5 py-3 last:border-b-0 sm:border-b-0 ${borderClass}`}>
       <span className="mb-2 block text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-text">{label}</span>
       {children}
     </div>

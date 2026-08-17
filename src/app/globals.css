@@ -270,18 +270,6 @@ summary:focus-visible {
   animation: slide-in-right 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* A slow "breathing" glow on the course finder card — subtle enough not to
-   be distracting, but enough motion in peripheral vision to draw the eye
-   to an interactive tool sitting in an otherwise mostly-static hero. */
-@keyframes finder-glow-pulse {
-  0%, 100% { box-shadow: 0 20px 45px -12px rgba(20, 24, 26, 0.14), 0 8px 60px -10px rgba(251, 191, 36, 0.7); }
-  50% { box-shadow: 0 20px 45px -12px rgba(20, 24, 26, 0.14), 0 12px 85px -6px rgba(251, 191, 36, 1); }
-}
-
-.animate-finder-glow {
-  animation: finder-glow-pulse 3.2s ease-in-out infinite;
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

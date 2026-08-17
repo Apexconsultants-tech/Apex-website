@@ -79,7 +79,7 @@ export default function HeroClassic() {
         </div>
 
         <Reveal delay={200} className="relative z-10 mt-20 lg:mt-24">
-          <div className="mb-6 flex flex-col items-center text-center">
+          <div className="mb-6 flex flex-col items-center rounded-3xl bg-black/35 px-6 py-6 text-center shadow-lg shadow-black/20 backdrop-blur-sm sm:px-10 sm:py-7">
             <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.1em] text-brand-deep shadow-lg shadow-black/10">
               <SearchGlyph />
               Course Finder
