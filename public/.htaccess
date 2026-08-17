@@ -1,0 +1,42 @@
+# Security headers, replacing the ones previously set in next.config.ts's
+# headers() block — that only worked with a live Next.js server, which
+# doesn't exist on this static HostGator deployment.
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
+
+# next build with output: "export" writes each page as a flat file, e.g.
+# study-in-uk.html, not study-in-uk/index.html — but every canonical tag,
+# internal <Link>, and sitemap entry on this site points to the extension-
+# less URL (/study-in-uk). Without this rewrite, none of those would
+# resolve on plain Apache.
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # An exact physical file (contact.php, /_next/static/*, /images/*, the
+  # root index.html, etc.) is served as-is, unrewritten.
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+
+  # /study-in-uk -> study-in-uk.html, when that file exists. This must
+  # come before the directory check below: dynamic routes each also get a
+  # same-named folder (e.g. out/study-in-uk/) containing only internal
+  # Next.js payload files, not a page — checking -f above first and this
+  # rewrite next means that folder never gets a chance to shadow the real
+  # page at study-in-uk.html.
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^(.+)$ $1.html [L]
+
+  # An actual directory with its own content (not one of the payload-only
+  # route folders above, which are only ever reached via the .html rule)
+  # is left for Apache to handle normally.
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+</IfModule>
+
+# Serve the site's own branded 404 page instead of Apache's default for any
+# path that matches nothing above.
+ErrorDocument 404 /404.html

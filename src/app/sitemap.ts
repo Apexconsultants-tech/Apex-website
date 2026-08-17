@@ -5,6 +5,10 @@ import { blogPosts } from "@/lib/blog-data";
 import { partnerUniversities } from "@/lib/universities-data";
 import { site } from "@/lib/site-config";
 
+// Required for output: "export" — built from static local data, so it's
+// safe to prerender once at build time.
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = site.url;
   const now = new Date();

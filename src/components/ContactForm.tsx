@@ -7,15 +7,9 @@ import { contactFormDestinations } from "@/lib/site-config";
 
 type FieldErrors = Partial<Record<"firstName" | "lastName" | "email" | "mobile" | "destination" | "message", string>>;
 type Status = "idle" | "submitting" | "success" | "error";
+type PhpResponse = { success: boolean; message: string };
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-// Netlify detects this form at build time from the prerendered HTML (this
-// page is statically generated) because of the name + data-netlify
-// attributes below, then processes POSTs to it — no server code needed.
-// Since the actual submission goes through fetch() rather than a native
-// form POST, form-name has to be included in the encoded body manually.
-const FORM_NAME = "contact";
 
 function encode(data: Record<string, string>) {
   return Object.entries(data)
@@ -34,9 +28,8 @@ export default function ContactForm() {
     const form = e.currentTarget;
     const data = new FormData(form);
 
-    // Honeypot: real users never fill this. Netlify's own honeypot filter
-    // (data-netlify-honeypot below) is the primary defense server-side;
-    // this just avoids the round-trip entirely for obvious bots.
+    // Honeypot: real users never fill this. contact.php checks it again
+    // server-side; this just avoids the round-trip entirely for obvious bots.
     if ((data.get("company") as string | null)?.trim()) {
       setStatus("success");
       setMessage("Thanks, our team will reach out shortly.");
@@ -78,11 +71,10 @@ export default function ContactForm() {
     setStatus("submitting");
 
     try {
-      const res = await fetch("/", {
+      const res = await fetch("/contact.php", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: encode({
-          "form-name": FORM_NAME,
           first_name: firstName,
           last_name: lastName,
           email,
@@ -93,10 +85,16 @@ export default function ContactForm() {
         }),
       });
 
-      if (!res.ok) throw new Error(`Netlify Forms responded ${res.status}`);
+      const result = (await res.json()) as PhpResponse;
+
+      if (!res.ok || !result.success) {
+        setStatus("error");
+        setMessage(result.message || "Sorry, we couldn't send your enquiry right now. Please call or WhatsApp us directly.");
+        return;
+      }
 
       setStatus("success");
-      setMessage("Thanks, our team will reach out shortly, usually within one business day.");
+      setMessage(result.message);
       trackEvent("form_submit", { form_name: "contact_enquiry" });
       formRef.current?.reset();
     } catch (error) {
@@ -109,18 +107,7 @@ export default function ContactForm() {
   const pending = status === "submitting";
 
   return (
-    <form
-      ref={formRef}
-      name={FORM_NAME}
-      data-netlify="true"
-      data-netlify-honeypot="company"
-      onSubmit={handleSubmit}
-      className="space-y-5"
-      noValidate
-    >
-      {/* Required so Netlify routes a JS-submitted (fetch) POST to this form */}
-      <input type="hidden" name="form-name" value={FORM_NAME} />
-
+    <form ref={formRef} onSubmit={handleSubmit} className="space-y-5" noValidate>
       {/* Honeypot, hidden from real users and left empty by them */}
       <input
         type="text"
