@@ -16,6 +16,28 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  # AI-training crawlers and third-party SEO/audit bots, actually blocked
+  # here rather than just asked nicely in robots.txt (the list below is
+  # kept in sync with blockedBots in src/app/robots.ts) — robots.txt is
+  # only a polite request, and non-conforming bots ignore it. Checked
+  # first, before any other rule, so it applies to every request
+  # regardless of whether it maps to a real file/directory. Matched
+  # case-insensitively as a substring of the User-Agent header, so
+  # Googlebot/Bingbot and real browsers are never affected.
+  RewriteCond %{HTTP_USER_AGENT} GPTBot [NC,OR]
+  RewriteCond %{HTTP_USER_AGENT} PetalBot [NC,OR]
+  RewriteCond %{HTTP_USER_AGENT} Factset_spyderbot [NC,OR]
+  RewriteCond %{HTTP_USER_AGENT} LINER\ Bot [NC,OR]
+  RewriteCond %{HTTP_USER_AGENT} ClaudeBot [NC,OR]
+  RewriteCond %{HTTP_USER_AGENT} Timpibot [NC,OR]
+  RewriteCond %{HTTP_USER_AGENT} SemrushBot [NC,OR]
+  RewriteCond %{HTTP_USER_AGENT} AhrefsBot [NC,OR]
+  RewriteCond %{HTTP_USER_AGENT} AhrefsSiteAudit [NC,OR]
+  RewriteCond %{HTTP_USER_AGENT} AwarioBot [NC,OR]
+  RewriteCond %{HTTP_USER_AGENT} DotBot [NC,OR]
+  RewriteCond %{HTTP_USER_AGENT} MJ12bot [NC]
+  RewriteRule ^ - [F,L]
+
   # An exact physical file (contact.php, /_next/static/*, /images/*, the
   # root index.html, etc.) is served as-is, unrewritten.
   RewriteCond %{REQUEST_FILENAME} -f
