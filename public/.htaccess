@@ -30,6 +30,14 @@
   RewriteCond %{REQUEST_FILENAME}.html -f
   RewriteRule ^(.+)$ $1.html [L]
 
+  # Same as above, but for the trailing-slash form (/study-in-uk/). Here
+  # REQUEST_FILENAME is the payload-only folder itself, which -d below would
+  # match and hand to Apache before the rewrite above ever gets a chance —
+  # so strip the trailing slash and re-check for the .html file explicitly.
+  RewriteCond %{REQUEST_URI} ^/(.+)/$
+  RewriteCond %{DOCUMENT_ROOT}/%1.html -f
+  RewriteRule ^ /%1.html [L]
+
   # An actual directory with its own content (not one of the payload-only
   # route folders above, which are only ever reached via the .html rule)
   # is left for Apache to handle normally.
