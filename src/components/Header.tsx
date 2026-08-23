@@ -1,6 +1,6 @@
 ﻿"use client";
 
-import { useState } from "react";
+import { useState, type FocusEvent } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { contact, destinations, serviceLinks } from "@/lib/site-config";
@@ -11,6 +11,11 @@ const primaryDestinations = destinations.slice(0, 8);
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [mobileSection, setMobileSection] = useState<"destinations" | "services" | null>(null);
+  const [openMenu, setOpenMenu] = useState<"destinations" | "services" | null>(null);
+
+  const closeOpenMenuOnBlur = (e: FocusEvent<HTMLDivElement>) => {
+    if (!e.currentTarget.contains(e.relatedTarget as Node | null)) setOpenMenu(null);
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-line/70 bg-surface/95 backdrop-blur supports-[backdrop-filter]:bg-surface/80">
@@ -97,7 +102,13 @@ export default function Header() {
           Home
         </Link>
 
-        <div className="group relative shrink-0">
+        <div
+          className="relative shrink-0"
+          onMouseEnter={() => setOpenMenu("destinations")}
+          onMouseLeave={() => setOpenMenu(null)}
+          onFocus={() => setOpenMenu("destinations")}
+          onBlur={closeOpenMenuOnBlur}
+        >
           <Link
             href="/destinations"
             className="flex shrink-0 items-center gap-0.5 whitespace-nowrap rounded-full py-1.5 pl-4 pr-3 text-sm font-semibold text-white transition-colors hover:bg-white/15"
@@ -105,13 +116,16 @@ export default function Header() {
             Study Abroad
             <ChevronDown size={11} />
           </Link>
-          <div className="invisible absolute left-1/2 top-full z-10 w-[560px] -translate-x-1/2 pt-3 opacity-0 transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+          <div
+            className={`absolute left-1/2 top-full z-10 w-[560px] -translate-x-1/2 pt-3 transition-all duration-150 ${openMenu === "destinations" ? "visible opacity-100" : "invisible opacity-0"}`}
+          >
             <div className="grid grid-cols-2 gap-x-6 gap-y-1 rounded-xl border border-line bg-surface p-5 shadow-lg shadow-ink/5">
               {destinations.map((d) => (
                 <Link
                   key={d.slug}
                   href={`/${d.slug}`}
                   className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm text-ink-soft transition-colors hover:bg-brand-tint hover:text-brand"
+                  onClick={() => setOpenMenu(null)}
                 >
                   <Image
                     src={`/images/flags/${d.flag}.svg`}
@@ -126,7 +140,13 @@ export default function Header() {
           </div>
         </div>
 
-        <div className="group relative shrink-0">
+        <div
+          className="relative shrink-0"
+          onMouseEnter={() => setOpenMenu("services")}
+          onMouseLeave={() => setOpenMenu(null)}
+          onFocus={() => setOpenMenu("services")}
+          onBlur={closeOpenMenuOnBlur}
+        >
           <Link
             href="/#services"
             className="flex shrink-0 items-center gap-0.5 whitespace-nowrap rounded-full py-1.5 pl-4 pr-3 text-sm font-semibold text-white transition-colors hover:bg-white/15"
@@ -134,13 +154,16 @@ export default function Header() {
             What We Do
             <ChevronDown size={11} />
           </Link>
-          <div className="invisible absolute left-1/2 top-full z-10 w-72 -translate-x-1/2 pt-3 opacity-0 transition-all duration-150 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100">
+          <div
+            className={`absolute left-1/2 top-full z-10 w-72 -translate-x-1/2 pt-3 transition-all duration-150 ${openMenu === "services" ? "visible opacity-100" : "invisible opacity-0"}`}
+          >
             <div className="flex flex-col gap-1 rounded-xl border border-line bg-surface p-3 shadow-lg shadow-ink/5">
               {serviceLinks.map((s) => (
                 <Link
                   key={s.slug}
                   href={`/${s.slug}`}
                   className="rounded-md px-3 py-2 text-sm text-ink-soft transition-colors hover:bg-brand-tint hover:text-brand"
+                  onClick={() => setOpenMenu(null)}
                 >
                   {s.label}
                 </Link>
