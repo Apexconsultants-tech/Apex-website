@@ -22,7 +22,12 @@ export default function ServiceTemplate({ s }: { s: ServiceData }) {
         <div className="mx-auto max-w-7xl px-5 pb-16 pt-10 lg:px-8 lg:pt-14">
           <Breadcrumb current={s.name} />
           <div className={`mt-6 grid grid-cols-1 items-center gap-10 ${image ? "lg:grid-cols-[1.05fr_0.95fr]" : ""}`}>
-            <Reveal className={image ? "" : "max-w-3xl"}>
+            {/* Not wrapped in Reveal (same reasoning as the hero image
+                below): above-the-fold text must render straight from the
+                static HTML rather than sit at opacity:0 until JS hydrates
+                and an IntersectionObserver fires. animate-hero-in gives
+                the same fade/lift look as a pure-CSS animation instead. */}
+            <div className={`animate-hero-in ${image ? "" : "max-w-3xl"}`}>
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">What We Do</p>
               <h1 className="mt-3 text-4xl font-semibold leading-[1.08] text-ink sm:text-5xl">{s.headline}</h1>
               <p className="mt-6 text-base leading-relaxed text-ink-soft sm:text-lg">{s.intro}</p>
@@ -42,7 +47,7 @@ export default function ServiceTemplate({ s }: { s: ServiceData }) {
                   Chat on WhatsApp
                 </a>
               </div>
-            </Reveal>
+            </div>
             {/* Not wrapped in Reveal: this is the hero/LCP image and must
                 paint immediately rather than wait on hydration + an
                 IntersectionObserver. */}

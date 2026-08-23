@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Public_Sans, Sora } from "next/font/google";
 import Analytics from "@/components/Analytics";
-import FloatingLuggageTag from "@/components/FloatingLuggageTag";
+import FloatingLuggageTag from "@/components/FloatingLuggageTagLazy";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import JsonLd from "@/components/JsonLd";

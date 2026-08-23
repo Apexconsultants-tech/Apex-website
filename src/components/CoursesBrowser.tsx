@@ -1,18 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { courseCountries, courses } from "@/lib/courses-data";
 import TiltCard from "@/components/TiltCard";
 
 export default function CoursesBrowser() {
-  const params = useSearchParams();
-  const initialCountry = params.get("country");
-  const [country, setCountry] = useState(
-    initialCountry && courseCountries.includes(initialCountry) ? initialCountry : "All countries"
-  );
-  const [query, setQuery] = useState(params.get("q") ?? "");
+  const [country, setCountry] = useState("All countries");
+  const [query, setQuery] = useState("");
+
+  // Reads ?country=&q= (set by CourseFinder's redirect) after mount instead
+  // of via useSearchParams(), which on a static export requires wrapping
+  // this whole component in a Suspense boundary — that shipped the entire
+  // course list as empty in the prerendered HTML until JS hydrated. Reading
+  // the URL client-side here keeps the full unfiltered list in the static
+  // page and only narrows it once a deep link is present.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const initialCountry = params.get("country");
+    if (initialCountry && courseCountries.includes(initialCountry)) setCountry(initialCountry);
+    const initialQuery = params.get("q");
+    if (initialQuery) setQuery(initialQuery);
+  }, []);
 
   const filtered = useMemo(() => {
     return courses.filter((c) => {

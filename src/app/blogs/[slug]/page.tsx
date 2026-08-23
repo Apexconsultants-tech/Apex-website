@@ -64,14 +64,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
       />
       <article className="mx-auto max-w-3xl px-5 pb-16 pt-10 lg:px-8 lg:pt-14">
         <Breadcrumb current={post.title} />
-        <Reveal className="mt-6">
+        <div className="mt-6 animate-hero-in">
           <p className="text-xs font-medium text-ink-faint">{post.category} &middot; {post.date} &middot; {readingMinutes} min read</p>
           <h1 className="mt-3 text-3xl font-semibold leading-tight text-ink sm:text-4xl">{post.title}</h1>
           <p className="mt-4 text-sm text-ink-faint">By Apex Consulting Services</p>
-        </Reveal>
+        </div>
 
         {post.image && (
-          <Reveal delay={60} className="mt-8 overflow-hidden rounded-2xl border border-line">
+          <div className="mt-8 overflow-hidden rounded-2xl border border-line animate-hero-in" style={{ animationDelay: "60ms" }}>
             <Image
               src={post.image}
               alt={post.imageAlt ?? post.title}
@@ -80,7 +80,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
               priority
               className="h-56 w-full object-cover sm:h-80"
             />
-          </Reveal>
+          </div>
         )}
 
         <Reveal delay={80} className="mt-8">

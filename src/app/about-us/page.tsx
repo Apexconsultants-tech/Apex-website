@@ -41,7 +41,7 @@ export default function AboutUsPage() {
       <section className="mx-auto max-w-7xl px-5 pb-16 pt-14 lg:px-8 lg:pb-20 lg:pt-20">
         <Breadcrumb current="About Us" />
         <div className="mt-6 grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-          <Reveal>
+          <div className="animate-hero-in">
             <h1 className="text-4xl font-semibold leading-[1.08] text-ink sm:text-5xl">
               Beyond Numbers, <span className="text-brand">Beyond Borders</span>
             </h1>
@@ -73,7 +73,7 @@ export default function AboutUsPage() {
                 Chat on WhatsApp
               </a>
             </div>
-          </Reveal>
+          </div>
           {/* Not wrapped in Reveal: hero/LCP image, must paint immediately. */}
           <TiltCard className="overflow-hidden rounded-3xl border border-line" max={4}>
             <Image

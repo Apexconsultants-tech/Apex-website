@@ -25,7 +25,7 @@ export default function SuccessStoriesPage() {
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "Success Stories", path: "/success-stories" }])} />
       <section className="mx-auto max-w-7xl px-5 pb-12 pt-10 lg:px-8 lg:pt-14">
         <Breadcrumb current="Success Stories" />
-        <Reveal className="mt-6 max-w-3xl">
+        <div className="mt-6 max-w-3xl animate-hero-in">
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">Real students. Real results.</p>
           <h1 className="mt-3 text-4xl font-semibold leading-[1.06] text-ink sm:text-5xl">
             Student <span className="text-brand">Success Stories</span>
@@ -34,12 +34,12 @@ export default function SuccessStoriesPage() {
             Meet students who secured admissions abroad with guidance from Apex Consulting Services, from
             applications and documentation to visa support.
           </p>
-        </Reveal>
-        <Reveal delay={100} className="mt-8 grid grid-cols-3 gap-4 sm:max-w-md">
+        </div>
+        <div className="mt-8 grid grid-cols-3 gap-4 sm:max-w-md animate-hero-in" style={{ animationDelay: "100ms" }}>
           <MiniStat value={`${testimonials.length}+`} label="Success stories" />
           <MiniStat value="2009" label="Trusted guidance since" />
           <MiniStat value="UK & beyond" label="Global destinations" />
-        </Reveal>
+        </div>
       </section>
 
       <section className="border-t border-line bg-surface-2/60 py-16">

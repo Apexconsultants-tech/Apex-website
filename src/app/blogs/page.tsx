@@ -25,12 +25,12 @@ export default function BlogsPage() {
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "Blog", path: "/blogs" }])} />
       <section className="mx-auto max-w-7xl px-5 pb-12 pt-10 lg:px-8 lg:pt-14">
         <Breadcrumb current="Blog" />
-        <Reveal className="mt-6 max-w-3xl">
+        <div className="mt-6 max-w-3xl animate-hero-in">
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">Insights & guides</p>
           <h1 className="mt-3 text-4xl font-semibold leading-[1.06] text-ink sm:text-5xl">
             Visa Tips & <span className="text-brand">Study Abroad Guides</span>
           </h1>
-        </Reveal>
+        </div>
       </section>
 
       <section className="border-t border-line bg-surface-2/60 py-16">

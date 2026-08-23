@@ -53,7 +53,7 @@ export default async function UniversityProfilePage({ params }: { params: Promis
       />
       <section className="mx-auto max-w-7xl px-5 pb-12 pt-10 lg:px-8 lg:pt-14">
         <Breadcrumb current={u.name} />
-        <Reveal className="mt-6 max-w-3xl">
+        <div className="mt-6 max-w-3xl animate-hero-in">
           <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">
             <Image src={`/images/flags/${u.flag}.svg`} alt="" {...flagSize(u.flag, 15)} className="rounded-sm" />
             Partner University &middot; {u.country}
@@ -86,7 +86,7 @@ export default async function UniversityProfilePage({ params }: { params: Promis
               Book free consultation
             </a>
           </div>
-        </Reveal>
+        </div>
       </section>
 
       {uniCourses.length > 0 && (

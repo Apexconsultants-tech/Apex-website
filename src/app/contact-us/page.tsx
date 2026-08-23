@@ -1,7 +1,7 @@
 ﻿import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Breadcrumb from "@/components/Breadcrumb";
-import ContactForm from "@/components/ContactForm";
 import JsonLd from "@/components/JsonLd";
 import OfficeLocations from "@/components/OfficeLocations";
 import Reveal from "@/components/Reveal";
@@ -9,6 +9,16 @@ import SectionHeading from "@/components/SectionHeading";
 import TiltCard from "@/components/TiltCard";
 import { contact, socials } from "@/lib/site-config";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
+
+// Code-split: this page's own validation/submit logic is sizeable and only
+// this one page needs it, so it's fetched as its own chunk rather than
+// bundled into contact-us's main JS. Still server-rendered by default (no
+// ssr:false), so the actual form fields stay in the static HTML — only the
+// hydration script is deferred. The skeleton mirrors the real form's field
+// layout so there's no shape jump if the chunk is still loading.
+const ContactForm = dynamic(() => import("@/components/ContactForm"), {
+  loading: () => <ContactFormSkeleton />,
+});
 
 const contactTitle = "Contact Us | Karachi, Hyderabad & UK";
 const contactDescription =
@@ -32,7 +42,7 @@ export default function ContactUsPage() {
         <div className="mx-auto max-w-7xl px-5 pb-16 pt-14 lg:px-8 lg:pb-20 lg:pt-20">
           <Breadcrumb current="Contact Us" />
           <div className="mt-6 grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-            <Reveal>
+            <div className="animate-hero-in">
               <h1 className="text-4xl font-semibold leading-[1.08] text-ink sm:text-5xl">
                 We are <span className="text-brand">here for you</span>
               </h1>
@@ -62,7 +72,7 @@ export default function ContactUsPage() {
                   Chat on WhatsApp
                 </a>
               </div>
-            </Reveal>
+            </div>
             {/* Not wrapped in Reveal: hero/LCP image, must paint immediately. */}
             <TiltCard className="overflow-hidden rounded-3xl border border-line shadow-lg shadow-ink/10" max={4}>
               <Image
@@ -165,6 +175,31 @@ export default function ContactUsPage() {
         </div>
       </section>
     </>
+  );
+}
+
+function ContactFormSkeleton() {
+  return (
+    <div className="animate-pulse space-y-5" aria-hidden="true">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+        {Array.from({ length: 4 }).map((_, i) => (
+          <div key={i} className="space-y-1.5">
+            <div className="h-3.5 w-24 rounded bg-line" />
+            <div className="h-10 rounded-lg bg-surface-2" />
+          </div>
+        ))}
+        <div className="space-y-1.5 sm:col-span-2">
+          <div className="h-3.5 w-40 rounded bg-line" />
+          <div className="h-10 rounded-lg bg-surface-2" />
+        </div>
+        <div className="space-y-1.5 sm:col-span-2">
+          <div className="h-3.5 w-36 rounded bg-line" />
+          <div className="h-28 rounded-lg bg-surface-2" />
+        </div>
+      </div>
+      <div className="h-4 w-3/4 rounded bg-line" />
+      <div className="h-11 w-40 rounded-full bg-surface-2" />
+    </div>
   );
 }
 

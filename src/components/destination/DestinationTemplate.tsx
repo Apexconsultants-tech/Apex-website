@@ -115,7 +115,13 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
         <div className="mx-auto max-w-7xl px-5 pb-10 pt-10 lg:px-8 lg:pt-14">
           <Breadcrumb current={d.name} />
           <div className="mt-6 grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-            <Reveal>
+            {/* Not wrapped in Reveal (same reasoning as the hero image
+                below): this is above-the-fold text, so it needs to render
+                straight from the static HTML instead of sitting at
+                opacity:0 until JS hydrates and an IntersectionObserver
+                fires. animate-hero-in gives the same fade/lift look as a
+                pure-CSS animation that runs on paint instead. */}
+            <div className="animate-hero-in">
               <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">
                 <FlagIcon code={d.flag} /> Study Abroad
               </p>
@@ -146,7 +152,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
                   Chat on WhatsApp
                 </a>
               </div>
-            </Reveal>
+            </div>
             {/* Not wrapped in Reveal: this is the hero/LCP image, so it
                 must paint the instant it's decoded rather than sit at
                 opacity:0 until JS hydrates and an IntersectionObserver

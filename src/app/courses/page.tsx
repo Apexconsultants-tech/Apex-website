@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import Breadcrumb from "@/components/Breadcrumb";
 import CoursesBrowser from "@/components/CoursesBrowser";
 import JsonLd from "@/components/JsonLd";
@@ -25,7 +24,7 @@ export default function CoursesPage() {
       <JsonLd data={breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "Courses", path: "/courses" }])} />
       <section className="mx-auto max-w-7xl px-5 pb-12 pt-10 lg:px-8 lg:pt-14">
         <Breadcrumb current="Courses" />
-        <Reveal className="mt-6 max-w-3xl">
+        <div className="mt-6 max-w-3xl animate-hero-in">
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">Programs worldwide</p>
           <h1 className="mt-3 text-4xl font-semibold leading-[1.06] text-ink sm:text-5xl">
             Study Abroad <span className="text-brand">Courses</span>
@@ -34,20 +33,18 @@ export default function CoursesPage() {
             Explore undergraduate, postgraduate, and diploma programs at our partner universities across
             the UK, USA, and Australia.
           </p>
-        </Reveal>
-        <Reveal delay={100} className="mt-8 grid grid-cols-3 gap-4 sm:max-w-md">
+        </div>
+        <div className="mt-8 grid grid-cols-3 gap-4 sm:max-w-md animate-hero-in" style={{ animationDelay: "100ms" }}>
           <MiniStat value={`${courses.length}+`} label="Courses listed" />
           <MiniStat value="3" label="Destinations" />
           <MiniStat value="13+" label="Partner universities" />
-        </Reveal>
+        </div>
       </section>
 
       <section className="border-t border-line bg-surface-2/60 py-16">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <Reveal>
-            <Suspense fallback={null}>
-              <CoursesBrowser />
-            </Suspense>
+            <CoursesBrowser />
           </Reveal>
         </div>
       </section>

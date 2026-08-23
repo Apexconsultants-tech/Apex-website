@@ -21,12 +21,15 @@ export default function StatStrip() {
 
 // Counts up from 0 to the stat's numeric value the first time it scrolls
 // into view. Non-numeric values (e.g. "Strong", "ICEF") just render as-is,
-// no animation to fake.
+// no animation to fake. The initial render (and any no-JS/pre-hydration
+// paint) shows the real target value rather than "0" — this strip sits
+// above the fold, so a crawler or a user on a slow connection would
+// otherwise see wrong numbers instead of delayed ones.
 function StatValue({ value }: { value: string }) {
   const match = value.match(/^(\d+)(.*)$/);
   const target = match ? parseInt(match[1], 10) : null;
   const suffix = match ? match[2] : "";
-  const [display, setDisplay] = useState(target === null ? value : `0${suffix}`);
+  const [display, setDisplay] = useState(value);
   const ref = useRef<HTMLParagraphElement>(null);
   const started = useRef(false);
 

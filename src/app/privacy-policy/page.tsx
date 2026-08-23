@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Breadcrumb from "@/components/Breadcrumb";
-import Reveal from "@/components/Reveal";
 import { contact, offices, site } from "@/lib/site-config";
 
 export const metadata: Metadata = {
@@ -14,7 +13,7 @@ export default function PrivacyPolicyPage() {
   return (
     <section className="mx-auto max-w-3xl px-5 pb-20 pt-10 lg:px-8 lg:pt-14">
       <Breadcrumb current="Privacy Policy" />
-      <Reveal className="mt-6">
+      <div className="mt-6 animate-hero-in">
         <h1 className="text-3xl font-semibold text-ink sm:text-4xl">Privacy Policy</h1>
         <p className="mt-3 text-sm text-ink-faint">Last updated: 9 August 2026</p>
 
@@ -93,7 +92,7 @@ export default function PrivacyPolicyPage() {
             </p>
           </div>
         </div>
-      </Reveal>
+      </div>
     </section>
   );
 }

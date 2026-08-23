@@ -27,7 +27,7 @@ export default function FaqsPage() {
       />
       <section className="mx-auto max-w-3xl px-5 pb-12 pt-10 lg:px-8 lg:pt-14">
         <Breadcrumb current="FAQs" />
-        <Reveal className="mt-6">
+        <div className="mt-6 animate-hero-in">
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">Common questions</p>
           <h1 className="mt-3 text-4xl font-semibold leading-[1.06] text-ink sm:text-5xl">
             Frequently Asked <span className="text-brand">Questions</span>
@@ -40,7 +40,7 @@ export default function FaqsPage() {
             </Link>{" "}
             also has its own FAQ section.
           </p>
-        </Reveal>
+        </div>
       </section>
 
       <section className="border-t border-line bg-surface-2/60 py-16">
