@@ -33,8 +33,15 @@ export const socials = {
 
 export const offices = [
   {
+    id: "karachi-shahrah-e-faisal",
+    name: "Karachi (Head Office, Shahrah-e-Faisal)",
+    address: "Office no. 601, 6th Floor, Business Centre, Shahrah-e-Faisal, PECHS Block 6, Karachi, Pakistan",
+    mapQuery: "Business+Centre+Shahrah-e-Faisal+PECHS+Block+6+Karachi+Pakistan",
+    mapZoom: 16,
+  },
+  {
     id: "karachi",
-    name: "Karachi (Head Office)",
+    name: "Karachi (Gulshan-e-Iqbal Branch)",
     address: "Office no. 301, 3rd Floor, Crown Square, Block 13A, Gulshan-e-Iqbal, Karachi 75300, Pakistan",
     mapQuery: "Crown+Square+Block+13A+Gulshan-e-Iqbal+Karachi+75300+Pakistan",
     mapZoom: 15,

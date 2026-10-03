@@ -3,11 +3,13 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { courseCountries, courses } from "@/lib/courses-data";
+import { getUniversity } from "@/lib/universities-data";
 import TiltCard from "@/components/TiltCard";
 
 export default function CoursesBrowser() {
   const [country, setCountry] = useState("All countries");
   const [query, setQuery] = useState("");
+  const [university, setUniversity] = useState("");
 
   // Reads ?country=&q= (set by CourseFinder's redirect) after mount instead
   // of via useSearchParams(), which on a static export requires wrapping
@@ -16,20 +18,27 @@ export default function CoursesBrowser() {
   // the URL client-side here keeps the full unfiltered list in the static
   // page and only narrows it once a deep link is present.
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const initialCountry = params.get("country");
-    if (initialCountry && courseCountries.includes(initialCountry)) setCountry(initialCountry);
-    const initialQuery = params.get("q");
-    if (initialQuery) setQuery(initialQuery);
+    // Apply browser-only filters after the initial static content paints.
+    const frame = requestAnimationFrame(() => {
+      const params = new URLSearchParams(window.location.search);
+      const initialCountry = params.get("country");
+      if (initialCountry && courseCountries.includes(initialCountry)) setCountry(initialCountry);
+      const initialQuery = params.get("q");
+      if (initialQuery) setQuery(initialQuery);
+      const initialUniversity = params.get("university");
+      if (initialUniversity && getUniversity(initialUniversity)) setUniversity(initialUniversity);
+    });
+    return () => cancelAnimationFrame(frame);
   }, []);
 
   const filtered = useMemo(() => {
     return courses.filter((c) => {
       const matchesCountry = country === "All countries" || c.country === country;
       const matchesQuery = query.trim() === "" || c.name.toLowerCase().includes(query.trim().toLowerCase());
-      return matchesCountry && matchesQuery;
+      const matchesUniversity = !university || c.universitySlug === university;
+      return matchesCountry && matchesQuery && matchesUniversity;
     });
-  }, [country, query]);
+  }, [country, query, university]);
 
   return (
     <div>
@@ -56,6 +65,12 @@ export default function CoursesBrowser() {
       <p className="mt-4 text-xs text-ink-faint">
         {filtered.length} course{filtered.length === 1 ? "" : "s"} found
       </p>
+      {university && (
+        <p className="mt-2 text-sm text-ink-soft">
+          At {getUniversity(university)?.name}{" "}
+          <button type="button" onClick={() => setUniversity("")} className="font-semibold text-brand-text underline underline-offset-2">Clear university filter</button>
+        </p>
+      )}
 
       <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((c) => (

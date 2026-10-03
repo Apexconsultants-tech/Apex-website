@@ -278,7 +278,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
             </Reveal>
             {d.scholarships.length > 0 && (
               <Reveal delay={100}>
-                <h2 className="text-2xl font-semibold text-ink">Scholarships</h2>
+              <h2 id="scholarships" className="scroll-mt-24 text-2xl font-semibold text-ink">Scholarships</h2>
                 <ul className="mt-5 space-y-2.5">
                   {d.scholarships.map((s) => (
                     <li key={s} className="flex gap-3 text-sm text-ink-soft">

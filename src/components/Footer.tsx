@@ -92,7 +92,7 @@ export default function Footer() {
           <div className="lg:col-span-3">
             <h3 className="text-xs font-semibold uppercase tracking-wide text-ink-faint">Contact Us</h3>
             <ul className="mt-4 space-y-3 text-sm text-ink-soft">
-              {offices.slice(0, 2).map((o) => (
+              {offices.filter((office) => office.id !== "uk").map((o) => (
                 <li key={o.id}>
                   <strong className="block text-ink">{o.name}</strong>
                   <span>{o.address}</span>

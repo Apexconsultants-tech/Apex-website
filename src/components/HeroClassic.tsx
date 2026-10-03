@@ -1,9 +1,14 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import CourseFinder from "@/components/CourseFinder";
+import CourseFinderBar from "@/components/CourseFinderBar";
 import StatStrip from "@/components/StatStrip";
 import { contact } from "@/lib/site-config";
+
+// Render the full form statically while splitting its navigation JavaScript.
+const CourseFinder = dynamic(() => import("@/components/CourseFinder"), {
+  loading: () => <CourseFinderBar />,
+});
 
 // Code-split: the Globe's own JS (orbit-flag layout, drag/momentum
 // panning, flag data) is sizeable and irrelevant to the rest of the hero,

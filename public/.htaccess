@@ -15,6 +15,9 @@
 # resolve on plain Apache.
 <IfModule mod_rewrite.c>
   RewriteEngine On
+  # Next.js also exports payload-only directories named after each page.
+  # Process their clean URLs before mod_dir can redirect them to a slash.
+  RewriteOptions AllowNoSlash
 
   # AI-training crawlers and third-party SEO/audit bots, actually blocked
   # here rather than just asked nicely in robots.txt (the list below is
@@ -27,7 +30,7 @@
   RewriteCond %{HTTP_USER_AGENT} GPTBot [NC,OR]
   RewriteCond %{HTTP_USER_AGENT} PetalBot [NC,OR]
   RewriteCond %{HTTP_USER_AGENT} Factset_spyderbot [NC,OR]
-  RewriteCond %{HTTP_USER_AGENT} LINER\ Bot [NC,OR]
+  RewriteCond %{HTTP_USER_AGENT} "LINER Bot" [NC,OR]
   RewriteCond %{HTTP_USER_AGENT} ClaudeBot [NC,OR]
   RewriteCond %{HTTP_USER_AGENT} Timpibot [NC,OR]
   RewriteCond %{HTTP_USER_AGENT} SemrushBot [NC,OR]
@@ -43,22 +46,13 @@
   RewriteCond %{REQUEST_FILENAME} -f
   RewriteRule ^ - [L]
 
-  # /study-in-uk -> study-in-uk.html, when that file exists. This must
-  # come before the directory check below: dynamic routes each also get a
-  # same-named folder (e.g. out/study-in-uk/) containing only internal
-  # Next.js payload files, not a page — checking -f above first and this
-  # rewrite next means that folder never gets a chance to shadow the real
-  # page at study-in-uk.html.
-  RewriteCond %{REQUEST_FILENAME}.html -f
-  RewriteRule ^(.+)$ $1.html [L]
-
-  # Same as above, but for the trailing-slash form (/study-in-uk/). Here
-  # REQUEST_FILENAME is the payload-only folder itself, which -d below would
-  # match and hand to Apache before the rewrite above ever gets a chance —
-  # so strip the trailing slash and re-check for the .html file explicitly.
-  RewriteCond %{REQUEST_URI} ^/(.+)/$
-  RewriteCond %{DOCUMENT_ROOT}/%1.html -f
-  RewriteRule ^ /%1.html [L]
+  # /destinations and /destinations/ -> destinations.html; the same rule
+  # handles /study-in-canada and nested routes. The lazy capture excludes
+  # the optional trailing slash. Apache matches RewriteRule first, so $1
+  # is available in the file check. Prefer this HTML file over the payload
+  # directory, and stop per-directory rewriting after the substitution.
+  RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+  RewriteRule ^(.+?)/?$ $1.html [END]
 
   # An actual directory with its own content (not one of the payload-only
   # route folders above, which are only ever reached via the .html rule)

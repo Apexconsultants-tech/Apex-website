@@ -43,3 +43,6 @@ next-env.d.ts
 
 # Local editor/tool settings
 .claude/
+
+# Local preview and verification artifacts
+/.tmp/
