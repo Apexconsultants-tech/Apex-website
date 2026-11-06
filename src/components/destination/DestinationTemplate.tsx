@@ -7,6 +7,7 @@ import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
 import TiltCard from "@/components/TiltCard";
 import Breadcrumb from "@/components/Breadcrumb";
+import Icon from "@/components/Icon";
 import SectionNav from "@/components/destination/SectionNav";
 import type { Destination } from "@/lib/destinations-data";
 import { destinationPhoto, getDestination, popularDestinationSlugs } from "@/lib/destinations-data";
@@ -262,7 +263,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
               <Reveal key={w.title} delay={i * 80} className="h-full">
                 <TiltCard className="group relative h-full overflow-hidden rounded-2xl border border-line bg-surface p-7 transition-colors hover:border-brand/40" max={4}>
                   <span className={`absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r transition-transform duration-500 group-hover:scale-x-100 ${accent.bar}`} />
-                  <span className={`pointer-events-none absolute -right-2 -top-4 font-display text-7xl font-bold ${accent.num}`}>
+                  <span className={`pointer-events-none absolute right-4 top-3 font-display text-5xl font-bold leading-none ${accent.num}`}>
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className={`flex h-11 w-11 items-center justify-center rounded-xl ${accent.tint}`}>
@@ -650,31 +651,4 @@ function CheckIcon() {
 
 function FlagIcon({ code }: { code: string }) {
   return <Image src={`/images/flags/${code}.svg`} alt="" {...flagSize(code, 15)} className="rounded-sm" />;
-}
-
-type IconName =
-  | "campus" | "wallet" | "briefcase" | "star" | "shield" | "spark" | "globe"
-  | "home" | "people" | "clock" | "clipboard" | "award";
-
-const iconPaths: Record<IconName, React.ReactNode> = {
-  campus: <><path d="M3 10 12 5l9 5-9 5-9-5Z" /><path d="M7 12v4.5c0 1 2.2 2.5 5 2.5s5-1.5 5-2.5V12" /><path d="M21 10v5" /></>,
-  wallet: <><rect x="3" y="6" width="18" height="13" rx="2.5" /><path d="M3 10h18" /><circle cx="16.5" cy="14.5" r="1.2" /></>,
-  briefcase: <><rect x="3" y="7" width="18" height="13" rx="2.5" /><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7" /><path d="M3 12.5h18" /></>,
-  star: <path d="m12 3.5 2.6 5.3 5.8.8-4.2 4.1 1 5.8L12 16.8l-5.2 2.7 1-5.8-4.2-4.1 5.8-.8L12 3.5Z" />,
-  shield: <><path d="M12 3 4.5 6v5.5c0 4.4 3.1 8.2 7.5 9.5 4.4-1.3 7.5-5.1 7.5-9.5V6L12 3Z" /><path d="m9 12 2 2 4-4" /></>,
-  spark: <><path d="M12 3v4M12 17v4M3 12h4M17 12h4" /><path d="m6 6 2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6" /></>,
-  globe: <><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3Z" /></>,
-  home: <><path d="M4 11 12 4l8 7" /><path d="M6 9.5V20h12V9.5" /><path d="M10 20v-5h4v5" /></>,
-  people: <><circle cx="9" cy="8.5" r="3" /><path d="M3.5 19c.6-3 2.8-5 5.5-5s4.9 2 5.5 5" /><circle cx="16.5" cy="9.5" r="2.4" /><path d="M16 14.2c2.3.2 4 1.9 4.5 4.8" /></>,
-  clock: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>,
-  clipboard: <><rect x="5" y="4.5" width="14" height="16" rx="2" /><path d="M9 4.5V3.5h6v1" /><path d="m9 12 2 2 4-4" /></>,
-  award: <><circle cx="12" cy="9" r="5.5" /><path d="m8.5 13.5-1.5 7 5-2.5 5 2.5-1.5-7" /></>,
-};
-
-function Icon({ name }: { name: IconName }) {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      {iconPaths[name]}
-    </svg>
-  );
 }
