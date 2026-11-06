@@ -26,10 +26,10 @@ export default function OfficeLocations() {
                 <p className="mt-1 text-sm text-ink-soft">{o.address}</p>
               </button>
               <a
-                href={contact.phoneHref} data-track="phone_click"
+                href={"phone" in o ? o.phone.href : contact.phoneHref} data-track="phone_click"
                 className="mt-2 inline-block text-sm font-semibold text-brand-text underline underline-offset-2 hover:decoration-2"
               >
-                {contact.phoneDisplay}
+                {"phone" in o ? o.phone.display : contact.phoneDisplay}
               </a>
             </div>
           );

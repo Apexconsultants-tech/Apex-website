@@ -38,6 +38,7 @@ export const offices = [
     address: "Office no. 601, 6th Floor, Business Centre, Shahrah-e-Faisal, PECHS Block 6, Karachi, Pakistan",
     mapQuery: "Business+Centre+Shahrah-e-Faisal+PECHS+Block+6+Karachi+Pakistan",
     mapZoom: 16,
+    phone: { display: "0332 3494225", href: "tel:+923323494225" },
   },
   {
     id: "karachi",
@@ -45,6 +46,7 @@ export const offices = [
     address: "Office no. 301, 3rd Floor, Crown Square, Block 13A, Gulshan-e-Iqbal, Karachi 75300, Pakistan",
     mapQuery: "Crown+Square+Block+13A+Gulshan-e-Iqbal+Karachi+75300+Pakistan",
     mapZoom: 15,
+    phone: { display: "0332 3494225", href: "tel:+923323494225" },
   },
   {
     id: "hyderabad",
@@ -52,13 +54,15 @@ export const offices = [
     address: "Auto Bhan Tower, Auto Bhan Road, Mezzanine Floor, Hyderabad, Pakistan",
     mapQuery: "Auto+Bhan+Tower+Auto+Bhan+Road+Hyderabad+Pakistan",
     mapZoom: 16,
+    phone: { display: "0331 3826159", href: "tel:+923313826159" },
   },
   {
     id: "uk",
     name: "United Kingdom",
-    address: "International office support for UK admissions, student visas, and post-arrival guidance.",
-    mapQuery: "London+United+Kingdom",
-    mapZoom: 11,
+    address: "Office No. 79, Atlantic Business Centre, Atlantic Street, WA14 5NQ, Altrincham, Greater Manchester, United Kingdom",
+    mapQuery: "Atlantic+Business+Centre+Atlantic+Street+Altrincham+WA14+5NQ+United+Kingdom",
+    mapZoom: 16,
+    phone: { display: "+44 7777 622790", href: "tel:+447777622790" },
   },
 ] as const;
 

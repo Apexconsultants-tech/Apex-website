@@ -92,10 +92,13 @@ export default function Footer() {
           <div className="lg:col-span-3">
             <h3 className="text-xs font-semibold uppercase tracking-wide text-ink-faint">Contact Us</h3>
             <ul className="mt-4 space-y-3 text-sm text-ink-soft">
-              {offices.filter((office) => office.id !== "uk").map((o) => (
+              {offices.map((o) => (
                 <li key={o.id}>
                   <strong className="block text-ink">{o.name}</strong>
                   <span>{o.address}</span>
+                  {"phone" in o && (
+                    <a href={o.phone.href} data-track="phone_click" className="block hover:text-brand">{o.phone.display}</a>
+                  )}
                 </li>
               ))}
               <li>

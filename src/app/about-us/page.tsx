@@ -214,6 +214,9 @@ export default function AboutUsPage() {
                     <li key={o.id} className="text-sm text-ink-soft">
                       <strong className="block text-ink">{o.name}</strong>
                       {o.address}
+                      {"phone" in o && (
+                        <a href={o.phone.href} data-track="phone_click" className="block hover:text-brand">{o.phone.display}</a>
+                      )}
                     </li>
                   ))}
                   <li className="text-sm text-ink-soft">

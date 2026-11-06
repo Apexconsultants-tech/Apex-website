@@ -18,11 +18,12 @@ export function organizationJsonLd() {
       identifier: icef.iasId,
       url: icef.certificateUrl,
     },
-    address: offices.filter((office) => office.id !== "uk").map((o) => ({
+    address: offices.map((o) => ({
       "@type": "PostalAddress",
       name: o.name,
       streetAddress: o.address,
-      addressCountry: "PK",
+      addressCountry: o.id === "uk" ? "GB" : "PK",
+      ...("phone" in o ? { telephone: o.phone.display } : {}),
     })),
   };
 }
