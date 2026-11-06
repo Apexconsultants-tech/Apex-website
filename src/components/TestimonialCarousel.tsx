@@ -44,17 +44,22 @@ export default function TestimonialCarousel({ items }: Props) {
     >
       <div
         ref={trackRef}
-        className={`animate-marquee-slow flex w-max gap-5 py-2 ${touchPaused ? "marquee-paused" : ""}`}
+        // No flex gap: the -50% loop needs each half to be exactly the same
+        // width, and gap leaves one fewer gap in the second half (a visible
+        // jump every cycle). Trailing padding on every item keeps halves equal.
+        className={`animate-marquee-slow flex w-max py-2 ${touchPaused ? "marquee-paused" : ""}`}
         role="region"
         aria-label="Student success stories, scrolling automatically. Pause by hovering, focusing, or touching a card."
       >
         {doubled.map((t, i) => (
           <div
             key={`${t.name}-${i}`}
-            className="w-[85vw] shrink-0 sm:w-[360px]"
+            className="shrink-0 pr-5"
             aria-hidden={i >= items.length}
           >
-            <TestimonialCard item={t} />
+            <div className="h-full w-[85vw] sm:w-[360px]">
+              <TestimonialCard item={t} />
+            </div>
           </div>
         ))}
       </div>

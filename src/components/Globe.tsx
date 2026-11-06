@@ -97,6 +97,8 @@ export default function Globe() {
     let momentum = 0;
     let raf = 0;
     let lastMoveTime = 0;
+    let lastFrame = 0;
+    let running = false;
 
     function apply() {
       // Keep offset within [0, 50) — 50% of the reel is exactly one copy,
@@ -106,22 +108,40 @@ export default function Globe() {
     }
     apply();
 
-    function frame() {
+    function frame(now: number) {
+      // Scale per-frame constants by elapsed time (in 60fps frames) so the
+      // spin speed is the same on 60Hz, 120Hz and throttled displays.
+      const steps = lastFrame ? Math.min((now - lastFrame) / (1000 / 60), 4) : 1;
+      lastFrame = now;
       if (pointerDown) {
         offset += dragDelta;
         dragDelta = 0;
       } else if (!reducedMotion) {
         if (Math.abs(momentum) > MOMENTUM_FLOOR) {
-          offset += momentum;
-          momentum *= FRICTION;
+          offset += momentum * steps;
+          momentum *= Math.pow(FRICTION, steps);
         } else {
-          offset += AUTO_SPEED;
+          offset += AUTO_SPEED * steps;
         }
       }
       apply();
       raf = requestAnimationFrame(frame);
     }
-    raf = requestAnimationFrame(frame);
+
+    function start() {
+      if (running) return;
+      running = true;
+      lastFrame = 0;
+      raf = requestAnimationFrame(frame);
+    }
+    function stop() {
+      running = false;
+      cancelAnimationFrame(raf);
+    }
+
+    // Only animate while the globe is actually on screen.
+    const io = new IntersectionObserver(([entry]) => (entry.isIntersecting ? start() : stop()));
+    io.observe(wrap);
 
     function onPointerDown(e: PointerEvent) {
       pointerDown = true;
@@ -131,6 +151,7 @@ export default function Globe() {
       wrap!.style.cursor = "grabbing";
     }
     function onPointerUp() {
+      if (!pointerDown) return;
       pointerDown = false;
       momentum = velocity;
       wrap!.style.cursor = "grab";
@@ -148,12 +169,17 @@ export default function Globe() {
 
     wrap.addEventListener("pointerdown", onPointerDown);
     window.addEventListener("pointerup", onPointerUp);
+    // Without this, a touch the browser takes over (e.g. to scroll the page)
+    // never sends pointerup and the globe stays "held" and frozen.
+    window.addEventListener("pointercancel", onPointerUp);
     window.addEventListener("pointermove", onPointerMove);
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
+      io.disconnect();
       wrap.removeEventListener("pointerdown", onPointerDown);
       window.removeEventListener("pointerup", onPointerUp);
+      window.removeEventListener("pointercancel", onPointerUp);
       window.removeEventListener("pointermove", onPointerMove);
     };
   }, []);
@@ -202,7 +228,7 @@ export default function Globe() {
       {/* the globe itself: a circular window onto a panning satellite map */}
       <div
         ref={wrapRef}
-        className="absolute inset-0 cursor-grab touch-none overflow-hidden rounded-full shadow-[inset_0_0_40px_rgba(0,0,0,0.35)] animate-[globe-in_0.8s_ease-out]"
+        className="absolute inset-0 cursor-grab touch-pan-y overflow-hidden rounded-full shadow-[inset_0_0_40px_rgba(0,0,0,0.35)] animate-[globe-in_0.8s_ease-out]"
         role="img"
         aria-label="Satellite view of Earth highlighting Apex's study destinations, including the UK, USA, Canada, Australia, and Ireland"
       >

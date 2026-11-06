@@ -37,12 +37,14 @@ export default function PartnerLogoStrip() {
             className="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]"
           >
             <div
-              className="flex w-max animate-marquee items-center gap-6"
+              // No flex gap (trailing padding per logo instead) so both
+              // duplicated halves are exactly equal and the -50% loop is seamless.
+              className="flex w-max animate-marquee items-center"
               style={{ animationDuration: rowDurations[r], willChange: "transform" }}
               aria-hidden="true"
             >
               {row.map((u, i) => (
-                <div key={`${u.slug}-${i}`} className="flex h-12 w-32 shrink-0 items-center justify-center sm:h-14 sm:w-36">
+                <div key={`${u.slug}-${i}`} className="box-content flex h-12 w-32 shrink-0 items-center justify-center pr-6 sm:h-14 sm:w-36">
                   <Image
                     src={`/images/university-logos/${u.logo}`}
                     alt={u.name}

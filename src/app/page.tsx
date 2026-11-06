@@ -13,7 +13,7 @@ import TestimonialCarousel from "@/components/TestimonialCarousel";
 import TiltCard from "@/components/TiltCard";
 import { destinationPhoto, destinations } from "@/lib/destinations-data";
 import { flagSize } from "@/lib/flags";
-import { contact, homeServiceHighlights, serviceLinks, testimonials } from "@/lib/site-config";
+import { contact, homeServiceHighlights, offices, serviceLinks, testimonials } from "@/lib/site-config";
 
 const featuredDestinations = destinations.slice(0, 8);
 
@@ -123,9 +123,11 @@ export default function HomePage() {
               <p className="font-display text-3xl font-semibold text-brand">15+</p>
               <p className="mt-1 text-sm text-ink-soft">Years guiding students abroad</p>
             </TiltCard>
-            <TiltCard className="mt-8 rounded-2xl bg-gradient-to-br from-ink to-[#0a0d0e] p-6 shadow-lg shadow-ink/20" max={5}>
-              <p className="font-display text-3xl font-semibold text-white">3</p>
-              <p className="mt-1 text-sm text-white/90">Offices in Karachi, Hyderabad, and the UK</p>
+            <TiltCard className="relative mt-8 overflow-hidden rounded-2xl bg-gradient-to-br from-brand via-brand-deep to-[#0b3b20] p-6 shadow-lg shadow-brand/30" max={5}>
+              <div aria-hidden="true" className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-logo-lime/30 blur-2xl" />
+              <div aria-hidden="true" className="pointer-events-none absolute -bottom-10 -left-6 h-24 w-24 rounded-full bg-logo-teal/40 blur-2xl" />
+              <p className="relative font-display text-3xl font-semibold text-white">{offices.length}</p>
+              <p className="relative mt-1 text-sm text-white/90">Offices in Karachi (2), Hyderabad, and the UK</p>
             </TiltCard>
             <TiltCard className="rounded-2xl border border-line bg-surface-2 p-6 shadow-sm shadow-ink/[0.03]" max={5}>
               <p className="font-display text-3xl font-semibold text-ink">1000+</p>
