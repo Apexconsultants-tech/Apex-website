@@ -108,10 +108,20 @@ function buildTimeline(d: Destination) {
 }
 
 const statIcons = ["campus", "wallet", "briefcase"] as const;
+
+// Logo palette rotation: blue, brand green, lime. Full class strings so
+// Tailwind picks them up at build time.
+const accents = [
+  { tint: "bg-logo-sky-tint text-logo-navy", solid: "from-logo-sky to-logo-navy shadow-logo-navy/25", hoverSolid: "group-hover:bg-logo-navy group-hover:text-white", num: "text-logo-navy/[0.08]", bar: "from-logo-sky to-logo-navy" },
+  { tint: "bg-brand-tint text-brand-text", solid: "from-brand to-brand-deep shadow-brand/25", hoverSolid: "group-hover:bg-brand group-hover:text-white", num: "text-brand/[0.08]", bar: "from-brand to-brand-deep" },
+  { tint: "bg-logo-lime-tint text-logo-forest", solid: "from-logo-lime to-logo-forest shadow-logo-forest/25", hoverSolid: "group-hover:bg-logo-forest group-hover:text-white", num: "text-logo-lime/[0.14]", bar: "from-logo-lime to-logo-forest" },
+] as const;
+const accent = (i: number) => accents[i % accents.length];
 const whyIcons = ["star", "shield", "spark", "globe", "campus", "briefcase"] as const;
 
 export default function DestinationTemplate({ d }: { d: Destination }) {
   const timeline = buildTimeline(d);
+  const tuitionStat = d.heroStats.find((s) => /tuition|fee/i.test(s));
 
   const studentLife = [
     {
@@ -158,6 +168,8 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--color-brand-tint),transparent_55%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_60%_at_0%_10%,var(--color-logo-sky-tint),transparent_70%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_40%_at_60%_100%,var(--color-logo-lime-tint),transparent_70%)]" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(var(--color-line)_1px,transparent_1px)] [background-size:22px_22px] [mask-image:linear-gradient(to_bottom,black,transparent_70%)] opacity-70" />
         <div className="relative mx-auto max-w-7xl px-5 pb-16 pt-10 lg:px-8 lg:pt-14">
           <Breadcrumb current={d.name} />
@@ -165,11 +177,11 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
             {/* Not wrapped in Reveal: above-the-fold text renders straight
                 from static HTML; animate-hero-in is a pure-CSS fade/lift. */}
             <div className="animate-hero-in">
-              <p className="inline-flex items-center gap-2 rounded-full border border-brand/20 bg-brand-tint/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-brand-text">
+              <p className="inline-flex items-center gap-2 rounded-full border border-logo-sky/25 bg-logo-sky-tint/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-logo-navy">
                 <FlagIcon code={d.flag} /> Study Abroad · {d.region}
               </p>
               <h1 className="mt-4 text-4xl font-semibold leading-[1.06] text-ink sm:text-5xl lg:text-6xl">
-                Study in <span className="bg-gradient-to-r from-brand to-brand-deep bg-clip-text text-transparent">{d.name}</span>
+                Study in <span className="bg-gradient-to-r from-logo-navy via-logo-sky to-brand bg-clip-text text-transparent">{d.name}</span>
               </h1>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-ink-soft">{d.intro}</p>
               <div className="mt-8 flex flex-wrap gap-3">
@@ -191,7 +203,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
             </div>
             {/* Not wrapped in Reveal: hero/LCP image must paint immediately. */}
             <div className="relative">
-              <div className="pointer-events-none absolute -inset-3 rotate-2 rounded-[2rem] bg-gradient-to-br from-brand/25 to-brand-deep/10" />
+              <div className="pointer-events-none absolute -inset-3 rotate-2 rounded-[2rem] bg-gradient-to-br from-logo-sky/25 via-brand/15 to-logo-lime/25" />
               <TiltCard
                 className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-line shadow-xl shadow-ink/15"
                 max={4}
@@ -225,7 +237,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
                 className="animate-hero-in flex items-center gap-4 rounded-2xl border border-line bg-surface/90 p-5 shadow-sm backdrop-blur"
                 style={{ animationDelay: `${150 + i * 90}ms` }}
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-brand to-brand-deep text-white shadow-md shadow-brand/25">
+                <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-md ${accent(i).solid}`}>
                   <Icon name={statIcons[i % statIcons.length]} />
                 </span>
                 <span className="text-sm font-semibold leading-snug text-ink">{s}</span>
@@ -247,11 +259,11 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
             {d.whyPoints.map((w, i) => (
               <Reveal key={w.title} delay={i * 80} className="h-full">
                 <TiltCard className="group relative h-full overflow-hidden rounded-2xl border border-line bg-surface p-7 transition-colors hover:border-brand/40" max={4}>
-                  <span className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r from-brand to-brand-deep transition-transform duration-500 group-hover:scale-x-100" />
-                  <span className="pointer-events-none absolute -right-2 -top-4 font-display text-7xl font-bold text-brand/[0.07]">
+                  <span className={`absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r transition-transform duration-500 group-hover:scale-x-100 ${accent(i).bar}`} />
+                  <span className={`pointer-events-none absolute -right-2 -top-4 font-display text-7xl font-bold ${accent(i).num}`}>
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-tint text-brand-text">
+                  <span className={`flex h-11 w-11 items-center justify-center rounded-xl ${accent(i).tint}`}>
                     <Icon name={whyIcons[i % whyIcons.length]} />
                   </span>
                   <h3 className="mt-5 text-lg font-semibold text-ink">{w.title}</h3>
@@ -277,14 +289,14 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
               />
             </TiltCard>
             <div className="animate-float absolute -bottom-6 left-6 flex items-center gap-3 rounded-2xl border border-line bg-surface px-4 py-3 shadow-lg shadow-ink/10">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-tint text-brand-text">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-logo-sky-tint text-logo-navy">
                 <Icon name="people" />
               </span>
               <span className="text-sm font-semibold text-ink">A truly global classroom</span>
             </div>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand-text">Life as a student in {d.name}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-logo-navy">Life as a student in {d.name}</p>
             <p className="mt-3 text-2xl font-semibold leading-snug text-ink sm:text-3xl">
               Beyond the classroom: campus life, new friendships, and a genuinely global environment.
             </p>
@@ -303,7 +315,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
           <Reveal className="h-full">
             <div id="requirements" className="h-full scroll-mt-36 rounded-3xl border border-line bg-surface p-7 shadow-sm sm:p-9">
               <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-tint text-brand-text">
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-logo-sky-tint text-logo-navy">
                   <Icon name="clipboard" />
                 </span>
                 <h2 className="text-2xl font-semibold text-ink">Admission requirements</h2>
@@ -312,7 +324,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
               <ol className="mt-6 space-y-3">
                 {d.requirements.map((r, i) => (
                   <li key={r} className="flex items-start gap-3 rounded-xl bg-surface-2/70 px-4 py-3 text-sm text-ink-soft">
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-brand text-[11px] font-bold text-white">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-logo-sky to-logo-navy text-[11px] font-bold text-white">
                       {i + 1}
                     </span>
                     <span className="pt-0.5">{r}</span>
@@ -330,12 +342,12 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
                 <h2 className="text-2xl font-semibold text-ink">Universities in {d.name}</h2>
               </div>
               <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {d.universities.map((u) => (
+                {d.universities.map((u, i) => (
                   <div
                     key={u.name}
                     className="group flex items-center gap-3 rounded-xl border border-line bg-surface px-4 py-3.5 transition-all hover:-translate-y-0.5 hover:border-brand/50 hover:shadow-md hover:shadow-brand/10"
                   >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-brand to-brand-deep font-display text-xs font-bold text-white">
+                    <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br font-display text-xs font-bold text-white ${accent(i).solid}`}>
                       {initials(u.name)}
                     </span>
                     <span className="min-w-0">
@@ -354,23 +366,51 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
       </section>
 
       {/* Cost / Scholarships — dark band */}
-      <section id="costs" className="relative scroll-mt-36 overflow-hidden bg-gradient-to-br from-brand-deep via-[#0f4a28] to-ink py-20">
-        <div className="pointer-events-none absolute -right-24 -top-24 h-96 w-96 rounded-full bg-brand/30 blur-3xl" />
-        <div className="pointer-events-none absolute -bottom-32 -left-20 h-80 w-80 rounded-full bg-brand/20 blur-3xl" />
-        <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
+      <section id="costs" className="relative isolate scroll-mt-36 overflow-hidden bg-[#0b3b20] py-24">
+        {/* Layered lighting: a bright glow top-right, a cooler pool bottom-left,
+            and a darker vignette so the band has depth instead of one flat fill. */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_70%_at_85%_0%,#22a355_0%,transparent_60%)] opacity-70" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_0%_100%,#15803d_0%,transparent_65%)] opacity-60" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_45%_55%_at_35%_0%,#22a7e0_0%,transparent_70%)] opacity-35" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_35%_45%_at_100%_100%,#1d32a0_0%,transparent_70%)] opacity-50" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(5,25,14,0.65)_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.14)_1px,transparent_1px)] [background-size:20px_20px] [mask-image:radial-gradient(ellipse_at_70%_30%,black,transparent_70%)]" />
+          {/* Dashed flight path arcing across the band */}
+          <svg className="absolute inset-0 h-full w-full" viewBox="0 0 1200 600" preserveAspectRatio="none" fill="none">
+            <path d="M-40 520 C 300 120, 820 80, 1240 300" stroke="rgba(255,255,255,0.18)" strokeWidth="1.5" strokeDasharray="6 10" />
+            <circle cx="1080" cy="196" r="5" fill="rgba(255,255,255,0.5)" />
+          </svg>
+          {/* Outlined country code watermark */}
+          <span
+            className="absolute -bottom-10 -right-4 select-none font-display text-[12rem] font-bold leading-none text-transparent sm:text-[16rem] lg:text-[20rem]"
+            style={{ WebkitTextStroke: "1.5px rgba(255,255,255,0.09)" }}
+          >
+            {d.short}
+          </span>
+        </div>
+        <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <Reveal>
             <SectionHeading tone="white" eyebrow="Plan your budget" title={`Cost of studying in ${d.name}`} />
           </Reveal>
-          <div className="mt-10 grid grid-cols-1 gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-            <Reveal>
-              <div className="h-full rounded-3xl border border-white/15 bg-white/[0.07] p-7 backdrop-blur sm:p-9">
-                <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-brand-deep">
+          <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+            <Reveal className="h-full">
+              <div className="relative h-full overflow-hidden rounded-3xl bg-surface p-7 shadow-2xl shadow-black/40 ring-1 ring-white/20 sm:p-9">
+                <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-logo-sky via-logo-lime to-brand" />
+                <div aria-hidden="true" className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-logo-sky-tint" />
+                <div aria-hidden="true" className="absolute -right-2 top-16 h-16 w-16 rounded-full bg-logo-lime-tint" />
+                <span className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand to-brand-deep text-white shadow-md shadow-brand/30">
                   <Icon name="wallet" />
                 </span>
-                <p className="mt-6 text-base leading-relaxed text-white/90">{d.cost}</p>
+                {tuitionStat && (
+                  <p className="relative mt-6 font-display text-2xl font-semibold leading-tight text-ink sm:text-3xl">
+                    {tuitionStat}
+                  </p>
+                )}
+                <p className="relative mt-4 text-sm leading-relaxed text-ink-soft">{d.cost}</p>
                 <Link
                   href="/financial-assistance"
-                  className="mt-6 inline-flex rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-brand-deep transition-all hover:-translate-y-0.5 hover:bg-white/90"
+                  className="relative mt-7 inline-flex rounded-full bg-gradient-to-b from-brand to-brand-deep px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-brand/25 transition-all hover:-translate-y-0.5 hover:shadow-lg"
                 >
                   Explore Financial Assistance
                 </Link>
@@ -378,15 +418,25 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
             </Reveal>
             {d.scholarships.length > 0 && (
               <Reveal delay={100}>
-                <h3 id="scholarships" className="scroll-mt-36 flex items-center gap-2 text-xl font-semibold text-white">
-                  <Icon name="award" /> Scholarships to explore
+                <h3 id="scholarships" className="flex scroll-mt-36 items-center gap-3 text-xl font-semibold text-white">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/15 ring-1 ring-white/25">
+                    <Icon name="award" />
+                  </span>
+                  Scholarships to explore
                 </h3>
-                <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  {d.scholarships.map((s) => {
+                <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  {d.scholarships.map((s, i) => {
                     const { title, body } = splitScholarship(s);
                     return (
-                      <div key={s} className="rounded-2xl border border-white/15 bg-white/[0.06] p-5 transition-colors hover:border-white/35 hover:bg-white/[0.1]">
-                        <p className="text-sm font-semibold text-white">{title}</p>
+                      <div
+                        key={s}
+                        className="group relative overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-br from-white/[0.16] to-white/[0.04] p-5 shadow-lg shadow-black/20 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-white/40 hover:shadow-xl hover:shadow-black/30"
+                      >
+                        <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+                        <span className={`font-display text-xs font-bold tracking-widest ${i % 2 === 0 ? "text-[#bef264]" : "text-[#7dd3fc]"}`}>
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <p className="mt-2 text-sm font-semibold text-white">{title}</p>
                         {body && <p className="mt-1.5 text-xs leading-relaxed text-white/80">{body.charAt(0).toUpperCase() + body.slice(1)}</p>}
                       </div>
                     );
@@ -402,14 +452,14 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
       <section id="visa" className="mx-auto max-w-7xl scroll-mt-36 px-5 py-20 lg:px-8">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.15fr_0.85fr]">
           <Reveal className="h-full">
-            <div className="relative h-full overflow-hidden rounded-3xl border-2 border-dashed border-brand/30 bg-surface p-7 sm:p-9">
+            <div className="relative h-full overflow-hidden rounded-3xl border-2 border-dashed border-logo-sky/40 bg-surface p-7 sm:p-9">
               <PassportStamp code={stampCode(d)} className="pointer-events-none absolute -right-4 -top-4 h-28 w-28 rotate-12 opacity-20" />
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand-text">Visa checklist</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-logo-navy">Visa checklist</p>
               <h2 className="mt-2 text-2xl font-semibold text-ink sm:text-3xl">{d.visaName}</h2>
               <ul className="mt-6 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">
                 {d.visaRequirements.map((r) => (
                   <li key={r} className="flex gap-3 text-sm text-ink-soft">
-                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-brand/40 bg-brand-tint">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-logo-sky/50 bg-logo-sky-tint">
                       <CheckIcon />
                     </span>
                     <span>{r}</span>
@@ -422,8 +472,8 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
             </div>
           </Reveal>
           <Reveal delay={100} className="h-full">
-            <div className="relative h-full overflow-hidden rounded-3xl bg-gradient-to-br from-brand-tint to-surface p-7 ring-1 ring-brand/20 sm:p-9">
-              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand to-brand-deep text-white shadow-md shadow-brand/25">
+            <div className="relative h-full overflow-hidden rounded-3xl bg-gradient-to-br from-logo-lime-tint via-brand-tint/60 to-surface p-7 ring-1 ring-logo-lime/30 sm:p-9">
+              <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-logo-lime to-logo-forest text-white shadow-md shadow-logo-forest/25">
                 <Icon name="briefcase" />
               </span>
               <h2 className="mt-5 text-2xl font-semibold text-ink">Post-study work opportunities</h2>
@@ -457,10 +507,10 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
             </div>
           </div>
           <ol className="relative">
-            <span aria-hidden="true" className="absolute bottom-6 left-[19px] top-6 w-0.5 bg-gradient-to-b from-brand via-brand/40 to-brand-tint" />
+            <span aria-hidden="true" className="absolute bottom-6 left-[19px] top-6 w-0.5 bg-gradient-to-b from-logo-navy via-logo-sky via-40% to-logo-lime" />
             {timeline.map((step, i) => (
               <Reveal as="li" key={step.title} delay={i * 70} x={24} y={0} className="relative pb-6 pl-14 last:pb-0">
-                <span className="absolute left-0 top-4 flex h-10 w-10 items-center justify-center rounded-full border-4 border-surface-2 bg-gradient-to-br from-brand to-brand-deep font-display text-sm font-bold text-white shadow-md shadow-brand/30">
+                <span className={`absolute left-0 top-4 flex h-10 w-10 items-center justify-center rounded-full border-4 border-surface-2 bg-gradient-to-br font-display text-sm font-bold text-white shadow-md ${accent(i).solid}`}>
                   {i + 1}
                 </span>
                 <div className="rounded-2xl border border-line bg-surface p-5 transition-all hover:border-brand/40 hover:shadow-md hover:shadow-brand/10">
@@ -482,7 +532,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
           {studentLife.map((topic, i) => (
             <Reveal key={topic.title} delay={i * 70} className="h-full">
               <TiltCard className="group h-full rounded-2xl border border-line bg-surface p-6 transition-colors hover:border-brand/40" max={4}>
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-tint text-brand-text transition-colors group-hover:bg-brand group-hover:text-white">
+                <span className={`flex h-11 w-11 items-center justify-center rounded-xl transition-colors ${accent(i).tint} ${accent(i).hoverSolid}`}>
                   <Icon name={topic.icon} />
                 </span>
                 <h3 className="mt-5 text-base font-semibold text-ink">{topic.title}</h3>
@@ -529,7 +579,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
                     sizes="(min-width: 1024px) 22vw, 45vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-brand-deep/90 via-brand-deep/20 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-logo-navy/85 via-brand-deep/25 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 p-4">
                     <span className="flex items-center gap-2 font-display text-sm font-semibold text-white sm:text-base">
                       <FlagIcon code={o.flag} /> {o.name}
@@ -557,7 +607,9 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
               className="object-cover"
               aria-hidden="true"
             />
-            <div className="absolute inset-0 bg-gradient-to-br from-brand/95 to-brand-deep/95" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0b3b20]/95 via-brand-deep/85 to-brand/55" />
+            <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(ellipse_50%_80%_at_100%_0%,rgba(34,167,224,0.4),transparent_70%)]" />
+            <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.12)_1px,transparent_1px)] [background-size:18px_18px] [mask-image:linear-gradient(to_right,black,transparent_60%)]" />
             <div className="relative">
               <h2 className="text-3xl font-semibold text-white sm:text-4xl">Ready to study in {d.name}?</h2>
               <p className="mt-3 max-w-lg text-white">

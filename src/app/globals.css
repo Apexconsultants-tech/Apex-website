@@ -32,6 +32,15 @@
   --color-amber: #dc2626;
   --color-amber-tint: #fee2e2;
   --color-line: #e2e6e3;
+  /* Logo palette: blues from the wordmark/icon top, greens from the icon
+     base. Used as secondary accents on destination pages alongside brand. */
+  --color-logo-navy: #1d32a0;
+  --color-logo-sky: #22a7e0;
+  --color-logo-sky-tint: #e0f4fd;
+  --color-logo-navy-tint: #e4e8fb;
+  --color-logo-lime: #7cc520;
+  --color-logo-lime-tint: #eef8dc;
+  --color-logo-forest: #236b0e;
 }
 
 @theme inline {
@@ -48,6 +57,13 @@
   --color-amber: var(--color-amber);
   --color-amber-tint: var(--color-amber-tint);
   --color-line: var(--color-line);
+  --color-logo-navy: var(--color-logo-navy);
+  --color-logo-sky: var(--color-logo-sky);
+  --color-logo-sky-tint: var(--color-logo-sky-tint);
+  --color-logo-navy-tint: var(--color-logo-navy-tint);
+  --color-logo-lime: var(--color-logo-lime);
+  --color-logo-lime-tint: var(--color-logo-lime-tint);
+  --color-logo-forest: var(--color-logo-forest);
 
   --font-display: var(--font-sora);
   --font-sans: var(--font-public-sans);
