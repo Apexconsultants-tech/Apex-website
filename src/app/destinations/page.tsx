@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
 import FaqAccordion from "@/components/FaqAccordion";
+import FaqTypographyWall from "@/components/FaqTypographyWall";
 import JsonLd from "@/components/JsonLd";
 import TiltCard from "@/components/TiltCard";
 import { destinationPhoto, destinations } from "@/lib/destinations-data";
@@ -226,8 +227,9 @@ export default function DestinationsPage() {
       </section>
 
       {/* FAQ */}
-      <section className="border-t border-line bg-surface-2/60 py-20">
-        <div className="mx-auto max-w-3xl px-5 lg:px-8">
+      <section className="relative overflow-hidden border-t border-line bg-surface-2/60 py-20">
+        <FaqTypographyWall />
+        <div className="relative mx-auto max-w-3xl px-5 lg:px-8">
           <div className="text-center">
             <p className="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">Common questions</p>
             <h2 className="mt-2 text-3xl font-semibold text-ink sm:text-4xl">Study Destination FAQs</h2>

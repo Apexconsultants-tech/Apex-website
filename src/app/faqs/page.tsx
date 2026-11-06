@@ -2,6 +2,7 @@
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
 import FaqAccordion from "@/components/FaqAccordion";
+import FaqTypographyWall from "@/components/FaqTypographyWall";
 import JsonLd from "@/components/JsonLd";
 import Reveal from "@/components/Reveal";
 import { contact, faqs } from "@/lib/site-config";
@@ -43,8 +44,9 @@ export default function FaqsPage() {
         </div>
       </section>
 
-      <section className="border-t border-line bg-surface-2/60 py-16">
-        <div className="mx-auto max-w-3xl px-5 lg:px-8">
+      <section className="relative overflow-hidden border-t border-line bg-surface-2/60 py-16">
+        <FaqTypographyWall />
+        <div className="relative mx-auto max-w-3xl px-5 lg:px-8">
           <Reveal>
             <FaqAccordion items={faqs} />
           </Reveal>

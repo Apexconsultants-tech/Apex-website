@@ -34,7 +34,7 @@ export const destinations: Destination[] = [
     short: "UK",
     flag: "gb",
     region: "Popular",
-    heroStats: ["150+ Universities", "GBP 10,000 to GBP 30,000 annual tuition", "2 to 3 years Graduate Route (post-study work)"],
+    heroStats: ["150+ Universities", "GBP 10,000 to GBP 30,000 annual tuition", "18 months Graduate Route (post-study work)"],
     intro:
       "The United Kingdom is one of the world's most popular study destinations, home to some of the oldest and most respected universities on earth. With globally ranked institutions, rigorous academic standards, and a genuinely multicultural student experience, Apex Consulting Services guides you through every step, from university selection to visa approval.",
     whyPoints: [
@@ -74,7 +74,7 @@ export const destinations: Destination[] = [
       "Immigration Health Surcharge payment and biometric information",
     ],
     postStudyWork:
-      "The UK's Graduate Route allows international students to stay and work after completing their degree: 2 years for Bachelor's and Master's graduates, 3 years for PhD graduates, with no sponsorship required during this period.",
+      "The UK's Graduate Route allows international students to stay and work for 18 months after completing their degree, with no sponsorship required during this period.",
     faqs: [
       { q: "How much study gap is acceptable in the UK?", a: "UK universities generally accept a study gap of 2 to 3 years for undergraduate programs, and longer for postgraduate courses, provided it's well explained with supporting documentation." },
       { q: "Can I work while studying in the UK?", a: "Yes. Most full-time students on a Student Visa can work up to 20 hours per week during term and full-time during scheduled breaks." },

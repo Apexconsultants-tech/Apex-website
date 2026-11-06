@@ -2,6 +2,7 @@
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
 import FaqAccordion from "@/components/FaqAccordion";
+import FaqTypographyWall from "@/components/FaqTypographyWall";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
 import TiltCard from "@/components/TiltCard";
@@ -115,13 +116,16 @@ export default function ServiceTemplate({ s }: { s: ServiceData }) {
       </section>
 
       {/* FAQ */}
-      <section className="mx-auto max-w-3xl px-5 py-20 lg:px-8">
-        <Reveal>
-          <SectionHeading align="center" eyebrow="Common questions" title="FAQs" />
-        </Reveal>
-        <Reveal delay={100} className="mt-10">
-          <FaqAccordion items={s.faqs} />
-        </Reveal>
+      <section className="relative overflow-hidden py-20">
+        <FaqTypographyWall />
+        <div className="relative mx-auto max-w-3xl px-5 lg:px-8">
+          <Reveal>
+            <SectionHeading align="center" eyebrow="Common questions" title="FAQs" />
+          </Reveal>
+          <Reveal delay={100} className="mt-10">
+            <FaqAccordion items={s.faqs} />
+          </Reveal>
+        </div>
       </section>
 
       {/* Explore more */}

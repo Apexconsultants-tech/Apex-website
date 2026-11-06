@@ -1,6 +1,7 @@
 ﻿import Image from "next/image";
 import Link from "next/link";
 import FaqAccordion from "@/components/FaqAccordion";
+import FaqTypographyWall from "@/components/FaqTypographyWall";
 import PassportStamp from "@/components/PassportStamp";
 import Reveal from "@/components/Reveal";
 import SectionHeading from "@/components/SectionHeading";
@@ -493,8 +494,9 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
       </section>
 
       {/* FAQ */}
-      <section id="faqs" className="scroll-mt-36 border-t border-line bg-surface-2/60 py-20">
-        <div className="mx-auto max-w-3xl px-5 lg:px-8">
+      <section id="faqs" className="relative scroll-mt-36 overflow-hidden border-t border-line bg-surface-2/60 py-20">
+        <FaqTypographyWall />
+        <div className="relative mx-auto max-w-3xl px-5 lg:px-8">
           <Reveal>
             <SectionHeading align="center" eyebrow="Common questions" title={`Got questions about ${d.name}?`} />
           </Reveal>
