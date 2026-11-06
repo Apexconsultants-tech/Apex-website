@@ -41,6 +41,9 @@
   --color-logo-lime: #7cc520;
   --color-logo-lime-tint: #eef8dc;
   --color-logo-forest: #236b0e;
+  --color-logo-teal: #0d9488;
+  --color-logo-teal-deep: #0f766e;
+  --color-logo-teal-tint: #dcf3ef;
 }
 
 @theme inline {
@@ -64,6 +67,9 @@
   --color-logo-lime: var(--color-logo-lime);
   --color-logo-lime-tint: var(--color-logo-lime-tint);
   --color-logo-forest: var(--color-logo-forest);
+  --color-logo-teal: var(--color-logo-teal);
+  --color-logo-teal-deep: var(--color-logo-teal-deep);
+  --color-logo-teal-tint: var(--color-logo-teal-tint);
 
   --font-display: var(--font-sora);
   --font-sans: var(--font-public-sans);

@@ -46,7 +46,7 @@ export default function SectionNav({ items }: { items: Item[] }) {
               href={`#${item.id}`}
               aria-current={isActive ? "true" : undefined}
               className={`shrink-0 rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-                isActive ? "bg-gradient-to-r from-logo-navy via-logo-sky to-brand text-white shadow-sm shadow-logo-navy/30" : "text-ink-soft hover:bg-logo-sky-tint hover:text-logo-navy"
+                isActive ? "bg-gradient-to-r from-brand to-logo-teal text-white shadow-sm shadow-brand/30" : "text-ink-soft hover:bg-brand-tint hover:text-brand-text"
               }`}
             >
               {item.label}

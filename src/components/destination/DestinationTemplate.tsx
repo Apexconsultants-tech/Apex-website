@@ -109,14 +109,16 @@ function buildTimeline(d: Destination) {
 
 const statIcons = ["campus", "wallet", "briefcase"] as const;
 
-// Logo palette rotation: blue, brand green, lime. Full class strings so
-// Tailwind picks them up at build time.
-const accents = [
-  { tint: "bg-logo-sky-tint text-logo-navy", solid: "from-logo-sky to-logo-navy shadow-logo-navy/25", hoverSolid: "group-hover:bg-logo-navy group-hover:text-white", num: "text-logo-navy/[0.08]", bar: "from-logo-sky to-logo-navy" },
-  { tint: "bg-brand-tint text-brand-text", solid: "from-brand to-brand-deep shadow-brand/25", hoverSolid: "group-hover:bg-brand group-hover:text-white", num: "text-brand/[0.08]", bar: "from-brand to-brand-deep" },
-  { tint: "bg-logo-lime-tint text-logo-forest", solid: "from-logo-lime to-logo-forest shadow-logo-forest/25", hoverSolid: "group-hover:bg-logo-forest group-hover:text-white", num: "text-logo-lime/[0.14]", bar: "from-logo-lime to-logo-forest" },
-] as const;
-const accent = (i: number) => accents[i % accents.length];
+// One accent for every repeated card: uniform cards, with the colour
+// movement (lime -> green -> teal, always left-to-right / top-to-bottom)
+// carried only by bars, lines and gradients.
+const accent = {
+  tint: "bg-brand-tint text-brand-text",
+  solid: "from-brand to-logo-teal shadow-brand/25",
+  hoverSolid: "group-hover:bg-brand group-hover:text-white",
+  num: "text-brand/[0.08]",
+  bar: "from-logo-lime via-brand to-logo-teal",
+};
 const whyIcons = ["star", "shield", "spark", "globe", "campus", "briefcase"] as const;
 
 export default function DestinationTemplate({ d }: { d: Destination }) {
@@ -168,8 +170,8 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--color-brand-tint),transparent_55%)]" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_60%_at_0%_10%,var(--color-logo-sky-tint),transparent_70%)]" />
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_40%_at_60%_100%,var(--color-logo-lime-tint),transparent_70%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_50%_60%_at_0%_10%,var(--color-logo-lime-tint),transparent_70%)]" />
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_40%_40%_at_60%_100%,var(--color-logo-teal-tint),transparent_70%)]" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(var(--color-line)_1px,transparent_1px)] [background-size:22px_22px] [mask-image:linear-gradient(to_bottom,black,transparent_70%)] opacity-70" />
         <div className="relative mx-auto max-w-7xl px-5 pb-16 pt-10 lg:px-8 lg:pt-14">
           <Breadcrumb current={d.name} />
@@ -177,11 +179,11 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
             {/* Not wrapped in Reveal: above-the-fold text renders straight
                 from static HTML; animate-hero-in is a pure-CSS fade/lift. */}
             <div className="animate-hero-in">
-              <p className="inline-flex items-center gap-2 rounded-full border border-logo-sky/25 bg-logo-sky-tint/80 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-logo-navy">
+              <p className="inline-flex items-center gap-2 rounded-full border border-brand/20 bg-brand-tint/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-brand-text">
                 <FlagIcon code={d.flag} /> Study Abroad · {d.region}
               </p>
               <h1 className="mt-4 text-4xl font-semibold leading-[1.06] text-ink sm:text-5xl lg:text-6xl">
-                Study in <span className="bg-gradient-to-r from-logo-navy via-logo-sky to-brand bg-clip-text text-transparent">{d.name}</span>
+                Study in <span className="bg-gradient-to-r from-logo-forest via-brand to-logo-teal bg-clip-text text-transparent">{d.name}</span>
               </h1>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-ink-soft">{d.intro}</p>
               <div className="mt-8 flex flex-wrap gap-3">
@@ -203,7 +205,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
             </div>
             {/* Not wrapped in Reveal: hero/LCP image must paint immediately. */}
             <div className="relative">
-              <div className="pointer-events-none absolute -inset-3 rotate-2 rounded-[2rem] bg-gradient-to-br from-logo-sky/25 via-brand/15 to-logo-lime/25" />
+              <div className="pointer-events-none absolute -inset-3 rotate-2 rounded-[2rem] bg-gradient-to-br from-logo-lime/30 via-brand/15 to-logo-teal/25" />
               <TiltCard
                 className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-line shadow-xl shadow-ink/15"
                 max={4}
@@ -237,7 +239,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
                 className="animate-hero-in flex items-center gap-4 rounded-2xl border border-line bg-surface/90 p-5 shadow-sm backdrop-blur"
                 style={{ animationDelay: `${150 + i * 90}ms` }}
               >
-                <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-md ${accent(i).solid}`}>
+                <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br text-white shadow-md ${accent.solid}`}>
                   <Icon name={statIcons[i % statIcons.length]} />
                 </span>
                 <span className="text-sm font-semibold leading-snug text-ink">{s}</span>
@@ -259,11 +261,11 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
             {d.whyPoints.map((w, i) => (
               <Reveal key={w.title} delay={i * 80} className="h-full">
                 <TiltCard className="group relative h-full overflow-hidden rounded-2xl border border-line bg-surface p-7 transition-colors hover:border-brand/40" max={4}>
-                  <span className={`absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r transition-transform duration-500 group-hover:scale-x-100 ${accent(i).bar}`} />
-                  <span className={`pointer-events-none absolute -right-2 -top-4 font-display text-7xl font-bold ${accent(i).num}`}>
+                  <span className={`absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gradient-to-r transition-transform duration-500 group-hover:scale-x-100 ${accent.bar}`} />
+                  <span className={`pointer-events-none absolute -right-2 -top-4 font-display text-7xl font-bold ${accent.num}`}>
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <span className={`flex h-11 w-11 items-center justify-center rounded-xl ${accent(i).tint}`}>
+                  <span className={`flex h-11 w-11 items-center justify-center rounded-xl ${accent.tint}`}>
                     <Icon name={whyIcons[i % whyIcons.length]} />
                   </span>
                   <h3 className="mt-5 text-lg font-semibold text-ink">{w.title}</h3>
@@ -289,14 +291,14 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
               />
             </TiltCard>
             <div className="animate-float absolute -bottom-6 left-6 flex items-center gap-3 rounded-2xl border border-line bg-surface px-4 py-3 shadow-lg shadow-ink/10">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-logo-sky-tint text-logo-navy">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-tint text-brand-text">
                 <Icon name="people" />
               </span>
               <span className="text-sm font-semibold text-ink">A truly global classroom</span>
             </div>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-logo-navy">Life as a student in {d.name}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand-text">Life as a student in {d.name}</p>
             <p className="mt-3 text-2xl font-semibold leading-snug text-ink sm:text-3xl">
               Beyond the classroom: campus life, new friendships, and a genuinely global environment.
             </p>
@@ -315,7 +317,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
           <Reveal className="h-full">
             <div id="requirements" className="h-full scroll-mt-36 rounded-3xl border border-line bg-surface p-7 shadow-sm sm:p-9">
               <div className="flex items-center gap-3">
-                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-logo-sky-tint text-logo-navy">
+                <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-tint text-brand-text">
                   <Icon name="clipboard" />
                 </span>
                 <h2 className="text-2xl font-semibold text-ink">Admission requirements</h2>
@@ -324,7 +326,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
               <ol className="mt-6 space-y-3">
                 {d.requirements.map((r, i) => (
                   <li key={r} className="flex items-start gap-3 rounded-xl bg-surface-2/70 px-4 py-3 text-sm text-ink-soft">
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-logo-sky to-logo-navy text-[11px] font-bold text-white">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand to-logo-teal text-[11px] font-bold text-white">
                       {i + 1}
                     </span>
                     <span className="pt-0.5">{r}</span>
@@ -342,12 +344,12 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
                 <h2 className="text-2xl font-semibold text-ink">Universities in {d.name}</h2>
               </div>
               <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {d.universities.map((u, i) => (
+                {d.universities.map((u) => (
                   <div
                     key={u.name}
                     className="group flex items-center gap-3 rounded-xl border border-line bg-surface px-4 py-3.5 transition-all hover:-translate-y-0.5 hover:border-brand/50 hover:shadow-md hover:shadow-brand/10"
                   >
-                    <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br font-display text-xs font-bold text-white ${accent(i).solid}`}>
+                    <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br font-display text-xs font-bold text-white ${accent.solid}`}>
                       {initials(u.name)}
                     </span>
                     <span className="min-w-0">
@@ -372,8 +374,8 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_70%_at_85%_0%,#22a355_0%,transparent_60%)] opacity-70" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_60%_at_0%_100%,#15803d_0%,transparent_65%)] opacity-60" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_45%_55%_at_35%_0%,#22a7e0_0%,transparent_70%)] opacity-35" />
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_35%_45%_at_100%_100%,#1d32a0_0%,transparent_70%)] opacity-50" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_45%_55%_at_35%_0%,#7cc520_0%,transparent_70%)] opacity-20" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_45%_55%_at_100%_100%,#0d9488_0%,transparent_70%)] opacity-45" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(5,25,14,0.65)_100%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.14)_1px,transparent_1px)] [background-size:20px_20px] [mask-image:radial-gradient(ellipse_at_70%_30%,black,transparent_70%)]" />
           {/* Dashed flight path arcing across the band */}
@@ -396,9 +398,9 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
           <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-[0.9fr_1.1fr]">
             <Reveal className="h-full">
               <div className="relative h-full overflow-hidden rounded-3xl bg-surface p-7 shadow-2xl shadow-black/40 ring-1 ring-white/20 sm:p-9">
-                <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-logo-sky via-logo-lime to-brand" />
-                <div aria-hidden="true" className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-logo-sky-tint" />
-                <div aria-hidden="true" className="absolute -right-2 top-16 h-16 w-16 rounded-full bg-logo-lime-tint" />
+                <div aria-hidden="true" className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-logo-lime via-brand to-logo-teal" />
+                <div aria-hidden="true" className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand-tint" />
+                <div aria-hidden="true" className="absolute -right-2 top-16 h-16 w-16 rounded-full bg-logo-lime-tint/80" />
                 <span className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand to-brand-deep text-white shadow-md shadow-brand/30">
                   <Icon name="wallet" />
                 </span>
@@ -433,7 +435,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
                         className="group relative overflow-hidden rounded-2xl border border-white/20 bg-gradient-to-br from-white/[0.16] to-white/[0.04] p-5 shadow-lg shadow-black/20 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-white/40 hover:shadow-xl hover:shadow-black/30"
                       >
                         <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/60 to-transparent" />
-                        <span className={`font-display text-xs font-bold tracking-widest ${i % 2 === 0 ? "text-[#bef264]" : "text-[#7dd3fc]"}`}>
+                        <span className={`font-display text-xs font-bold tracking-widest text-[#bef264]`}>
                           {String(i + 1).padStart(2, "0")}
                         </span>
                         <p className="mt-2 text-sm font-semibold text-white">{title}</p>
@@ -452,14 +454,14 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
       <section id="visa" className="mx-auto max-w-7xl scroll-mt-36 px-5 py-20 lg:px-8">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.15fr_0.85fr]">
           <Reveal className="h-full">
-            <div className="relative h-full overflow-hidden rounded-3xl border-2 border-dashed border-logo-sky/40 bg-surface p-7 sm:p-9">
+            <div className="relative h-full overflow-hidden rounded-3xl border-2 border-dashed border-logo-teal/35 bg-surface p-7 sm:p-9">
               <PassportStamp code={stampCode(d)} className="pointer-events-none absolute -right-4 -top-4 h-28 w-28 rotate-12 opacity-20" />
-              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-logo-navy">Visa checklist</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-logo-teal-deep">Visa checklist</p>
               <h2 className="mt-2 text-2xl font-semibold text-ink sm:text-3xl">{d.visaName}</h2>
               <ul className="mt-6 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">
                 {d.visaRequirements.map((r) => (
                   <li key={r} className="flex gap-3 text-sm text-ink-soft">
-                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-logo-sky/50 bg-logo-sky-tint">
+                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border border-logo-teal/40 bg-logo-teal-tint">
                       <CheckIcon />
                     </span>
                     <span>{r}</span>
@@ -507,10 +509,10 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
             </div>
           </div>
           <ol className="relative">
-            <span aria-hidden="true" className="absolute bottom-6 left-[19px] top-6 w-0.5 bg-gradient-to-b from-logo-navy via-logo-sky via-40% to-logo-lime" />
+            <span aria-hidden="true" className="absolute bottom-6 left-[19px] top-6 w-0.5 bg-gradient-to-b from-logo-lime via-brand to-logo-teal" />
             {timeline.map((step, i) => (
               <Reveal as="li" key={step.title} delay={i * 70} x={24} y={0} className="relative pb-6 pl-14 last:pb-0">
-                <span className={`absolute left-0 top-4 flex h-10 w-10 items-center justify-center rounded-full border-4 border-surface-2 bg-gradient-to-br font-display text-sm font-bold text-white shadow-md ${accent(i).solid}`}>
+                <span className={`absolute left-0 top-4 flex h-10 w-10 items-center justify-center rounded-full border-4 border-surface-2 bg-gradient-to-br font-display text-sm font-bold text-white shadow-md ${accent.solid}`}>
                   {i + 1}
                 </span>
                 <div className="rounded-2xl border border-line bg-surface p-5 transition-all hover:border-brand/40 hover:shadow-md hover:shadow-brand/10">
@@ -532,7 +534,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
           {studentLife.map((topic, i) => (
             <Reveal key={topic.title} delay={i * 70} className="h-full">
               <TiltCard className="group h-full rounded-2xl border border-line bg-surface p-6 transition-colors hover:border-brand/40" max={4}>
-                <span className={`flex h-11 w-11 items-center justify-center rounded-xl transition-colors ${accent(i).tint} ${accent(i).hoverSolid}`}>
+                <span className={`flex h-11 w-11 items-center justify-center rounded-xl transition-colors ${accent.tint} ${accent.hoverSolid}`}>
                   <Icon name={topic.icon} />
                 </span>
                 <h3 className="mt-5 text-base font-semibold text-ink">{topic.title}</h3>
@@ -579,7 +581,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
                     sizes="(min-width: 1024px) 22vw, 45vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-logo-navy/85 via-brand-deep/25 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0b3b20]/90 via-brand-deep/25 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 p-4">
                     <span className="flex items-center gap-2 font-display text-sm font-semibold text-white sm:text-base">
                       <FlagIcon code={o.flag} /> {o.name}
@@ -608,7 +610,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
               aria-hidden="true"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-[#0b3b20]/95 via-brand-deep/85 to-brand/55" />
-            <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(ellipse_50%_80%_at_100%_0%,rgba(34,167,224,0.4),transparent_70%)]" />
+            <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(ellipse_50%_80%_at_100%_0%,rgba(124,197,32,0.3),transparent_70%)]" />
             <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.12)_1px,transparent_1px)] [background-size:18px_18px] [mask-image:linear-gradient(to_right,black,transparent_60%)]" />
             <div className="relative">
               <h2 className="text-3xl font-semibold text-white sm:text-4xl">Ready to study in {d.name}?</h2>
@@ -640,7 +642,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
 
 function CheckIcon() {
   return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="shrink-0 text-brand-text" aria-hidden="true">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" className="shrink-0 text-logo-teal-deep" aria-hidden="true">
       <path d="M20 6 9 17l-5-5" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
