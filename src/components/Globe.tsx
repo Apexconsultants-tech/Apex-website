@@ -58,8 +58,10 @@ const TEXTURE_SRC = "/images/brand/earth-satellite.webp";
 // One full revolution per minute, turning west-to-east like the real Earth
 // (surface moves left-to-right as seen from space with north up).
 const AUTO_REV_PER_SEC = 1 / 35;
-// Momentum after a drag decays by this factor per second.
-const MOMENTUM_DECAY_PER_SEC = 0.06;
+// A fling sets a new steady spin speed (rev/sec), capped so a hard flick
+// can't turn it into a blur. Below MIN_FLING it counts as a still release.
+const MAX_SPIN = 1;
+const MIN_FLING = 0.004;
 // How far the north pole is tipped toward the viewer (radians).
 const VIEW_TILT = 0.38;
 
@@ -173,11 +175,16 @@ export default function Globe() {
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let rot = 0.83; // start with Pakistan, the Gulf and Europe facing the viewer
-    let velocity = 0; // extra rev/sec from a drag, decays to 0
+    const defaultSpin = reducedMotion ? 0 : AUTO_REV_PER_SEC;
+    // Current steady spin (rev/sec). A fling replaces it with the speed and
+    // direction the user threw the globe at, and it keeps that speed
+    // (clicking elsewhere on the page doesn't change it) until the next drag.
+    let spin = defaultSpin;
     let dragging = false;
     let lastX = 0;
     let lastMoveT = 0;
     let dragVel = 0;
+    let moved = false;
     let lastFrame = 0;
     let raf = 0;
     let visible = false;
@@ -205,16 +212,11 @@ export default function Globe() {
     function frame(now: number) {
       const dt = lastFrame ? Math.min((now - lastFrame) / 1000, 0.1) : 0;
       lastFrame = now;
-      if (!dragging) {
-        const auto = reducedMotion ? 0 : AUTO_REV_PER_SEC;
-        rot += (auto + velocity) * dt;
-        velocity *= Math.pow(MOMENTUM_DECAY_PER_SEC, dt);
-        if (Math.abs(velocity) < 0.0005) velocity = 0;
-      }
+      if (!dragging) rot += spin * dt;
       rot -= Math.floor(rot);
       draw();
       // Keep looping only while there's motion to show.
-      if (visible && (!reducedMotion || dragging || velocity !== 0)) raf = requestAnimationFrame(frame);
+      if (visible && (dragging || spin !== 0)) raf = requestAnimationFrame(frame);
       else raf = 0;
     }
 
@@ -283,7 +285,7 @@ export default function Globe() {
       lastX = e.clientX;
       lastMoveT = performance.now();
       dragVel = 0;
-      velocity = 0;
+      moved = false;
       wrap!.style.cursor = "grabbing";
       kick();
     }
@@ -296,17 +298,21 @@ export default function Globe() {
       const radius = wrap!.clientWidth / 2;
       const dRot = dx / radius / (2 * Math.PI);
       rot += dRot;
+      if (dx !== 0) moved = true;
       const dt = Math.max((now - lastMoveT) / 1000, 0.001);
-      dragVel = dRot / dt;
+      // Smoothed so one jittery mouse event at release doesn't decide the spin.
+      dragVel = dragVel * 0.5 + (dRot / dt) * 0.5;
       lastX = e.clientX;
       lastMoveT = now;
     }
     function onPointerUp() {
       if (!dragging) return;
       dragging = false;
-      // Ignore stale velocity if the pointer paused before release.
+      // Released mid-motion: keep spinning at the thrown speed/direction.
+      // Still click, or a pause before letting go: back to the gentle spin.
       const sinceMove = performance.now() - lastMoveT;
-      velocity = sinceMove > 80 ? 0 : Math.max(-0.6, Math.min(0.6, dragVel));
+      const thrown = moved && sinceMove <= 80 ? Math.max(-MAX_SPIN, Math.min(MAX_SPIN, dragVel)) : 0;
+      spin = Math.abs(thrown) >= MIN_FLING ? thrown : defaultSpin;
       wrap!.style.cursor = "grab";
       kick();
     }
