@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { flagSize } from "@/lib/flags";
 
@@ -12,11 +12,9 @@ type OrbitFlagConfig = { code: string; radius: number; duration: number; delay: 
 
 const FLAG_CODES = ["gb", "us", "ca", "au", "de", "cn", "fr", "ie"];
 const FLAG_RADIUS = 1.5;
-const FLAG_DURATION = 40;
+const FLAG_DURATION = 60;
 // One shared height for every flag — each is still drawn at its own real
-// aspect ratio (via flagSize, the same helper the rest of the site uses)
-// rather than force-cropped into a fixed box, so nothing looks stretched or
-// sliced, but nothing looks bigger or smaller than its neighbors either.
+// aspect ratio (via flagSize) so nothing looks stretched or sliced.
 const FLAG_HEIGHT = 14;
 const ORBIT_FLAGS: OrbitFlagConfig[] = FLAG_CODES.map((code, i) => ({
   code,
@@ -56,151 +54,301 @@ function PlaneMark() {
   );
 }
 
-// The map asset's own aspect ratio (2600×1300 = 2:1, a standard
-// equirectangular projection). Drives every percentage below — using
-// `fill`+`object-cover` inside a square box instead would crop the wide
-// image down to a centered slice and both "copies" would show the same crop.
-const MAP_ASPECT = 2600 / 1300;
+const TEXTURE_SRC = "/images/brand/earth-satellite.webp";
+// One full revolution per minute, turning west-to-east like the real Earth
+// (surface moves left-to-right as seen from space with north up).
+const AUTO_REV_PER_SEC = 1 / 35;
+// Momentum after a drag decays by this factor per second.
+const MOMENTUM_DECAY_PER_SEC = 0.06;
+// How far the north pole is tipped toward the viewer (radians).
+const VIEW_TILT = 0.38;
 
-// Two copies sit side by side, each rendered at its natural aspect ratio
-// (height = 100% of the circular window, width = height × MAP_ASPECT, no
-// cropping) so each one is the entire world map. The reel's width is then
-// exactly 2× one copy's width, so translateX(-50%) pans exactly one full
-// copy across and lands back on an identical starting frame.
-const AUTO_SPEED = 0.015; // % of reel width per frame (~50%/55s ≈ one lap a minute)
-const FRICTION = 0.94;
-const MOMENTUM_FLOOR = 0.004;
-// Dragging one full wrapper-width should pan by one full visible window's
-// worth of content. The visible window is wrapWidth out of a copy that's
-// 2×MAP_ASPECT×wrapWidth wide (two copies make up the reel), so 1 wrapWidth
-// of drag = 100/(2×MAP_ASPECT) percent of the reel.
-const REEL_PERCENT_PER_WRAP_WIDTH = 100 / (2 * MAP_ASPECT);
+const VERT = `
+attribute vec2 a;
+varying vec2 v;
+void main() { v = a; gl_Position = vec4(a, 0.0, 1.0); }
+`;
 
-// Earth texture: NASA Blue Marble source data via Solar System Scope's
-// CC BY 4.0 day-map texture, panning behind a circular mask. Two copies sit
-// side by side inside a translating strip so the pan loops seamlessly.
+// Orthographic sphere: each pixel of the disc is turned into a point on the
+// sphere, tilted, converted to latitude/longitude and used to sample the
+// equirectangular Earth texture. Lighting, a soft specular highlight and an
+// atmospheric rim are computed per pixel, so the globe genuinely rotates
+// (land slows and foreshortens toward the edges) instead of a flat map
+// sliding behind a circular mask.
+//
+// With derivatives available the texture is mipmapped (no shimmer as detail
+// near the limb rotates past). Longitude wraps from +PI to -PI at the back of
+// the sphere; picking whichever of two equivalent u values has the smaller
+// screen-space derivative stops that wrap from selecting a tiny mip level
+// and drawing a visible seam line (Tarini's method).
+const makeFrag = (deriv: boolean) => `${deriv ? "#extension GL_OES_standard_derivatives : enable\n" : ""}
+precision highp float;
+varying vec2 v;
+uniform sampler2D tex;
+uniform float rot;
+uniform float aa;
+const float PI = 3.14159265359;
+void main() {
+  float r = length(v);
+  float edge = 1.0 - smoothstep(1.0 - aa, 1.0, r);
+  if (edge <= 0.0) { gl_FragColor = vec4(0.0); return; }
+  float z = sqrt(max(0.0, 1.0 - r * r));
+  vec3 n = vec3(v.x, v.y, z);
+  float ct = cos(${VIEW_TILT.toFixed(3)});
+  float st = sin(${VIEW_TILT.toFixed(3)});
+  vec3 q = vec3(n.x, n.y * ct + n.z * st, -n.y * st + n.z * ct);
+  float lat = asin(clamp(q.y, -1.0, 1.0));
+  float lon = atan(q.x, q.z);
+  float u = lon / (2.0 * PI);
+  ${deriv ? `float u1 = fract(u);
+  float u2 = fract(u + 0.5) - 0.5;
+  u = fwidth(u1) <= fwidth(u2) + 1e-5 ? u1 : u2;` : ""}
+  vec2 uv = vec2(u + 0.5 - rot, 0.5 - lat / PI);
+  vec3 col = texture2D(tex, uv).rgb;
+  vec3 L = normalize(vec3(-0.5, 0.42, 0.76));
+  float diff = max(dot(n, L), 0.0);
+  col *= 0.42 + 0.78 * diff;
+  float spec = pow(max(dot(reflect(-L, n), vec3(0.0, 0.0, 1.0)), 0.0), 28.0);
+  col += vec3(spec * 0.14);
+  float rim = pow(1.0 - z, 2.4);
+  col = mix(col, vec3(0.58, 0.8, 1.0), rim * 0.6);
+  gl_FragColor = vec4(col * edge, edge);
+}
+`;
+
+function compile(gl: WebGLRenderingContext, type: number, src: string) {
+  const s = gl.createShader(type);
+  if (!s) return null;
+  gl.shaderSource(s, src);
+  gl.compileShader(s);
+  if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
+    gl.deleteShader(s);
+    return null;
+  }
+  return s;
+}
+
 export default function Globe() {
   const wrapRef = useRef<HTMLDivElement>(null);
-  const reelRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [ready, setReady] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     const wrap = wrapRef.current;
-    const reel = reelRef.current;
-    if (!wrap || !reel) return;
+    const canvas = canvasRef.current;
+    if (!wrap || !canvas) return;
+
+    const gl = canvas.getContext("webgl", { alpha: true, premultipliedAlpha: true, antialias: false });
+    if (!gl) {
+      setFailed(true);
+      return;
+    }
+    const deriv = Boolean(gl.getExtension("OES_standard_derivatives"));
+    const aniso = gl.getExtension("EXT_texture_filter_anisotropic");
+    const vs = compile(gl, gl.VERTEX_SHADER, VERT);
+    const fs = compile(gl, gl.FRAGMENT_SHADER, makeFrag(deriv));
+    const prog = gl.createProgram();
+    if (!vs || !fs || !prog) {
+      setFailed(true);
+      return;
+    }
+    gl.attachShader(prog, vs);
+    gl.attachShader(prog, fs);
+    gl.linkProgram(prog);
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) {
+      setFailed(true);
+      return;
+    }
+    gl.useProgram(prog);
+
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    const aLoc = gl.getAttribLocation(prog, "a");
+    gl.enableVertexAttribArray(aLoc);
+    gl.vertexAttribPointer(aLoc, 2, gl.FLOAT, false, 0, 0);
+    const rotLoc = gl.getUniformLocation(prog, "rot");
+    const aaLoc = gl.getUniformLocation(prog, "aa");
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let offset = 10; // % of reel width, arbitrary start so land is visible immediately
-    let pointerDown = false;
-    let pointerX = 0;
-    let dragDelta = 0;
-    let velocity = 0;
-    let momentum = 0;
-    let raf = 0;
-    let lastMoveTime = 0;
+    let rot = 0.83; // start with Pakistan, the Gulf and Europe facing the viewer
+    let velocity = 0; // extra rev/sec from a drag, decays to 0
+    let dragging = false;
+    let lastX = 0;
+    let lastMoveT = 0;
+    let dragVel = 0;
     let lastFrame = 0;
-    let running = false;
+    let raf = 0;
+    let visible = false;
+    let textureReady = false;
+    let disposed = false;
 
-    function apply() {
-      // Keep offset within [0, 50) — 50% of the reel is exactly one copy,
-      // the seam where it can wrap without a visible jump.
-      offset = ((offset % 50) + 50) % 50;
-      if (reel) reel.style.transform = `translate3d(-${offset}%, 0, 0)`;
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const size = Math.max(1, Math.round(wrap!.clientWidth * dpr));
+      if (canvas!.width !== size) {
+        canvas!.width = size;
+        canvas!.height = size;
+        gl!.viewport(0, 0, size, size);
+      }
+      gl!.uniform1f(aaLoc, 3 / size);
     }
-    apply();
+
+    function draw() {
+      gl!.uniform1f(rotLoc, rot);
+      gl!.clearColor(0, 0, 0, 0);
+      gl!.clear(gl!.COLOR_BUFFER_BIT);
+      gl!.drawArrays(gl!.TRIANGLE_STRIP, 0, 4);
+    }
 
     function frame(now: number) {
-      // Scale per-frame constants by elapsed time (in 60fps frames) so the
-      // spin speed is the same on 60Hz, 120Hz and throttled displays.
-      const steps = lastFrame ? Math.min((now - lastFrame) / (1000 / 60), 4) : 1;
+      const dt = lastFrame ? Math.min((now - lastFrame) / 1000, 0.1) : 0;
       lastFrame = now;
-      if (pointerDown) {
-        offset += dragDelta;
-        dragDelta = 0;
-      } else if (!reducedMotion) {
-        if (Math.abs(momentum) > MOMENTUM_FLOOR) {
-          offset += momentum * steps;
-          momentum *= Math.pow(FRICTION, steps);
-        } else {
-          offset += AUTO_SPEED * steps;
-        }
+      if (!dragging) {
+        const auto = reducedMotion ? 0 : AUTO_REV_PER_SEC;
+        rot += (auto + velocity) * dt;
+        velocity *= Math.pow(MOMENTUM_DECAY_PER_SEC, dt);
+        if (Math.abs(velocity) < 0.0005) velocity = 0;
       }
-      apply();
-      raf = requestAnimationFrame(frame);
+      rot -= Math.floor(rot);
+      draw();
+      // Keep looping only while there's motion to show.
+      if (visible && (!reducedMotion || dragging || velocity !== 0)) raf = requestAnimationFrame(frame);
+      else raf = 0;
     }
 
-    function start() {
-      if (running) return;
-      running = true;
-      lastFrame = 0;
-      raf = requestAnimationFrame(frame);
-    }
-    function stop() {
-      running = false;
-      cancelAnimationFrame(raf);
+    function kick() {
+      if (!raf && textureReady && visible && !disposed) {
+        lastFrame = 0;
+        raf = requestAnimationFrame(frame);
+      }
     }
 
-    // Only animate while the globe is actually on screen.
-    const io = new IntersectionObserver(([entry]) => (entry.isIntersecting ? start() : stop()));
+    const img = new window.Image();
+    img.decoding = "async";
+    img.onload = () => {
+      if (disposed) return;
+      // Resample to a power-of-two size so the texture can wrap (REPEAT)
+      // horizontally in WebGL 1 — the seam where longitude wraps is then
+      // invisible.
+      const tc = document.createElement("canvas");
+      tc.width = 2048;
+      tc.height = 1024;
+      const ctx = tc.getContext("2d");
+      if (!ctx) {
+        setFailed(true);
+        return;
+      }
+      ctx.drawImage(img, 0, 0, tc.width, tc.height);
+      const tex = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, tex);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, tc);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.REPEAT);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      if (deriv) {
+        gl.generateMipmap(gl.TEXTURE_2D);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR);
+        if (aniso) {
+          const max = gl.getParameter(aniso.MAX_TEXTURE_MAX_ANISOTROPY_EXT) as number;
+          gl.texParameterf(gl.TEXTURE_2D, aniso.TEXTURE_MAX_ANISOTROPY_EXT, Math.min(8, max));
+        }
+      } else {
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      }
+      textureReady = true;
+      resize();
+      draw();
+      setReady(true);
+      kick();
+    };
+    img.onerror = () => setFailed(true);
+    img.src = TEXTURE_SRC;
+
+    const ro = new ResizeObserver(() => {
+      resize();
+      if (textureReady) draw();
+    });
+    ro.observe(wrap);
+
+    const io = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible) kick();
+    });
     io.observe(wrap);
 
     function onPointerDown(e: PointerEvent) {
-      pointerDown = true;
-      pointerX = e.clientX;
-      lastMoveTime = performance.now();
+      dragging = true;
+      lastX = e.clientX;
+      lastMoveT = performance.now();
+      dragVel = 0;
       velocity = 0;
       wrap!.style.cursor = "grabbing";
-    }
-    function onPointerUp() {
-      if (!pointerDown) return;
-      pointerDown = false;
-      momentum = velocity;
-      wrap!.style.cursor = "grab";
+      kick();
     }
     function onPointerMove(e: PointerEvent) {
-      if (!pointerDown || !wrap) return;
+      if (!dragging) return;
       const now = performance.now();
-      const dt = Math.max(now - lastMoveTime, 1);
-      const deltaPercent = (-(e.clientX - pointerX) / wrap.clientWidth) * REEL_PERCENT_PER_WRAP_WIDTH;
-      dragDelta = deltaPercent;
-      velocity = (deltaPercent / dt) * 16;
-      pointerX = e.clientX;
-      lastMoveTime = now;
+      const dx = e.clientX - lastX;
+      // Dragging the globe's centre by dx pixels moves the surface under the
+      // pointer by dx: an arc of dx / radius radians.
+      const radius = wrap!.clientWidth / 2;
+      const dRot = dx / radius / (2 * Math.PI);
+      rot += dRot;
+      const dt = Math.max((now - lastMoveT) / 1000, 0.001);
+      dragVel = dRot / dt;
+      lastX = e.clientX;
+      lastMoveT = now;
+    }
+    function onPointerUp() {
+      if (!dragging) return;
+      dragging = false;
+      // Ignore stale velocity if the pointer paused before release.
+      const sinceMove = performance.now() - lastMoveT;
+      velocity = sinceMove > 80 ? 0 : Math.max(-0.6, Math.min(0.6, dragVel));
+      wrap!.style.cursor = "grab";
+      kick();
     }
 
     wrap.addEventListener("pointerdown", onPointerDown);
-    window.addEventListener("pointerup", onPointerUp);
-    // Without this, a touch the browser takes over (e.g. to scroll the page)
-    // never sends pointerup and the globe stays "held" and frozen.
-    window.addEventListener("pointercancel", onPointerUp);
     window.addEventListener("pointermove", onPointerMove);
+    window.addEventListener("pointerup", onPointerUp);
+    // A touch the browser takes over (e.g. to scroll the page) sends
+    // pointercancel instead of pointerup.
+    window.addEventListener("pointercancel", onPointerUp);
+
+    function onContextLost(e: Event) {
+      e.preventDefault();
+      setFailed(true);
+    }
+    canvas.addEventListener("webglcontextlost", onContextLost);
 
     return () => {
-      stop();
+      disposed = true;
+      cancelAnimationFrame(raf);
+      ro.disconnect();
       io.disconnect();
       wrap.removeEventListener("pointerdown", onPointerDown);
+      window.removeEventListener("pointermove", onPointerMove);
       window.removeEventListener("pointerup", onPointerUp);
       window.removeEventListener("pointercancel", onPointerUp);
-      window.removeEventListener("pointermove", onPointerMove);
+      canvas.removeEventListener("webglcontextlost", onContextLost);
     };
   }, []);
 
   return (
     <div className="relative aspect-square w-full">
-      {/* ambient halo behind everything — shifted toward a sky-blue
-          atmosphere tone now that the globe itself carries real satellite
-          color, with a touch of brand green retained for site identity */}
+      {/* ambient halo behind everything */}
       <div className="pointer-events-none absolute -inset-10 rounded-full bg-[radial-gradient(circle,rgba(56,142,220,0.22),transparent_65%)] blur-2xl" />
       <div className="pointer-events-none absolute -inset-6 rounded-full bg-[radial-gradient(circle_at_65%_70%,rgba(21,128,61,0.13),transparent_55%)] blur-2xl" />
 
-      {/* decorative orbit rings — plain lines, no riding markers */}
-      <div className="pointer-events-none absolute -inset-[7%] animate-orbit rounded-full border border-dashed border-brand/25" />
-      <div className="pointer-events-none absolute -inset-[15%] animate-orbit-reverse rounded-full border border-dashed border-brand/15" />
+      {/* decorative orbit rings — both turn the same way as the Earth, at
+          related speeds, so the motion reads as one calm system */}
+      <div className="pointer-events-none absolute -inset-[7%] animate-orbit rounded-full border border-dashed border-brand/25" style={{ animationDuration: "60s" }} />
+      <div className="pointer-events-none absolute -inset-[15%] animate-orbit rounded-full border border-dashed border-brand/15" style={{ animationDuration: "120s" }} />
 
-      {/* flight path — a single, very subtle route arcing past the globe,
-          kept faint so it never competes with the satellite imagery. The
-          dashed curve is static; only the plane moves, via a plain CSS
-          animation so it inherits the same global prefers-reduced-motion
-          handling as every other animation on the site. */}
+      {/* flight path — static dashed curve, only the plane moves */}
       <svg className="pointer-events-none absolute -inset-[6%] overflow-visible" viewBox="0 0 100 100" aria-hidden="true">
         <path
           d="M8,72 Q50,-6 92,30"
@@ -220,49 +368,31 @@ export default function Globe() {
         </div>
       </div>
 
-      {/* atmosphere rim — a thin bright glow hugging the globe's own edge,
-          distinct from the soft outer halo above; this is what actually
-          reads as "atmosphere" rather than just ambient page glow */}
+      {/* thin atmosphere glow just outside the globe's edge */}
       <div className="pointer-events-none absolute -inset-[2.5%] rounded-full bg-[radial-gradient(circle,transparent_92%,rgba(147,197,253,0.55)_97%,transparent_100%)]" />
 
-      {/* the globe itself: a circular window onto a panning satellite map */}
+      {/* the globe itself */}
       <div
         ref={wrapRef}
-        className="absolute inset-0 cursor-grab touch-pan-y overflow-hidden rounded-full shadow-[inset_0_0_40px_rgba(0,0,0,0.35)] animate-[globe-in_0.8s_ease-out]"
+        className="absolute inset-0 cursor-grab touch-pan-y select-none rounded-full animate-[globe-in_0.8s_ease-out]"
         role="img"
-        aria-label="Satellite view of Earth highlighting Apex's study destinations, including the UK, USA, Canada, Australia, and Ireland"
+        aria-label="Rotating satellite globe highlighting Apex's study destinations, including the UK, USA, Canada, Australia, and Ireland"
       >
-        {/* Reel width is intentionally not set — with no flex-grow on its
-            children, the flex container sizes to the sum of its children's
-            natural widths, which is what "two full-width map copies side
-            by side" needs. */}
-        <div ref={reelRef} className="absolute inset-y-0 left-0 flex h-full" style={{ willChange: "transform" }}>
-          {[0, 1].map((copy) => (
-            <div key={copy} className="relative h-full shrink-0">
-              <Image
-                src="/images/brand/earth-satellite.webp"
-                alt=""
-                width={1600}
-                height={800}
-                draggable={false}
-                sizes="(min-width: 1024px) 620px, 420px"
-                className="h-full w-auto max-w-none select-none"
-              />
-            </div>
-          ))}
-        </div>
-
-        {/* limb-darkening: fades the map toward the left/right edges, the
-            same trick that makes a flat panning strip read as a curved
-            sphere instead of a scrolling banner. Neutral navy-black rather
-            than green-tinted now that the underlying texture is a real
-            photograph with its own color. */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_62%_100%_at_50%_50%,transparent_52%,rgba(6,10,18,0.58)_100%)]" />
-        {/* lighting highlight, upper-left, for a lit-sphere feel — a
-            genuine sunlit-hemisphere look against real terrain */}
-        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_32%_26%,rgba(255,255,255,0.4),transparent_52%)]" />
-        {/* soft outer ring so the circle edge doesn't look clinically flat */}
-        <div className="pointer-events-none absolute inset-0 rounded-full ring-1 ring-inset ring-white/15" />
+        {/* placeholder ocean disc while the texture loads */}
+        <div
+          className={`absolute inset-0 rounded-full bg-[radial-gradient(circle_at_35%_30%,#3b6fa8,#0c2240_75%)] transition-opacity duration-700 ${ready ? "opacity-0" : "opacity-100"}`}
+        />
+        {failed ? (
+          <div className="absolute inset-0 overflow-hidden rounded-full">
+            <Image src={TEXTURE_SRC} alt="" fill sizes="620px" className="object-cover" />
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_32%_26%,rgba(255,255,255,0.35),transparent_52%),radial-gradient(circle,transparent_55%,rgba(6,10,18,0.6)_100%)]" />
+          </div>
+        ) : (
+          <canvas
+            ref={canvasRef}
+            className={`absolute inset-0 h-full w-full transition-opacity duration-700 ${ready ? "opacity-100" : "opacity-0"}`}
+          />
+        )}
       </div>
 
       {/* little flags roaming around the globe */}
