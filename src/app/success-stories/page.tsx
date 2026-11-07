@@ -7,7 +7,7 @@ import TiltCard from "@/components/TiltCard";
 import { testimonials } from "@/lib/site-config";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
 
-const successTitle = "Student Success Stories";
+const successTitle = "Student Success Stories: University Offers Abroad";
 const successDescription =
   "Meet students who secured admissions abroad with guidance from Apex Consulting Services, from applications and documentation to visa support.";
 

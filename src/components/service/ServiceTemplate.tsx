@@ -242,7 +242,7 @@ export default function ServiceTemplate({ s }: { s: ServiceData }) {
             <Reveal key={o.slug} delay={(i % 4) * 70}>
               <Link href={o.href} className="group relative block aspect-[4/3] overflow-hidden rounded-2xl border border-line bg-brand-deep shadow-sm">
                 {o.image && (
-                  <Image src={o.image} alt="" fill sizes="(min-width: 1024px) 22vw, 45vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
+                  <Image src={o.image} alt={`${o.name} for students studying abroad`} fill sizes="(min-width: 1024px) 22vw, 45vw" className="object-cover transition-transform duration-700 group-hover:scale-110" />
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0b3b20]/90 via-brand-deep/30 to-transparent" />
                 <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 p-4">

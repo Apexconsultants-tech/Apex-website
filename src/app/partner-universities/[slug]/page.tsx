@@ -7,7 +7,7 @@ import JsonLd from "@/components/JsonLd";
 import Reveal from "@/components/Reveal";
 import TiltCard from "@/components/TiltCard";
 import { coursesForUniversity } from "@/lib/courses-data";
-import { destinationPhoto, getDestination } from "@/lib/destinations-data";
+import { destinationPhoto, getDestination, inName } from "@/lib/destinations-data";
 import { flagSize } from "@/lib/flags";
 import { contact } from "@/lib/site-config";
 import { breadcrumbJsonLd } from "@/lib/structured-data";
@@ -140,7 +140,7 @@ export default async function UniversityProfilePage({ params }: { params: Promis
                   href={`/${destination.slug}`}
                   className="rounded-full border border-brand/30 bg-brand-tint px-4 py-2 text-xs font-semibold text-brand-text"
                 >
-                  Study in {destination.name} destination guide
+                  Study in {inName(destination.name)}: destination guide
                 </Link>
               )}
               {otherInCountry.map((o) => (

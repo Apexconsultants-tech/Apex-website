@@ -50,7 +50,8 @@ export default function PartnerLogoStrip() {
                     alt={u.name}
                     width={200}
                     height={64}
-                    loading="eager"
+                    loading="lazy"
+                    fetchPriority="low"
                     className={u.darkLogo ? "aspect-auto h-full w-full object-contain invert" : "aspect-auto h-full w-full object-contain"}
                   />
                 </div>

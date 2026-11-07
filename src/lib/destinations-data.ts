@@ -977,3 +977,16 @@ export function destinationPhoto(slug: string) {
   return `/images/destinations/${slug.replace("study-in-", "")}.webp`;
 }
 
+
+// Country names that read with "the" in a sentence ("study in the United
+// Kingdom", not "study in United Kingdom").
+const NEEDS_THE = new Set(["United Kingdom", "United States", "United Arab Emirates", "Netherlands"]);
+/** "the United Kingdom" / "Canada" — for use mid-sentence. */
+export function inName(name: string) {
+  return NEEDS_THE.has(name) ? `the ${name}` : name;
+}
+/** "The United Kingdom" / "Canada" — for the start of a sentence. */
+export function startName(name: string) {
+  const n = inName(name);
+  return n.charAt(0).toUpperCase() + n.slice(1);
+}

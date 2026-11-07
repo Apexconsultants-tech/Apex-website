@@ -1,4 +1,5 @@
-﻿import Image from "next/image";
+﻿import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import AccreditationsStrip from "@/components/AccreditationsStrip";
 import FaqTypographyWall from "@/components/FaqTypographyWall";
@@ -16,6 +17,18 @@ import { flagSize } from "@/lib/flags";
 import { contact, homeServiceHighlights, offices, serviceLinks, testimonials } from "@/lib/site-config";
 
 const featuredDestinations = destinations.slice(0, 8);
+
+const homeTitle = "Study Abroad Consultants in Pakistan | Apex Consulting Services";
+const homeDescription =
+  "ICEF-accredited study abroad consultants in Pakistan since 2009. Free guidance on university admissions, student visas, scholarships and IELTS/PTE for the UK, USA, Canada, Australia and more.";
+
+export const metadata: Metadata = {
+  title: { absolute: homeTitle },
+  description: homeDescription,
+  alternates: { canonical: "/" },
+  openGraph: { title: homeTitle, description: homeDescription, url: "/", images: ["/opengraph-image"] },
+  twitter: { card: "summary_large_image", title: homeTitle, description: homeDescription, images: ["/opengraph-image"] },
+};
 
 const journeySteps = [
   { title: "Discover", body: "Choose your destination and course with a free consultation.", icon: "discover", from: "#15803d", to: "#166534" },
@@ -77,7 +90,7 @@ export default function HomePage() {
             <Reveal delay={100}>
               <Link
                 href="/contact-us"
-                className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-ink/15 transition-all hover:-translate-y-0.5 hover:bg-brand-deep"
+                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-b from-brand to-brand-deep px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-brand/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand/35"
               >
                 Get free guidance <span aria-hidden="true">→</span>
               </Link>
@@ -112,14 +125,6 @@ export default function HomePage() {
                         className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full blur-2xl transition-transform duration-500 group-hover:scale-125"
                         style={{ backgroundColor: `${accent.from}22` }}
                       />
-                      {/* oversized watermark number */}
-                      <span
-                        aria-hidden="true"
-                        className="pointer-events-none absolute -bottom-4 right-3 font-display text-[6.5rem] font-bold leading-none tracking-tighter opacity-[0.07] transition-opacity duration-300 group-hover:opacity-[0.12]"
-                        style={{ color: accent.from }}
-                      >
-                        {s.number}
-                      </span>
 
                       <div className="relative flex items-center justify-between">
                         <span
@@ -362,7 +367,7 @@ export default function HomePage() {
                   <JourneyStep step={step} />
                 </Reveal>
                 {i < journeySteps.length - 1 && (
-                  <div className="flex w-10 shrink-0 flex-col items-center justify-start pt-[38px]" aria-hidden="true">
+                  <div className="flex w-6 shrink-0 flex-col items-center justify-start pt-[38px] xl:w-9" aria-hidden="true">
                     <div
                       className="h-0.5 w-full rounded-full"
                       style={{ background: `linear-gradient(to right, ${step.to}, ${journeySteps[i + 1].from})` }}
@@ -471,7 +476,7 @@ export default function HomePage() {
               </div>
               <p className="mt-4 font-display text-lg font-semibold text-ink">Talk to an advisor</p>
               <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">
-                Real answers, no obligation. Chat with a counsellor on WhatsApp, {contact.hours.toLowerCase()}.
+                Real answers, no obligation. Chat with a counsellor on WhatsApp, {contact.hours}.
               </p>
               <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-amber-700">
                 Chat on WhatsApp
@@ -558,14 +563,14 @@ export default function HomePage() {
 
 function JourneyStep({ step }: { step: (typeof journeySteps)[number] }) {
   return (
-    <TiltCard className="h-full overflow-hidden rounded-2xl border border-line bg-surface p-6 shadow-sm shadow-ink/[0.03] transition-shadow hover:shadow-lg hover:shadow-ink/5" max={4}>
+    <TiltCard className="h-full overflow-hidden rounded-2xl border border-line bg-surface p-5 shadow-sm shadow-ink/[0.03] transition-shadow hover:shadow-lg hover:shadow-ink/5" max={4}>
       <span
         className="flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-md"
         style={{ background: `linear-gradient(135deg, ${step.from}, ${step.to})`, boxShadow: `0 8px 16px -6px ${step.to}66` }}
       >
         <JourneyIcon name={step.icon} />
       </span>
-      <h3 className="mt-4 text-base font-semibold text-ink">{step.title}</h3>
+      <h3 className="mt-4 whitespace-nowrap text-base font-semibold text-ink">{step.title}</h3>
       <p className="mt-2 text-sm leading-relaxed text-ink-soft">{step.body}</p>
     </TiltCard>
   );

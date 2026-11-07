@@ -10,7 +10,7 @@ import Breadcrumb from "@/components/Breadcrumb";
 import Icon from "@/components/Icon";
 import SectionNav from "@/components/destination/SectionNav";
 import type { Destination } from "@/lib/destinations-data";
-import { destinationPhoto, getDestination, popularDestinationSlugs } from "@/lib/destinations-data";
+import { destinationPhoto, getDestination, popularDestinationSlugs, inName, startName } from "@/lib/destinations-data";
 import { destinationLifePhoto } from "@/lib/destination-photos.server";
 import { flagSize } from "@/lib/flags";
 import { contact } from "@/lib/site-config";
@@ -61,7 +61,7 @@ function buildTimeline(d: Destination) {
   const uniLine =
     uniNames.length > 0
       ? `institutions like ${uniNames.join(" and ")} (the exact shortlist depends on your grades, budget, and course)`
-      : `universities in ${d.name} that genuinely fit your goals`;
+      : `universities in ${inName(d.name)} that genuinely fit your goals`;
 
   const reqSample = lowerFirstItem(d.requirements.slice(0, 2));
   const reqLine =
@@ -91,7 +91,7 @@ function buildTimeline(d: Destination) {
     },
     {
       title: "Offer & financial planning",
-      body: `${costClause} Once you have an offer, we help you plan for it${scholarshipCount > 0 ? ` and check your eligibility across ${scholarshipCount} scholarship route${scholarshipCount > 1 ? "s" : ""} we track for ${d.name}` : ""}.`,
+      body: `${costClause} Once you have an offer, we help you plan for it${scholarshipCount > 0 ? ` and check your eligibility across ${scholarshipCount} scholarship route${scholarshipCount > 1 ? "s" : ""} we track for ${inName(d.name)}` : ""}.`,
     },
     {
       title: "Visa filing",
@@ -99,7 +99,7 @@ function buildTimeline(d: Destination) {
     },
     {
       title: "Pre-departure preparation",
-      body: `Guidance on accommodation, travel documentation, packing, and what to expect in your first weeks in ${d.name}.`,
+      body: `Guidance on accommodation, travel documentation, packing, and what to expect in your first weeks in ${inName(d.name)}.`,
     },
     {
       title: "Arrival & after",
@@ -130,7 +130,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
     {
       icon: "campus" as const,
       title: "Types of institutions",
-      body: `${d.name} offers a mix of public/state universities, private universities, and specialised or applied-science institutions. The right type depends on your budget, field, and career goals, we help you compare them directly.`,
+      body: `${startName(d.name)} offers a mix of public/state universities, private universities, and specialised or applied-science institutions. The right type depends on your budget, field, and career goals, we help you compare them directly.`,
     },
     {
       icon: "home" as const,
@@ -184,7 +184,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
                 <FlagIcon code={d.flag} /> Study Abroad · {d.region}
               </p>
               <h1 className="mt-4 text-4xl font-semibold leading-[1.06] text-ink sm:text-5xl lg:text-6xl">
-                Study in <span className="bg-gradient-to-r from-logo-forest via-brand to-logo-teal bg-clip-text text-transparent">{d.name}</span>
+                Study in <span className="bg-gradient-to-r from-logo-forest via-brand to-logo-teal bg-clip-text text-transparent">{inName(d.name)}</span>
               </h1>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-ink-soft">{d.intro}</p>
               <div className="mt-8 flex flex-wrap gap-3">
@@ -256,7 +256,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
       <section id="why" className="scroll-mt-36 bg-surface-2/60 py-20">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <Reveal>
-            <SectionHeading eyebrow="Why this destination" title={<>Why study in <span className="text-brand">{d.name}</span>?</>} />
+            <SectionHeading eyebrow="Why this destination" title={<>Why study in <span className="text-brand">{inName(d.name)}</span>?</>} />
           </Reveal>
           <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {d.whyPoints.map((w, i) => (
@@ -299,7 +299,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
             </div>
           </div>
           <div>
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand-text">Life as a student in {d.name}</p>
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brand-text">Life as a student in {inName(d.name)}</p>
             <p className="mt-3 text-2xl font-semibold leading-snug text-ink sm:text-3xl">
               Beyond the classroom: campus life, new friendships, and a genuinely global environment.
             </p>
@@ -342,7 +342,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
                 <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-brand-tint text-brand-text">
                   <Icon name="campus" />
                 </span>
-                <h2 className="text-2xl font-semibold text-ink">Universities in {d.name}</h2>
+                <h2 className="text-2xl font-semibold text-ink">Universities in {inName(d.name)}</h2>
               </div>
               <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {d.universities.map((u) => (
@@ -394,7 +394,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
         </div>
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <Reveal>
-            <SectionHeading tone="white" eyebrow="Plan your budget" title={`Cost of studying in ${d.name}`} />
+            <SectionHeading tone="white" eyebrow="Plan your budget" title={`Cost of studying in ${inName(d.name)}`} />
           </Reveal>
           <div className="mt-12 grid grid-cols-1 gap-8 lg:grid-cols-[0.9fr_1.1fr]">
             <Reveal className="h-full">
@@ -497,7 +497,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
               <Reveal>
                 <SectionHeading
                   eyebrow="How it works"
-                  title={`Your application timeline for ${d.name}`}
+                  title={`Your application timeline for ${inName(d.name)}`}
                   lead="A typical path from first consultation to arrival. Apex works alongside you at every step."
                 />
                 <Link
@@ -551,7 +551,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
         <FaqTypographyWall />
         <div className="relative mx-auto max-w-3xl px-5 lg:px-8">
           <Reveal>
-            <SectionHeading align="center" eyebrow="Common questions" title={`Got questions about ${d.name}?`} />
+            <SectionHeading align="center" eyebrow="Common questions" title={`Got questions about ${inName(d.name)}?`} />
           </Reveal>
           <Reveal delay={100} className="mt-10">
             <FaqAccordion items={d.faqs} />
@@ -577,7 +577,7 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
                 >
                   <Image
                     src={destinationPhoto(o.slug)}
-                    alt=""
+                    alt={`Study in ${o.name}: city view`}
                     fill
                     sizes="(min-width: 1024px) 22vw, 45vw"
                     className="object-cover transition-transform duration-700 group-hover:scale-110"
@@ -614,9 +614,9 @@ export default function DestinationTemplate({ d }: { d: Destination }) {
             <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(ellipse_50%_80%_at_100%_0%,rgba(124,197,32,0.3),transparent_70%)]" />
             <div aria-hidden="true" className="absolute inset-0 bg-[radial-gradient(rgba(255,255,255,0.12)_1px,transparent_1px)] [background-size:18px_18px] [mask-image:linear-gradient(to_right,black,transparent_60%)]" />
             <div className="relative">
-              <h2 className="text-3xl font-semibold text-white sm:text-4xl">Ready to study in {d.name}?</h2>
+              <h2 className="text-3xl font-semibold text-white sm:text-4xl">Ready to study in {inName(d.name)}?</h2>
               <p className="mt-3 max-w-lg text-white">
-                Book a free consultation with our Study in {d.name} Consultants and let our experienced
+                Book a free consultation with our study in {inName(d.name)} consultants and let our experienced
                 counsellors guide you from university selection to visa approval.
               </p>
             </div>

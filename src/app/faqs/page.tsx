@@ -8,7 +8,7 @@ import Reveal from "@/components/Reveal";
 import { contact, faqs } from "@/lib/site-config";
 import { breadcrumbJsonLd, faqJsonLd } from "@/lib/structured-data";
 
-const faqsTitle = "Frequently Asked Questions";
+const faqsTitle = "Study Abroad & Student Visa FAQs";
 const faqsDescription =
   "Answers to common questions about studying abroad with Apex Consulting Services: visas, scholarships, accreditation, and getting started.";
 

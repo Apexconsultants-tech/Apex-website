@@ -27,9 +27,9 @@ function OrbitFlag({ code, radius, duration, delay }: OrbitFlagConfig) {
   const timing = { animationDuration: `${duration}s`, animationDelay: `${delay}s`, animationTimingFunction: "linear", animationIterationCount: "infinite" } as const;
   const { width } = flagSize(code, FLAG_HEIGHT);
   return (
-    <div className="pointer-events-none absolute" style={{ inset: `${-radius}%`, animationName: "orbit-spin", ...timing }}>
+    <div className="pointer-events-none absolute" style={{ inset: `${-radius}%`, animationName: "orbit-spin-reverse", ...timing }}>
       <div className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
-        <div style={{ animationName: "orbit-spin-reverse", ...timing }}>
+        <div style={{ animationName: "orbit-spin", ...timing }}>
           <Image
             src={`/images/flags/${code}.svg`}
             alt=""
@@ -54,10 +54,58 @@ function PlaneMark() {
   );
 }
 
-const TEXTURE_SRC = "/images/brand/earth-satellite.webp";
-// One full revolution per minute, turning west-to-east like the real Earth
-// (surface moves left-to-right as seen from space with north up).
-const AUTO_REV_PER_SEC = 1 / 35;
+export const TEXTURE_SRC = "/images/brand/earth-satellite.webp";
+// Starting rotation: Pakistan, the Gulf and Europe facing the viewer.
+const START_ROT = 0.83;
+// Gentle auto-spin (rev/sec). Negative = the visible surface drifts to the
+// left, which reads more naturally next to the left-aligned hero copy.
+const AUTO_REV_PER_SEC = -1 / 35;
+
+// Start downloading + decoding the texture as soon as this module is
+// evaluated (i.e. in parallel with hydration) instead of waiting for the
+// component's effect to run. The hero also preloads the same URL in <head>,
+// so this is usually a cache hit.
+let texturePromise: Promise<HTMLImageElement> | null = null;
+function loadTexture() {
+  if (!texturePromise) {
+    texturePromise = new Promise((resolve, reject) => {
+      const img = new window.Image();
+      img.decoding = "async";
+      img.onload = () => {
+        (img.decode ? img.decode() : Promise.resolve()).then(() => resolve(img), () => resolve(img));
+      };
+      img.onerror = () => {
+        texturePromise = null;
+        reject(new Error("texture failed"));
+      };
+      img.src = TEXTURE_SRC;
+    });
+  }
+  return texturePromise;
+}
+if (typeof window !== "undefined") loadTexture();
+
+/**
+ * A flat but correctly-colored stand-in for the globe, shown until WebGL has
+ * the texture: the same satellite image framed on the same longitudes the
+ * sphere starts on, with sphere shading on top. Swapping it for the real
+ * sphere is a subtle crossfade instead of a blue disc turning into a map.
+ */
+export function GlobePlaceholder({ className = "" }: { className?: string }) {
+  return (
+    <div
+      aria-hidden="true"
+      className={`absolute inset-0 overflow-hidden rounded-full bg-[#0c2240] ${className}`}
+      style={{
+        backgroundImage: `url(${TEXTURE_SRC})`,
+        backgroundSize: "200% 125%",
+        backgroundPosition: "84% 30%",
+      }}
+    >
+      <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_30%_28%,rgba(255,255,255,0.22),transparent_50%),radial-gradient(circle,transparent_52%,rgba(6,10,18,0.55)_88%,rgba(147,197,253,0.45)_100%)]" />
+    </div>
+  );
+}
 // A fling sets a new steady spin speed (rev/sec), capped so a hard flick
 // can't turn it into a blur. Below MIN_FLING it counts as a still release.
 const MAX_SPIN = 1;
@@ -174,7 +222,7 @@ export default function Globe() {
     const aaLoc = gl.getUniformLocation(prog, "aa");
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let rot = 0.83; // start with Pakistan, the Gulf and Europe facing the viewer
+    let rot = START_ROT;
     const defaultSpin = reducedMotion ? 0 : AUTO_REV_PER_SEC;
     // Current steady spin (rev/sec). A fling replaces it with the speed and
     // direction the user threw the globe at, and it keeps that speed
@@ -227,9 +275,7 @@ export default function Globe() {
       }
     }
 
-    const img = new window.Image();
-    img.decoding = "async";
-    img.onload = () => {
+    loadTexture().then((img) => {
       if (disposed) return;
       // Resample to a power-of-two size so the texture can wrap (REPEAT)
       // horizontally in WebGL 1 — the seam where longitude wraps is then
@@ -264,9 +310,7 @@ export default function Globe() {
       draw();
       setReady(true);
       kick();
-    };
-    img.onerror = () => setFailed(true);
-    img.src = TEXTURE_SRC;
+    }, () => setFailed(true));
 
     const ro = new ResizeObserver(() => {
       resize();
@@ -351,8 +395,8 @@ export default function Globe() {
 
       {/* decorative orbit rings — both turn the same way as the Earth, at
           related speeds, so the motion reads as one calm system */}
-      <div className="pointer-events-none absolute -inset-[7%] animate-orbit rounded-full border border-dashed border-brand/25" style={{ animationDuration: "60s" }} />
-      <div className="pointer-events-none absolute -inset-[15%] animate-orbit rounded-full border border-dashed border-brand/15" style={{ animationDuration: "120s" }} />
+      <div className="pointer-events-none absolute -inset-[7%] animate-orbit-reverse rounded-full border border-dashed border-brand/25" style={{ animationDuration: "60s" }} />
+      <div className="pointer-events-none absolute -inset-[15%] animate-orbit-reverse rounded-full border border-dashed border-brand/15" style={{ animationDuration: "120s" }} />
 
       {/* flight path — static dashed curve, only the plane moves */}
       <svg className="pointer-events-none absolute -inset-[6%] overflow-visible" viewBox="0 0 100 100" aria-hidden="true">
@@ -380,14 +424,12 @@ export default function Globe() {
       {/* the globe itself */}
       <div
         ref={wrapRef}
-        className="absolute inset-0 cursor-grab touch-pan-y select-none rounded-full animate-[globe-in_0.8s_ease-out]"
+        className="absolute inset-0 cursor-grab touch-pan-y select-none rounded-full"
         role="img"
         aria-label="Rotating satellite globe highlighting Apex's study destinations, including the UK, USA, Canada, Australia, and Ireland"
       >
-        {/* placeholder ocean disc while the texture loads */}
-        <div
-          className={`absolute inset-0 rounded-full bg-[radial-gradient(circle_at_35%_30%,#3b6fa8,#0c2240_75%)] transition-opacity duration-700 ${ready ? "opacity-0" : "opacity-100"}`}
-        />
+        {/* textured stand-in while WebGL gets the texture ready */}
+        <GlobePlaceholder className={`transition-opacity duration-500 ${ready || failed ? "opacity-0" : "opacity-100"}`} />
         {failed ? (
           <div className="absolute inset-0 overflow-hidden rounded-full">
             <Image src={TEXTURE_SRC} alt="" fill sizes="620px" className="object-cover" />
@@ -396,7 +438,7 @@ export default function Globe() {
         ) : (
           <canvas
             ref={canvasRef}
-            className={`absolute inset-0 h-full w-full transition-opacity duration-700 ${ready ? "opacity-100" : "opacity-0"}`}
+            className={`absolute inset-0 h-full w-full transition-opacity duration-500 ${ready ? "opacity-100" : "opacity-0"}`}
           />
         )}
       </div>

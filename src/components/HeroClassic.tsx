@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import { preload } from "react-dom";
 import Image from "next/image";
 import Link from "next/link";
 import CourseFinderBar from "@/components/CourseFinderBar";
@@ -22,6 +23,10 @@ const Globe = dynamic(() => import("@/components/Globe"), {
 
 // The homepage hero: cinematic photo background with the orbiting Globe.
 export default function HeroClassic() {
+  // Fetch the globe texture alongside the HTML so it is ready (or nearly)
+  // by the time the globe mounts — no blue placeholder phase.
+  preload("/images/brand/earth-satellite.webp", { as: "image", fetchPriority: "high" });
+
   return (
     <section className="relative overflow-hidden">
       {/* Cinematic full-bleed background photo — a real, high-resolution
@@ -52,10 +57,10 @@ export default function HeroClassic() {
       <div className="relative mx-auto max-w-7xl px-5 pb-10 pt-14 lg:px-8 lg:pb-16 lg:pt-20">
         <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:gap-12">
           <div className="animate-hero-in">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-white/90">
-              Overseas education consultants since 2009
-            </p>
-            <h1 className="mt-3 text-4xl font-semibold leading-[1.06] text-white sm:text-5xl lg:text-6xl">
+            <h1 className="text-4xl font-semibold leading-[1.06] text-white sm:text-5xl lg:text-6xl">
+              <span className="mb-3 block font-sans text-xs font-semibold uppercase leading-normal tracking-[0.14em] text-white/90">
+                Study abroad consultants in Pakistan since 2009
+              </span>
               Where Futures <span className="text-brand-tint">Cross Continents</span>
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-white/90 sm:text-lg">
@@ -121,9 +126,16 @@ function GlobeSkeleton() {
     <div className="relative aspect-square w-full">
       <div className="pointer-events-none absolute -inset-10 rounded-full bg-[radial-gradient(circle,rgba(56,142,220,0.22),transparent_65%)] blur-2xl" />
       <div
-        className="absolute inset-0 animate-skeleton-pulse rounded-full bg-gradient-to-br from-brand/25 via-brand-deep/20 to-black/30 shadow-[inset_0_0_40px_rgba(0,0,0,0.35)]"
         aria-hidden="true"
-      />
+        className="absolute inset-0 overflow-hidden rounded-full bg-[#0c2240]"
+        style={{
+          backgroundImage: "url(/images/brand/earth-satellite.webp)",
+          backgroundSize: "200% 125%",
+          backgroundPosition: "84% 30%",
+        }}
+      >
+        <div className="absolute inset-0 rounded-full bg-[radial-gradient(circle_at_30%_28%,rgba(255,255,255,0.22),transparent_50%),radial-gradient(circle,transparent_52%,rgba(6,10,18,0.55)_88%,rgba(147,197,253,0.45)_100%)]" />
+      </div>
     </div>
   );
 }
