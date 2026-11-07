@@ -24,14 +24,14 @@ export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative overflow-hidden bg-[#0b1510] text-white">
+    <footer className="relative overflow-hidden bg-gradient-to-b from-[#f1f8f2] via-[#eaf5ec] to-[#dff0e4] text-ink">
       {/* gradient hairline + ambient glows */}
-      <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-logo-lime/70 to-transparent" />
-      <div aria-hidden="true" className="pointer-events-none absolute -left-40 -top-40 h-[28rem] w-[28rem] rounded-full bg-brand/25 blur-3xl" />
-      <div aria-hidden="true" className="pointer-events-none absolute -right-32 top-1/3 h-96 w-96 rounded-full bg-logo-sky/10 blur-3xl" />
+      <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/40 to-transparent" />
+      <div aria-hidden="true" className="pointer-events-none absolute -left-40 -top-40 h-[28rem] w-[28rem] rounded-full bg-logo-lime/20 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -right-32 top-1/3 h-96 w-96 rounded-full bg-logo-sky/15 blur-3xl" />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 opacity-[0.05] [background-image:radial-gradient(white_1px,transparent_1px)] [background-size:24px_24px]"
+        className="pointer-events-none absolute inset-0 opacity-[0.12] [background-image:radial-gradient(var(--color-brand)_1px,transparent_1px)] [background-size:24px_24px]"
       />
 
       <div className="relative mx-auto max-w-7xl px-5 pt-16 pb-8 lg:px-8 lg:pt-20">
@@ -41,7 +41,7 @@ export default function Footer() {
             <Link
               href="/"
               aria-label="Apex Consulting Services home"
-              className="inline-flex rounded-2xl bg-white px-4 py-3 shadow-lg shadow-black/30 transition-transform hover:-translate-y-0.5"
+              className="inline-flex rounded-2xl bg-white px-4 py-3 border border-line shadow-lg shadow-brand/10 transition-transform hover:-translate-y-0.5"
             >
               <Image
                 src="/images/brand/apex-logo.webp"
@@ -52,7 +52,7 @@ export default function Footer() {
                 className="h-8 w-auto"
               />
             </Link>
-            <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/75">
+            <p className="mt-5 max-w-sm text-sm leading-relaxed text-ink-soft">
               Trusted overseas education consultancy since {site.foundedYear}. Admissions, visas, and
               student support from Pakistan to the world.
             </p>
@@ -79,14 +79,14 @@ export default function Footer() {
               href={icef.certificateUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-2.5 text-xs text-white/80 backdrop-blur transition-colors hover:border-logo-lime/50 hover:text-white"
+              className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-line bg-white/70 px-3 py-2.5 text-xs text-ink-soft shadow-sm shadow-ink/[0.03] backdrop-blur transition-colors hover:border-brand/50 hover:text-ink"
               title="Verify ICEF Agency Status (IAS) certification"
             >
               <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white">
                 <Image src="/images/brand/icef-ias-badge.svg" alt="" width={20} height={20} className="h-5 w-5" />
               </span>
               <span>
-                <span className="block font-semibold text-white">ICEF Agency Status</span>
+                <span className="block font-semibold text-ink">ICEF Agency Status</span>
                 IAS #{icef.iasId} · Verify certificate ↗
               </span>
             </a>
@@ -98,8 +98,8 @@ export default function Footer() {
             <ul className="mt-5 space-y-3 text-sm">
               {quickLinks.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href} className="group inline-flex items-center gap-2 text-white/75 transition-colors hover:text-white">
-                    <span className="h-px w-0 bg-logo-lime transition-all duration-300 group-hover:w-3" />
+                  <Link href={l.href} className="group inline-flex items-center gap-2 text-ink-soft transition-colors hover:text-brand-text">
+                    <span className="h-px w-0 bg-brand transition-all duration-300 group-hover:w-3" />
                     {l.label}
                   </Link>
                 </li>
@@ -115,7 +115,7 @@ export default function Footer() {
                 <li key={d.slug}>
                   <Link
                     href={`/${d.slug}`}
-                    className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-xs text-white/80 transition-all hover:-translate-y-0.5 hover:border-logo-lime/50 hover:bg-white/10 hover:text-white"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-line bg-white/70 px-2.5 py-1 text-xs text-ink-soft shadow-sm shadow-ink/[0.03] transition-all hover:-translate-y-0.5 hover:border-brand/50 hover:bg-white hover:text-brand-text"
                   >
                     <Image src={`/images/flags/${d.flag}.svg`} alt="" {...flagSize(d.flag, 10)} className="shrink-0 rounded-[1px]" />
                     {d.short}
@@ -130,14 +130,14 @@ export default function Footer() {
             <FooterHeading>Get in touch</FooterHeading>
             <ul className="mt-5 space-y-3">
               <ContactRow icon={<PhoneIcon />} label="Helpline">
-                <a href={contact.phoneHref} data-track="phone_click" className="hover:text-logo-lime">{contact.phoneDisplay}</a>
+                <a href={contact.phoneHref} data-track="phone_click" className="hover:text-brand-text">{contact.phoneDisplay}</a>
               </ContactRow>
               <ContactRow icon={<MailIcon />} label="Email">
-                <a href={`mailto:${contact.email}`} className="break-all hover:text-logo-lime">{contact.email}</a>
+                <a href={`mailto:${contact.email}`} className="break-all hover:text-brand-text">{contact.email}</a>
               </ContactRow>
               <ContactRow icon={<ClockIcon />} label="Hours">
                 <span>{contact.hours}</span>
-                <span className="block text-xs text-white/60">{contact.hoursNote}</span>
+                <span className="block text-xs text-ink-faint">{contact.hoursNote}</span>
               </ContactRow>
             </ul>
           </div>
@@ -150,19 +150,19 @@ export default function Footer() {
             {offices.map((o) => (
               <li
                 key={o.id}
-                className="group flex flex-col rounded-2xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-logo-lime/40 hover:bg-white/[0.07]"
+                className="group flex flex-col rounded-2xl border border-line bg-white/70 p-5 backdrop-blur transition-all duration-300 shadow-sm shadow-ink/[0.04] hover:-translate-y-1 hover:border-brand/40 hover:bg-white hover:shadow-lg hover:shadow-brand/10"
               >
                 <div className="flex items-center gap-2.5">
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-brand to-logo-teal text-white">
                     <PinIcon />
                   </span>
-                  <strong className="text-sm font-semibold text-white">{officeShortName[o.id] ?? o.name}</strong>
+                  <strong className="text-sm font-semibold text-ink">{officeShortName[o.id] ?? o.name}</strong>
                 </div>
-                <p className="mt-3 flex-1 text-xs leading-relaxed text-white/70">{o.address}</p>
-                <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-white/10 pt-3 text-xs">
-                  <span className="text-white/60">{o.hours}</span>
+                <p className="mt-3 flex-1 text-xs leading-relaxed text-ink-soft">{o.address}</p>
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-line pt-3 text-xs">
+                  <span className="text-ink-faint">{o.hours}</span>
                   {"phone" in o && (
-                    <a href={o.phone.href} data-track="phone_click" className="font-semibold text-logo-lime hover:underline">
+                    <a href={o.phone.href} data-track="phone_click" className="font-semibold text-brand-text hover:underline">
                       {o.phone.display}
                     </a>
                   )}
@@ -173,19 +173,19 @@ export default function Footer() {
         </div>
 
         {/* Bottom bar */}
-        <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/60 sm:flex-row sm:items-center">
+        <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-line pt-6 text-xs text-ink-faint sm:flex-row sm:items-center">
           <p>© {site.foundedYear}–{year} {site.name}. All rights reserved.</p>
           <div className="flex flex-wrap gap-x-5 gap-y-2">
-            <Link href="/privacy-policy" className="hover:text-white">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-white">Terms of Service</Link>
-            <Link href="/contact-us" className="hover:text-white">Contact Us</Link>
+            <Link href="/privacy-policy" className="hover:text-brand-text">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-brand-text">Terms of Service</Link>
+            <Link href="/contact-us" className="hover:text-brand-text">Contact Us</Link>
           </div>
         </div>
 
         {/* Oversized wordmark */}
         <p
           aria-hidden="true"
-          className="pointer-events-none mt-8 select-none bg-gradient-to-b from-white/[0.09] to-transparent bg-clip-text text-center font-display text-[22vw] font-bold leading-[0.8] tracking-tighter text-transparent lg:text-[15rem]"
+          className="pointer-events-none mt-8 select-none bg-gradient-to-b from-brand/[0.14] to-transparent bg-clip-text text-center font-display text-[22vw] font-bold leading-[0.8] tracking-tighter text-transparent lg:text-[15rem]"
         >
           APEX
         </p>
@@ -196,8 +196,8 @@ export default function Footer() {
 
 function FooterHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-white">
-      <span className="h-1.5 w-1.5 rounded-full bg-logo-lime" />
+    <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-ink">
+      <span className="h-1.5 w-1.5 rounded-full bg-brand" />
       {children}
     </h3>
   );
@@ -206,11 +206,11 @@ function FooterHeading({ children }: { children: React.ReactNode }) {
 function ContactRow({ icon, label, children }: { icon: React.ReactNode; label: string; children: React.ReactNode }) {
   return (
     <li className="flex gap-3">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.06] text-logo-lime">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-brand/15 bg-brand-tint text-brand-text">
         {icon}
       </span>
-      <span className="min-w-0 text-sm text-white/85">
-        <span className="block text-[11px] uppercase tracking-wider text-white/55">{label}</span>
+      <span className="min-w-0 text-sm text-ink">
+        <span className="block text-[11px] uppercase tracking-wider text-ink-faint">{label}</span>
         {children}
       </span>
     </li>
@@ -224,7 +224,7 @@ function SocialLink({ href, label, children }: { href: string; label: string; ch
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/[0.05] text-white/80 transition-all hover:-translate-y-0.5 hover:border-logo-lime hover:bg-logo-lime hover:text-[#0b1510]"
+      className="flex h-10 w-10 items-center justify-center rounded-full border border-line bg-white text-ink-soft shadow-sm shadow-ink/[0.04] transition-all hover:-translate-y-0.5 hover:border-brand hover:bg-brand hover:text-white"
     >
       {children}
     </a>
