@@ -26,6 +26,15 @@ const journeySteps = [
   { title: "Study", body: "Begin your international education, with support that doesn't stop.", icon: "study", from: "#166534", to: "#14181a" },
 ] as const;
 
+// One accent per service card, all drawn from the logo palette so the
+// section stays on-brand while each pillar gets its own identity.
+const serviceAccents = [
+  { from: "#15803d", to: "#166534", tint: "#dcfce7", text: "#0f6b31" }, // brand green
+  { from: "#0d9488", to: "#0f766e", tint: "#dcf3ef", text: "#0f6b62" }, // teal
+  { from: "#22a7e0", to: "#1d6fb8", tint: "#e0f4fd", text: "#0b5f8a" }, // sky
+  { from: "#7cc520", to: "#236b0e", tint: "#eef8dc", text: "#2f6b0e" }, // lime → forest
+] as const;
+
 export default function HomePage() {
   return (
     <>
@@ -41,50 +50,138 @@ export default function HomePage() {
       <PartnerLogoStrip />
 
       {/* Services teaser */}
-      <section id="services" className="border-y border-line bg-surface-2/60 py-20">
-        <div className="mx-auto max-w-7xl px-5 lg:px-8">
-          <Reveal>
-            <SectionHeading
-              eyebrow="What we do"
-              title="Admissions, visas & student support"
-              lead="Four pillars of end-to-end guidance, from choosing the right course to settling in after you land."
-            />
-          </Reveal>
-          <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {homeServiceHighlights.map((s, i) => (
-              <Reveal key={s.number} delay={i * 80}>
-                <TiltCard
-                  className="flex h-full flex-col rounded-2xl border border-line bg-surface p-6 shadow-sm shadow-ink/[0.03] transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-ink/[0.07]"
-                  max={4}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-brand to-brand-deep text-white shadow-md shadow-brand/25">
-                      <ServiceIcon name={s.icon} />
-                    </span>
-                    <span className="font-display text-xs font-bold text-ink-faint">{s.number}</span>
-                  </div>
-                  <h3 className="mt-4 text-base font-semibold text-ink">{s.title}</h3>
-                  <p className="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">{s.body}</p>
-                  <Link
-                    href={`/${s.slug}`}
-                    className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-text hover:underline"
-                  >
-                    Learn more →
-                  </Link>
-                </TiltCard>
-              </Reveal>
-            ))}
-          </div>
-          <Reveal delay={320} className="mt-8 flex flex-wrap gap-2">
-            {serviceLinks.map((s) => (
+      <section id="services" className="relative overflow-hidden border-y border-line bg-gradient-to-b from-surface-2/70 via-paper to-surface-2/70 py-16 sm:py-24">
+        {/* Soft brand-colored glows + a faint dot grid give the section depth
+            instead of a flat grey band. */}
+        <div aria-hidden="true" className="pointer-events-none absolute -left-32 top-10 h-80 w-80 rounded-full bg-logo-lime/15 blur-3xl" />
+        <div aria-hidden="true" className="pointer-events-none absolute -right-24 bottom-0 h-96 w-96 rounded-full bg-logo-sky/15 blur-3xl" />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 opacity-50 [background-image:radial-gradient(var(--color-line)_1px,transparent_1px)] [background-size:22px_22px] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_40%,black,transparent)]"
+        />
+
+        <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+            <Reveal>
+              <SectionHeading
+                eyebrow="What we do"
+                title={
+                  <>
+                    Admissions, visas &amp;{" "}
+                    <span className="bg-gradient-to-r from-brand to-logo-teal bg-clip-text text-transparent">student support</span>
+                  </>
+                }
+                lead="Four pillars of end-to-end guidance, from choosing the right course to settling in after you land."
+              />
+            </Reveal>
+            <Reveal delay={100}>
               <Link
-                key={s.slug}
-                href={`/${s.slug}`}
-                className="rounded-full border border-line bg-surface px-4 py-2 text-xs font-medium text-ink-soft transition-colors hover:border-brand hover:text-brand"
+                href="/contact-us"
+                className="inline-flex items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-ink/15 transition-all hover:-translate-y-0.5 hover:bg-brand-deep"
               >
-                {s.label}
+                Get free guidance <span aria-hidden="true">→</span>
               </Link>
-            ))}
+            </Reveal>
+          </div>
+
+          <div className="mt-10 grid grid-cols-1 gap-5 sm:mt-12 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
+            {homeServiceHighlights.map((s, i) => {
+              const accent = serviceAccents[i % serviceAccents.length];
+              return (
+                <Reveal key={s.number} delay={i * 80} className="h-full">
+                  <Link href={`/${s.slug}`} className="group block h-full">
+                    <TiltCard
+                      className="relative flex h-full flex-col overflow-hidden rounded-[1.75rem] border border-line bg-surface/90 p-6 shadow-[0_1px_2px_rgba(20,24,26,0.04),0_8px_24px_-12px_rgba(20,24,26,0.12)] backdrop-blur transition-all duration-300 group-hover:-translate-y-1.5 group-hover:border-transparent sm:p-7"
+                      max={4}
+                    >
+                      {/* colored top bar */}
+                      <div
+                        aria-hidden="true"
+                        className="absolute inset-x-0 top-0 h-1.5"
+                        style={{ background: `linear-gradient(90deg, ${accent.from}, ${accent.to})` }}
+                      />
+                      {/* hover tint wash */}
+                      <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                        style={{ background: `linear-gradient(160deg, ${accent.tint} 0%, transparent 55%)`, boxShadow: `inset 0 0 0 1.5px ${accent.from}55` }}
+                      />
+                      {/* corner blob */}
+                      <div
+                        aria-hidden="true"
+                        className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full blur-2xl transition-transform duration-500 group-hover:scale-125"
+                        style={{ backgroundColor: `${accent.from}22` }}
+                      />
+                      {/* oversized watermark number */}
+                      <span
+                        aria-hidden="true"
+                        className="pointer-events-none absolute -bottom-4 right-3 font-display text-[6.5rem] font-bold leading-none tracking-tighter opacity-[0.07] transition-opacity duration-300 group-hover:opacity-[0.12]"
+                        style={{ color: accent.from }}
+                      >
+                        {s.number}
+                      </span>
+
+                      <div className="relative flex items-center justify-between">
+                        <span
+                          className="flex h-14 w-14 items-center justify-center rounded-2xl text-white transition-transform duration-300 group-hover:-rotate-6 group-hover:scale-105"
+                          style={{
+                            background: `linear-gradient(135deg, ${accent.from}, ${accent.to})`,
+                            boxShadow: `0 10px 20px -8px ${accent.to}aa`,
+                          }}
+                        >
+                          <ServiceIcon name={s.icon} />
+                        </span>
+                        <span
+                          className="rounded-full px-2.5 py-1 font-display text-[11px] font-bold tracking-wider"
+                          style={{ backgroundColor: accent.tint, color: accent.text }}
+                        >
+                          {s.number}
+                        </span>
+                      </div>
+
+                      <h3 className="relative mt-6 text-lg font-semibold leading-snug text-ink">{s.title}</h3>
+                      <p className="relative mt-3 flex-1 text-sm leading-relaxed text-ink-soft">{s.body}</p>
+
+                      <div className="relative mt-6 flex items-center justify-between border-t border-dashed border-line pt-4">
+                        <span className="text-sm font-semibold" style={{ color: accent.text }}>
+                          Learn more
+                        </span>
+                        <span
+                          className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border transition-all duration-300 group-hover:translate-x-0.5 group-hover:!text-white"
+                          style={{ borderColor: `${accent.from}40`, color: accent.text }}
+                        >
+                          <span
+                            aria-hidden="true"
+                            className="absolute h-9 w-9 scale-0 rounded-full transition-transform duration-300 group-hover:scale-100"
+                            style={{ background: `linear-gradient(135deg, ${accent.from}, ${accent.to})` }}
+                          />
+                          <svg className="relative" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                          </svg>
+                        </span>
+                      </div>
+                    </TiltCard>
+                  </Link>
+                </Reveal>
+              );
+            })}
+          </div>
+
+          <Reveal delay={320} className="mt-10">
+            <div className="rounded-3xl border border-line bg-surface/80 p-4 shadow-sm shadow-ink/[0.03] backdrop-blur sm:p-5">
+              <p className="mb-3 px-1 text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-faint">More services</p>
+              <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] sm:flex-wrap sm:overflow-visible [&::-webkit-scrollbar]:hidden">
+                {serviceLinks.map((s) => (
+                  <Link
+                    key={s.slug}
+                    href={`/${s.slug}`}
+                    className="shrink-0 whitespace-nowrap rounded-full border border-line bg-surface-2/70 px-4 py-2 text-xs font-medium text-ink-soft transition-all hover:-translate-y-0.5 hover:border-brand hover:bg-brand-tint hover:text-brand-text"
+                  >
+                    {s.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
           </Reveal>
         </div>
       </section>
@@ -556,7 +653,7 @@ function PassportEmblem() {
 }
 
 function ServiceIcon({ name }: { name: string }) {
-  const common = { width: 20, height: 20, viewBox: "0 0 24 24", fill: "none", "aria-hidden": true } as const;
+  const common = { width: 24, height: 24, viewBox: "0 0 24 24", fill: "none", "aria-hidden": true } as const;
   switch (name) {
     case "admission":
       return (
