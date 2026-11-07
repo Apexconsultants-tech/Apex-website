@@ -3,15 +3,46 @@ import Link from "next/link";
 import { contact, destinations, icef, offices, site, socials } from "@/lib/site-config";
 import { flagSize } from "@/lib/flags";
 
+const quickLinks = [
+  { label: "About Us", href: "/about-us" },
+  { label: "Our Services", href: "/#services" },
+  { label: "Study Destinations", href: "/destinations" },
+  { label: "Partner Universities", href: "/#partner-logos" },
+  { label: "Success Stories", href: "/success-stories" },
+  { label: "FAQs", href: "/faqs" },
+  { label: "Contact Us", href: "/contact-us" },
+] as const;
+
+const officeShortName: Record<string, string> = {
+  "karachi-shahrah-e-faisal": "Karachi · Head Office",
+  karachi: "Karachi · Gulshan",
+  hyderabad: "Hyderabad",
+  uk: "United Kingdom",
+};
+
 export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-line bg-surface">
-      <div className="mx-auto max-w-7xl px-5 py-14 lg:px-8">
-        <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-12">
-          <div className="lg:col-span-3">
-            <Link href="/" aria-label="Apex Consulting Services home">
+    <footer className="relative overflow-hidden bg-[#0b1510] text-white">
+      {/* gradient hairline + ambient glows */}
+      <div aria-hidden="true" className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-logo-lime/70 to-transparent" />
+      <div aria-hidden="true" className="pointer-events-none absolute -left-40 -top-40 h-[28rem] w-[28rem] rounded-full bg-brand/25 blur-3xl" />
+      <div aria-hidden="true" className="pointer-events-none absolute -right-32 top-1/3 h-96 w-96 rounded-full bg-logo-sky/10 blur-3xl" />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.05] [background-image:radial-gradient(white_1px,transparent_1px)] [background-size:24px_24px]"
+      />
+
+      <div className="relative mx-auto max-w-7xl px-5 pt-16 pb-8 lg:px-8 lg:pt-20">
+        <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-10">
+          {/* Brand */}
+          <div className="sm:col-span-2 lg:col-span-4">
+            <Link
+              href="/"
+              aria-label="Apex Consulting Services home"
+              className="inline-flex rounded-2xl bg-white px-4 py-3 shadow-lg shadow-black/30 transition-transform hover:-translate-y-0.5"
+            >
               <Image
                 src="/images/brand/apex-logo.webp"
                 alt="Apex Consulting Services"
@@ -21,114 +52,227 @@ export default function Footer() {
                 className="h-8 w-auto"
               />
             </Link>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink-soft">
+            <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/75">
               Trusted overseas education consultancy since {site.foundedYear}. Admissions, visas, and
               student support from Pakistan to the world.
             </p>
-            <div className="mt-5 flex items-center gap-3">
-              <a
-                href={socials.facebook}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink-soft transition-colors hover:border-brand hover:text-brand"
-              >
+
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <SocialLink href={socials.facebook} label="Facebook">
                 <FacebookIcon />
-              </a>
+              </SocialLink>
+              <SocialLink href={socials.linkedin} label="LinkedIn">
+                <LinkedInIcon />
+              </SocialLink>
               <a
-                href={socials.linkedin}
+                href={contact.whatsappHref}
+                data-track="whatsapp_click"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="LinkedIn"
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink-soft transition-colors hover:border-brand hover:text-brand"
+                className="inline-flex h-10 items-center gap-2 rounded-full bg-gradient-to-r from-brand to-logo-teal px-4 text-sm font-semibold text-white shadow-lg shadow-brand/30 transition-all hover:-translate-y-0.5 hover:shadow-brand/50"
               >
-                <LinkedInIcon />
+                <ChatIcon /> WhatsApp us
               </a>
             </div>
+
             <a
               href={icef.certificateUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-5 inline-flex items-center gap-2 rounded-lg border border-line px-3 py-2 text-xs font-medium text-ink-soft transition-colors hover:border-brand hover:text-brand"
+              className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-2.5 text-xs text-white/80 backdrop-blur transition-colors hover:border-logo-lime/50 hover:text-white"
               title="Verify ICEF Agency Status (IAS) certification"
             >
-              <Image src="/images/brand/icef-ias-badge.svg" alt="" width={20} height={20} className="h-5 w-5" />
-              ICEF Agency Status, IAS #{icef.iasId}
+              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-white">
+                <Image src="/images/brand/icef-ias-badge.svg" alt="" width={20} height={20} className="h-5 w-5" />
+              </span>
+              <span>
+                <span className="block font-semibold text-white">ICEF Agency Status</span>
+                IAS #{icef.iasId} · Verify certificate ↗
+              </span>
             </a>
           </div>
 
+          {/* Quick links */}
           <div className="lg:col-span-2">
-            <h3 className="text-xs font-semibold uppercase tracking-wide text-ink-faint">Important Links</h3>
-            <ul className="mt-4 space-y-2.5 text-sm text-ink-soft">
-              <li><Link href="/about-us" className="hover:text-brand">About Us</Link></li>
-              <li><Link href="/#services" className="hover:text-brand">Our Services</Link></li>
-              <li><Link href="/destinations" className="hover:text-brand">Study Destinations</Link></li>
-              <li><Link href="/#partner-logos" className="hover:text-brand">Partner Universities</Link></li>
-              <li><Link href="/success-stories" className="hover:text-brand">Success Stories</Link></li>
-              <li><Link href="/faqs" className="hover:text-brand">FAQs</Link></li>
-              <li><Link href="/contact-us" className="hover:text-brand">Contact Us</Link></li>
-            </ul>
-          </div>
-
-          <div className="lg:col-span-4">
-            <h3 className="text-xs font-semibold uppercase tracking-wide text-ink-faint">Study Destinations</h3>
-            <ul className="mt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-ink-soft sm:grid-cols-3">
-              {destinations.map((d) => (
-                <li key={d.slug}>
-                  <Link href={`/${d.slug}`} className="flex items-center gap-1.5 hover:text-brand">
-                    <Image
-                      src={`/images/flags/${d.flag}.svg`}
-                      alt=""
-                      {...flagSize(d.flag, 10)}
-                      className="shrink-0 rounded-[1px]"
-                    />
-                    <span className="truncate">{d.short}</span>
+            <FooterHeading>Explore</FooterHeading>
+            <ul className="mt-5 space-y-3 text-sm">
+              {quickLinks.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="group inline-flex items-center gap-2 text-white/75 transition-colors hover:text-white">
+                    <span className="h-px w-0 bg-logo-lime transition-all duration-300 group-hover:w-3" />
+                    {l.label}
                   </Link>
                 </li>
               ))}
             </ul>
           </div>
 
+          {/* Destinations */}
           <div className="lg:col-span-3">
-            <h3 className="text-xs font-semibold uppercase tracking-wide text-ink-faint">Contact Us</h3>
-            <ul className="mt-4 space-y-3 text-sm text-ink-soft">
-              {offices.map((o) => (
-                <li key={o.id}>
-                  <strong className="block text-ink">{o.name}</strong>
-                  <span>{o.address}</span>
-                  <span className="block text-xs text-ink-faint">{o.hours}</span>
-                  {"phone" in o && (
-                    <a href={o.phone.href} data-track="phone_click" className="block hover:text-brand">{o.phone.display}</a>
-                  )}
+            <FooterHeading>Study destinations</FooterHeading>
+            <ul className="mt-5 flex flex-wrap gap-2">
+              {destinations.map((d) => (
+                <li key={d.slug}>
+                  <Link
+                    href={`/${d.slug}`}
+                    className="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-xs text-white/80 transition-all hover:-translate-y-0.5 hover:border-logo-lime/50 hover:bg-white/10 hover:text-white"
+                  >
+                    <Image src={`/images/flags/${d.flag}.svg`} alt="" {...flagSize(d.flag, 10)} className="shrink-0 rounded-[1px]" />
+                    {d.short}
+                  </Link>
                 </li>
               ))}
-              <li>
-                <strong className="block text-ink">Helpline</strong>
-                <a href={contact.phoneHref} data-track="phone_click" className="hover:text-brand">{contact.phoneDisplay}</a>
-              </li>
-              <li>
-                <strong className="block text-ink">Email</strong>
-                <a href={`mailto:${contact.email}`} className="hover:text-brand">{contact.email}</a>
-              </li>
-              <li>
-                <strong className="block text-ink">Hours</strong>
+            </ul>
+          </div>
+
+          {/* Get in touch */}
+          <div className="lg:col-span-3">
+            <FooterHeading>Get in touch</FooterHeading>
+            <ul className="mt-5 space-y-3">
+              <ContactRow icon={<PhoneIcon />} label="Helpline">
+                <a href={contact.phoneHref} data-track="phone_click" className="hover:text-logo-lime">{contact.phoneDisplay}</a>
+              </ContactRow>
+              <ContactRow icon={<MailIcon />} label="Email">
+                <a href={`mailto:${contact.email}`} className="break-all hover:text-logo-lime">{contact.email}</a>
+              </ContactRow>
+              <ContactRow icon={<ClockIcon />} label="Hours">
                 <span>{contact.hours}</span>
-                <span className="block text-xs text-ink-faint">{contact.hoursNote}</span>
-              </li>
+                <span className="block text-xs text-white/60">{contact.hoursNote}</span>
+              </ContactRow>
             </ul>
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-line pt-6 text-xs text-ink-faint sm:flex-row sm:items-center">
-          <p>Copyright © {site.foundedYear}–{year}. {site.name}</p>
-          <div className="flex gap-5">
-            <Link href="/privacy-policy" className="hover:text-brand">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-brand">Terms of Service</Link>
-            <Link href="/contact-us" className="hover:text-brand">Contact Us</Link>
+        {/* Offices */}
+        <div className="mt-14">
+          <FooterHeading>Our offices</FooterHeading>
+          <ul className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {offices.map((o) => (
+              <li
+                key={o.id}
+                className="group flex flex-col rounded-2xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur transition-all duration-300 hover:-translate-y-1 hover:border-logo-lime/40 hover:bg-white/[0.07]"
+              >
+                <div className="flex items-center gap-2.5">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-brand to-logo-teal text-white">
+                    <PinIcon />
+                  </span>
+                  <strong className="text-sm font-semibold text-white">{officeShortName[o.id] ?? o.name}</strong>
+                </div>
+                <p className="mt-3 flex-1 text-xs leading-relaxed text-white/70">{o.address}</p>
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-white/10 pt-3 text-xs">
+                  <span className="text-white/60">{o.hours}</span>
+                  {"phone" in o && (
+                    <a href={o.phone.href} data-track="phone_click" className="font-semibold text-logo-lime hover:underline">
+                      {o.phone.display}
+                    </a>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Bottom bar */}
+        <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-white/10 pt-6 text-xs text-white/60 sm:flex-row sm:items-center">
+          <p>© {site.foundedYear}–{year} {site.name}. All rights reserved.</p>
+          <div className="flex flex-wrap gap-x-5 gap-y-2">
+            <Link href="/privacy-policy" className="hover:text-white">Privacy Policy</Link>
+            <Link href="/terms" className="hover:text-white">Terms of Service</Link>
+            <Link href="/contact-us" className="hover:text-white">Contact Us</Link>
           </div>
         </div>
+
+        {/* Oversized wordmark */}
+        <p
+          aria-hidden="true"
+          className="pointer-events-none mt-8 select-none bg-gradient-to-b from-white/[0.09] to-transparent bg-clip-text text-center font-display text-[22vw] font-bold leading-[0.8] tracking-tighter text-transparent lg:text-[15rem]"
+        >
+          APEX
+        </p>
       </div>
     </footer>
+  );
+}
+
+function FooterHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <h3 className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-white">
+      <span className="h-1.5 w-1.5 rounded-full bg-logo-lime" />
+      {children}
+    </h3>
+  );
+}
+
+function ContactRow({ icon, label, children }: { icon: React.ReactNode; label: string; children: React.ReactNode }) {
+  return (
+    <li className="flex gap-3">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.06] text-logo-lime">
+        {icon}
+      </span>
+      <span className="min-w-0 text-sm text-white/85">
+        <span className="block text-[11px] uppercase tracking-wider text-white/55">{label}</span>
+        {children}
+      </span>
+    </li>
+  );
+}
+
+function SocialLink({ href, label, children }: { href: string; label: string; children: React.ReactNode }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label}
+      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/[0.05] text-white/80 transition-all hover:-translate-y-0.5 hover:border-logo-lime hover:bg-logo-lime hover:text-[#0b1510]"
+    >
+      {children}
+    </a>
+  );
+}
+
+const iconProps = { width: 16, height: 16, viewBox: "0 0 24 24", fill: "none", "aria-hidden": true } as const;
+
+function PhoneIcon() {
+  return (
+    <svg {...iconProps}>
+      <path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function MailIcon() {
+  return (
+    <svg {...iconProps}>
+      <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="2" />
+      <path d="m3 7 9 6 9-6" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function ClockIcon() {
+  return (
+    <svg {...iconProps}>
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
+      <path d="M12 7v5l3 2" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function PinIcon() {
+  return (
+    <svg {...iconProps}>
+      <path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+      <circle cx="12" cy="9.5" r="2.5" stroke="currentColor" strokeWidth="2" />
+    </svg>
+  );
+}
+
+function ChatIcon() {
+  return (
+    <svg {...iconProps}>
+      <path d="M4 20l1.3-3.9A8 8 0 1 1 8 19.1L4 20Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
+    </svg>
   );
 }
 
