@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -54,7 +54,7 @@ export default function ContactUsPage() {
               </p>
               <p className="mt-4 text-ink-soft">
                 Call our helpline, message us on WhatsApp, or send an enquiry. We typically respond during
-                office hours: <strong className="text-ink">{contact.hours}</strong>.
+                office hours: <strong className="text-ink">{contact.hours}</strong> ({contact.hoursNote}).
               </p>
               <div className="mt-8 flex flex-wrap gap-3">
                 <a
@@ -95,7 +95,7 @@ export default function ContactUsPage() {
             { title: "Helpline", value: contact.phoneDisplay, href: contact.phoneHref, track: "phone_click", icon: "phone" as const },
             { title: "Email Us", value: contact.email, href: `mailto:${contact.email}`, icon: "email" as const },
             { title: "WhatsApp", value: "Quick chat with our team", href: contact.whatsappHref, external: true, track: "whatsapp_click", icon: "whatsapp" as const },
-            { title: "Office Hours", value: contact.hours, icon: "clock" as const },
+            { title: "Office Hours", value: `${contact.hours} (Shahrah-e-Faisal until 8pm)`, icon: "clock" as const },
           ].map((c, i) => (
             <Reveal key={c.title} delay={i * 70} className="h-full">
               <TiltCard max={4} className="h-full">

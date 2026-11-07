@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import Breadcrumb from "@/components/Breadcrumb";
@@ -214,6 +214,7 @@ export default function AboutUsPage() {
                     <li key={o.id} className="text-sm text-ink-soft">
                       <strong className="block text-ink">{o.name}</strong>
                       {o.address}
+                      <span className="block text-xs text-ink-faint">{o.hours}</span>
                       {"phone" in o && (
                         <a href={o.phone.href} data-track="phone_click" className="block hover:text-brand">{o.phone.display}</a>
                       )}
@@ -226,6 +227,7 @@ export default function AboutUsPage() {
                   <li className="text-sm text-ink-soft">
                     <strong className="block text-ink">Hours</strong>
                     {contact.hours}
+                    <span className="block text-xs text-ink-faint">{contact.hoursNote}</span>
                   </li>
                 </ul>
                 <Link

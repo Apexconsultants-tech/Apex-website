@@ -1,4 +1,4 @@
-﻿import Image from "next/image";
+import Image from "next/image";
 import Link from "next/link";
 import { contact, destinations, icef, offices, site, socials } from "@/lib/site-config";
 import { flagSize } from "@/lib/flags";
@@ -96,6 +96,7 @@ export default function Footer() {
                 <li key={o.id}>
                   <strong className="block text-ink">{o.name}</strong>
                   <span>{o.address}</span>
+                  <span className="block text-xs text-ink-faint">{o.hours}</span>
                   {"phone" in o && (
                     <a href={o.phone.href} data-track="phone_click" className="block hover:text-brand">{o.phone.display}</a>
                   )}
@@ -112,6 +113,7 @@ export default function Footer() {
               <li>
                 <strong className="block text-ink">Hours</strong>
                 <span>{contact.hours}</span>
+                <span className="block text-xs text-ink-faint">{contact.hoursNote}</span>
               </li>
             </ul>
           </div>

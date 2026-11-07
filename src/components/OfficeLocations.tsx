@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import { contact, offices } from "@/lib/site-config";
@@ -24,6 +24,7 @@ export default function OfficeLocations() {
                 <span className="text-xs font-semibold text-ink-faint">{String(i + 1).padStart(2, "0")}</span>
                 <h3 className="mt-1 text-base font-semibold text-ink">{o.name}</h3>
                 <p className="mt-1 text-sm text-ink-soft">{o.address}</p>
+                <p className="mt-1 text-xs font-medium text-ink-faint">{o.hours}</p>
               </button>
               <a
                 href={"phone" in o ? o.phone.href : contact.phoneHref} data-track="phone_click"

@@ -43,6 +43,12 @@ export function localBusinessJsonLd() {
       streetAddress: karachi.address,
       addressCountry: "PK",
     },
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      opens: karachi.opens,
+      closes: karachi.closes,
+    },
   };
 }
 
