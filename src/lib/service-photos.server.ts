@@ -13,6 +13,6 @@ import path from "node:path";
  * hasn't been sourced for a given service yet. */
 export function serviceImage(slug: string): string | null {
   const relative = `images/services/${slug}.webp`;
-  const exists = fs.existsSync(path.join(process.cwd(), "public", relative));
+  const exists = fs.existsSync(path.join(process.cwd(), "src", "assets", relative));
   return exists ? `/${relative}` : null;
 }

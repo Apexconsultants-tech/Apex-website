@@ -1,0 +1,26 @@
+---
+import TestimonialCard from "@/components/TestimonialCard.astro";
+import type { testimonials } from "@/lib/site-config";
+
+interface Props { items: readonly (typeof testimonials)[number][] }
+const { items } = Astro.props;
+const doubled = [...items, ...items];
+---
+<div class="relative overflow-hidden" style="mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent); -webkit-mask-image: linear-gradient(to right, transparent, black 4%, black 96%, transparent)">
+  <div
+    data-marquee-track
+    class="animate-marquee-slow flex w-max gap-5 py-2"
+    role="region"
+    aria-label="Student success stories, scrolling automatically. Pause by hovering, focusing, or touching a card."
+  >
+    {doubled.map((t, i) => (
+      <div class="w-[85vw] shrink-0 sm:w-[360px]" aria-hidden={i >= items.length ? "true" : undefined}>
+        <TestimonialCard item={t} />
+      </div>
+    ))}
+  </div>
+</div>
+
+<script>
+  import "@/scripts/testimonial-carousel";
+</script>

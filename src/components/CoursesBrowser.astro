@@ -1,0 +1,52 @@
+---
+import TiltCard from "@/components/TiltCard.astro";
+import { courseCountries, courses } from "@/lib/courses-data";
+
+const countryOptions = ["All countries", ...courseCountries];
+const courseSummary = courses.map((c) => ({
+  slug: c.slug,
+  name: c.name,
+  university: c.university,
+  country: c.country,
+  duration: c.duration ?? null,
+}));
+---
+<div data-courses-browser data-courses={JSON.stringify(courseSummary)}>
+  <div class="flex flex-col gap-3 sm:flex-row">
+    <input
+      type="text"
+      data-courses-search
+      placeholder="Search by course name"
+      class="flex-1 rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink placeholder:text-ink-faint focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20"
+    />
+    <select data-courses-country aria-label="Filter by country" class="rounded-xl border border-line bg-surface px-4 py-3 text-sm text-ink focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/20">
+      {countryOptions.map((c) => <option value={c}>{c}</option>)}
+    </select>
+  </div>
+
+  <p data-courses-count class="mt-4 text-xs text-ink-faint">{courses.length} courses found</p>
+
+  <div data-courses-grid class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+    {courses.map((c) => (
+      <TiltCard class="h-full" max={4}>
+        <a href="/contact-us" class="block h-full rounded-2xl border border-line bg-surface p-5 transition-shadow hover:shadow-lg hover:shadow-ink/5">
+          <p class="text-sm font-semibold text-ink">{c.name}</p>
+          <p class="mt-1 text-xs text-ink-soft">{c.university}</p>
+          <div class="mt-3 flex items-center justify-between">
+            <span class="text-xs text-ink-faint">{c.country}</span>
+            {c.duration && <span class="text-xs font-medium text-brand-text">{c.duration}</span>}
+          </div>
+        </a>
+      </TiltCard>
+    ))}
+  </div>
+
+  <p data-courses-empty class="mt-8 hidden rounded-2xl border border-line bg-surface p-8 text-center text-sm text-ink-soft">
+    No courses match that search. Try a different name or country, or <a href="/contact-us" class="font-semibold text-brand-text hover:underline">talk to a counselor</a>.
+  </p>
+</div>
+
+<script>
+  import "@/scripts/tilt-card";
+  import "@/scripts/courses-browser";
+</script>

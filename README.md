@@ -8,23 +8,36 @@ form.
 
 ## Tech stack
 
-- **Framework:** [Next.js 16](https://nextjs.org) (App Router, React Server
-  Components, TypeScript)
-- **UI:** React 19
-- **Styling:** [Tailwind CSS v4](https://tailwindcss.com), configured via
-  `src/app/globals.css` (no separate `tailwind.config`, Tailwind v4 uses
-  CSS-based configuration)
-- **Fonts:** `next/font` (Sora for display type, Public Sans for body text)
-- **Contact form:** [Netlify Forms](https://docs.netlify.com/manage/forms/setup/) —
-  detected at build time from the prerendered `/contact-us` HTML, submitted
-  via `fetch()` from the client, no backend code or SMTP required
-- **Analytics:** Google Analytics 4, loaded via `next/script`
-- **Linting:** ESLint with `eslint-config-next`
+- **Framework:** [Astro 5](https://astro.build), static output
+  (`output: "static"`), TypeScript
+- **UI:** no client-side framework. Interactive bits (header menus, course
+  finder, contact form, carousels, tilt cards, reveal animations, the hero
+  globe) are small vanilla TypeScript modules under `src/scripts/`, each
+  loaded only on the page that uses it via a `<script>` tag inside the
+  relevant Astro component.
+- **Styling:** [Tailwind CSS v4](https://tailwindcss.com) via
+  `@tailwindcss/vite`, configured in `src/styles/globals.css` (CSS-based
+  configuration, no `tailwind.config`)
+- **Fonts:** self-hosted via `@fontsource/sora` and `@fontsource/public-sans`
+  (`font-display: swap`, the two above-the-fold weights preloaded in
+  `src/components/BaseHead.astro`)
+- **Images:** `src/assets/images/`, processed at build time by Astro's
+  `<Image>`/`<Picture>` (AVIF + WebP, explicit dimensions, responsive
+  `sizes`), resolved from their original `/images/...` path strings via
+  `src/lib/images.ts`. SVGs (flags, a few vector logos) and the three brand
+  marks that must stay byte-exact (`apex-icon.webp`, `apex-wordmark.webp`,
+  `apex-logo.webp`) stay in `public/images/`, unprocessed.
+- **Contact form:** `src/components/ContactForm.astro` posts to
+  `public/contact.php`, a plain PHP mail handler that runs on HostGator's
+  own PHP/Apache — no Node server, no third-party form service.
+- **Analytics:** Google Analytics 4, loaded with `defer` and bootstrapped on
+  `requestIdleCallback` so it never competes with LCP/TBT
+  (`src/scripts/analytics.ts`).
 
 ## Project architecture
 
 - Content-heavy pages (destinations, services) are rendered from a single
-  catalog-style dynamic route (`src/app/[slug]/page.tsx`) that resolves the
+  catalog-style dynamic route (`src/pages/[slug].astro`) that resolves the
   slug against either the destinations or services data set and renders a
   shared template component. This keeps ~28 pages consistent without
   duplicating markup.
@@ -32,36 +45,42 @@ form.
   not in a CMS or database. Editing copy, adding a destination, or adding a
   partner university means editing the relevant data file.
 - `src/lib/*.server.ts` files touch the filesystem (`node:fs`) to resolve
-  optional per-page photos and must only be imported from server components;
-  everything else in `src/lib` is safe to import from client components too.
-- Server Actions (`src/app/actions.ts`) handle the contact form submission,
-  including validation and the honeypot spam check, without a separate API
-  route.
+  optional per-page photos and must only be imported from `.astro` files
+  (never from a `src/scripts/*` client module).
+- `src/scripts/*` modules have browser-only top-level code — never import
+  one from an Astro component's frontmatter (that runs during the SSG
+  build, where `document`/`window` don't exist). If frontmatter and a
+  script both need the same value, put it in `src/lib/` instead.
 
 ## Directory structure
 
 ```
 src/
-  app/                  Routes (App Router). One folder per top-level page,
-                         plus [slug] for destinations/services and
-                         blogs/[slug], partner-universities/[slug] for their
-                         respective detail pages.
-    actions.ts           Server action backing the contact form
-    layout.tsx            Root layout: fonts, global nav/footer, JSON-LD
-    sitemap.ts / robots.ts  Generated sitemap.xml and robots.txt
-    opengraph-image.tsx     Auto-generated OG image for the homepage
-  components/            Shared UI components
+  pages/                Routes. [slug].astro resolves to a destination or a
+                         service; blogs/[slug].astro and
+                         partner-universities/[slug].astro are their own
+                         catch-alls. sitemap.xml.ts / robots.txt.ts are
+                         generated endpoints.
+  layouts/BaseLayout.astro  Root layout: head, header/footer, global scripts
+  components/            Astro components (.astro)
     destination/          Destination-page template
-    service/               Service-page template
+    service/                Service-page template
+    ui/                      Shared dropdown primitives
+  scripts/               Vanilla TS modules, one per interactive component
   lib/                    Typed content data, site config, and helpers
+  styles/                 globals.css (Tailwind + custom CSS), fonts.css
 public/
-  images/                 Local, optimized image assets (see below)
+  images/                 Local SVGs + the 3 byte-exact brand marks
+  contact.php             Form handler (runs on HostGator's PHP)
+  .htaccess               Bot blocking, URL rewrite, caching, 404
+scripts/                  Build/CI tooling (not shipped): byte-budget gate,
+                         Lighthouse gate, screenshot tool
 ```
 
 ## Prerequisites
 
 - Node.js 20+
-- npm (the repo is set up with `package-lock.json`)
+- npm
 
 ## Local development
 
@@ -70,49 +89,59 @@ npm install
 npm run dev
 ```
 
-The site runs at `http://localhost:3000`.
+The site runs at `http://localhost:4321`. The contact form will hit a
+network error locally — there's no PHP server here, so `/contact.php`
+can't actually run. That's expected; it only runs after deploying to
+HostGator.
 
 ## Environment variables
 
-None are currently required — see `.env.example`. The contact form uses
-Netlify Forms, which needs no application secrets; configure the
-notification email in the Netlify dashboard instead (Site configuration ->
-Forms -> Form notifications).
+None are required to build or run the site — see `.env.example`. The only
+secrets this project has are the four FTP deploy credentials, which live in
+the GitHub repo's Actions secrets, not in any file here.
 
-## Build and deployment
+## Build, checks, and deployment
 
 ```bash
-npm run build   # production build
-npm run start   # serve the production build locally
-npm run lint    # ESLint
+npm run build       # astro build, then the byte-budget gate (fast, no browser)
+npm run lighthouse   # separate: mobile Lighthouse gate, median of 3 runs/URL
+npm run check        # astro check (TypeScript + template diagnostics)
+npm run preview      # serve the production build locally
 ```
 
-Production deploys to Netlify from this repo's `main` branch. After the
-first deploy with the contact form in place, set the notification email in
-Netlify (Site configuration -> Forms -> Form notifications -> Email
-notification -> `info@apexconsultants.org`) so submissions actually reach
-an inbox.
+**Pushing to `main` deploys the live site** via
+`.github/workflows/deploy.yml`: `npm ci` → `astro check` → `npm run build`
+→ `npm run lighthouse` → upload `dist/` to HostGator over FTPS
+(`SamKirkland/FTP-Deploy-Action`, changed files only). That workflow needs
+four repository secrets set in GitHub (Settings → Secrets and variables →
+Actions): `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_SERVER_DIR`.
+
+Run `npm run build` (and `npm run lighthouse` for anything touching images,
+fonts, or above-the-fold markup) before pushing to `main`.
 
 ## Assets
 
-- `public/images/` holds all first-party imagery (brand marks, destination
-  and service photography, university logos, testimonial photos, flags) as
-  local, pre-optimized WebP/SVG/PNG files. Nothing in the UI depends on a
+- `src/assets/images/` holds first-party raster imagery (destination and
+  service photography, university logos, testimonial photos, brand badges),
+  processed into AVIF/WebP at build time. Nothing in the UI depends on a
   remote image host.
 - Destination and service hero photos are resolved by filename convention
   (`src/lib/destination-photos.server.ts`, `src/lib/service-photos.server.ts`)
   so adding a new photo is just adding a correctly named file.
-- See **[CONTENT-GUIDE.md](./CONTENT-GUIDE.md)** for step-by-step instructions
-  on adding testimonials, destinations, universities, and other content.
+- See **[CONTENT-GUIDE.md](./CONTENT-GUIDE.md)** for step-by-step
+  instructions on adding testimonials, destinations, universities, and
+  other content (the image-location details there predate this Astro
+  rebuild — paths now resolve through `src/lib/images.ts`, but the
+  naming conventions are unchanged).
 
 ## Integrations
 
-- **Google Analytics 4** — loaded client-side in `src/components/Analytics.tsx`;
-  the measurement ID lives in `src/lib/analytics.ts`. Any element with a
-  `data-track="event_name"` attribute fires that GA4 event on click.
+- **Google Analytics 4** — `src/scripts/analytics.ts` + `src/lib/ga.ts` for
+  the measurement ID. Any element with a `data-track="event_name"`
+  attribute fires that GA4 event on click.
 - **Google Maps embeds** — office locations on the Contact page
-  (`src/components/OfficeLocations.tsx`) use unauthenticated Maps embed URLs,
-  no API key required.
+  (`src/components/OfficeLocations.astro`) use unauthenticated Maps embed
+  URLs, no API key required.
 - **ICEF Agency Status** — the agency's accreditation is verifiable at the
   URLs in `src/lib/site-config.ts` (`icef.certificateUrl`,
   `icef.agencyProfileUrl`).

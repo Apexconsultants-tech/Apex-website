@@ -1,0 +1,56 @@
+---
+import { Image } from "astro:assets";
+import { img } from "@/lib/images";
+import SectionHeading from "@/components/SectionHeading.astro";
+import Reveal from "@/components/Reveal.astro";
+import { partnerLogos, type PartnerLogo } from "@/lib/partner-logo-data";
+
+const rows: PartnerLogo[][] = [[], [], []];
+partnerLogos.forEach((u, i) => rows[i % 3].push(u));
+const marqueeRows = rows.map((row) => [...row, ...row]);
+const rowDurations = ["70s", "85s", "100s"];
+---
+<section id="partner-logos" class="scroll-mt-20">
+  <div class="mx-auto max-w-7xl px-5 pt-20 lg:px-8">
+    <Reveal>
+      <SectionHeading
+        eyebrow="Trusted network"
+        title="Partner Universities"
+        lead="The universities and institutions we work with as an authorized representative, across the UK, USA, Australia, Germany, and Ireland."
+      />
+    </Reveal>
+  </div>
+  <div class="mt-10 space-y-14 bg-brand-tint/50 py-10">
+    {marqueeRows.map((row, r) => (
+      <Reveal delay={r * 100} class="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
+        <div class="flex w-max animate-marquee items-center gap-6" style={`animation-duration: ${rowDurations[r]}; will-change: transform`} aria-hidden="true">
+          {row.map((u) =>
+            u.logo.endsWith(".svg") ? (
+              <div class="flex h-12 w-32 shrink-0 items-center justify-center sm:h-14 sm:w-36">
+                <img
+                  src={`/images/university-logos/${u.logo}`}
+                  alt={u.name}
+                  width="200"
+                  height="64"
+                  loading="lazy"
+                  class={u.darkLogo ? "aspect-auto h-full w-full object-contain invert" : "aspect-auto h-full w-full object-contain"}
+                />
+              </div>
+            ) : (
+              <div class="flex h-12 w-32 shrink-0 items-center justify-center sm:h-14 sm:w-36">
+                <Image
+                  src={img(`/images/university-logos/${u.logo}`)}
+                  alt={u.name}
+                  width={200}
+                  height={64}
+                  loading="lazy"
+                  class={u.darkLogo ? "aspect-auto h-full w-full object-contain invert" : "aspect-auto h-full w-full object-contain"}
+                />
+              </div>
+            )
+          )}
+        </div>
+      </Reveal>
+    ))}
+  </div>
+</section>

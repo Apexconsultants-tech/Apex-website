@@ -15,6 +15,6 @@ import { destinationPhoto } from "@/lib/destinations-data";
 export function destinationLifePhoto(slug: string) {
   const name = slug.replace("study-in-", "");
   const relative = `images/destinations/${name}-life.webp`;
-  const exists = fs.existsSync(path.join(process.cwd(), "public", relative));
+  const exists = fs.existsSync(path.join(process.cwd(), "src", "assets", relative));
   return exists ? `/${relative}` : destinationPhoto(slug);
 }

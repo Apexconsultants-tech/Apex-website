@@ -1,0 +1,42 @@
+---
+interface Props { name: string }
+const { name } = Astro.props;
+---
+{name === "discover" && (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2" />
+    <path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+    <circle cx="11" cy="11" r="2.2" fill="currentColor" />
+  </svg>
+)}
+{name === "apply" && (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M7 3h7l4 4v14a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+    <path d="M9 12h6M9 16h6M9 8h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+  </svg>
+)}
+{name === "accepted" && (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M12 2 4 5.5v6c0 5 3.4 8.7 8 9.5 4.6-.8 8-4.5 8-9.5v-6L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+    <path d="m8.5 12 2.5 2.5 4.5-4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+)}
+{name === "visa" && (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="2" />
+    <circle cx="12" cy="10" r="2.3" stroke="currentColor" stroke-width="1.6" />
+    <path d="M8 17c0-1.7 1.8-2.8 4-2.8s4 1.1 4 2.8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+  </svg>
+)}
+{name === "fly" && (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M21 15v-2l-8-5V4.5a1.5 1.5 0 0 0-3 0V8l-8 5v2l8-2.5V17l-2.5 1.5V20l4-1 4 1v-1.5L13 17v-4.5l8 2.5Z" />
+  </svg>
+)}
+{name === "study" && (
+  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M12 3 2 8l10 5 10-5-10-5Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M6 10.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M22 8v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+  </svg>
+)}

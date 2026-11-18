@@ -1,0 +1,184 @@
+---
+import { Image } from "astro:assets";
+import { img } from "@/lib/images";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import FaqAccordion from "@/components/FaqAccordion.astro";
+import JsonLd from "@/components/JsonLd.astro";
+import TiltCard from "@/components/TiltCard.astro";
+import WhyIcon from "@/components/icons/WhyIcon.astro";
+import KeyFactorIcon from "@/components/icons/KeyFactorIcon.astro";
+import { destinationPhoto, destinations } from "@/lib/destinations-data";
+import { flagSize } from "@/lib/flags";
+import { contact, homeServiceHighlights } from "@/lib/site-config";
+import { breadcrumbJsonLd, faqJsonLd } from "@/lib/structured-data";
+
+const whyStudyAbroad = [
+  { title: "Global Exposure", icon: "globe", body: "Step outside a single classroom and into a genuinely international environment, learning alongside students from dozens of countries and building a worldview that looks beyond one city or one system." },
+  { title: "World-Class Education", icon: "cap", body: "Study at globally ranked universities known for research output, modern teaching methods, and industry-linked programs that carry real weight with employers back home and abroad." },
+  { title: "Language & Communication Skills", icon: "chat", body: "Daily immersion in an English-medium environment sharpens fluency far faster than a classroom ever could, an advantage that shows up in interviews, coursework, and everyday confidence." },
+  { title: "Career Growth & Global Networks", icon: "briefcase", body: "An international degree, a post-study work visa, and a professional network that spans continents make you a stronger candidate the moment you start job hunting." },
+  { title: "Independence & Personal Growth", icon: "compass", body: "Managing your own finances, routine, and decisions in a new country builds a level of resilience and confidence that's hard to develop any other way." },
+  { title: "Cultural Enrichment", icon: "spark", body: "New traditions, festivals, cuisines, and friendships broaden your perspective long after graduation, and often shape how you think and work for the rest of your career." },
+] as const;
+
+const keyFactors = [
+  { title: "University Ranking & Accreditation", icon: "rank", body: "Check global rankings, program accreditation, and faculty expertise for your specific field, not just the university's overall reputation. A strong engineering school and a strong law school rarely sit inside the same institution." },
+  { title: "Tuition Fees & Cost of Living", icon: "wallet", body: "Compare the full cost, tuition, accommodation, food, and transport, not tuition alone. A lower-tuition country with a high cost of living can end up more expensive than it first appears." },
+  { title: "Post-Study Work & Career Pathways", icon: "work", body: "Look at the post-study work visa length, part-time work rules during your degree, and how in-demand your field is locally. This is where a country's real long-term value shows up." },
+] as const;
+
+const destinationsFaqs = [
+  { q: "What is the best country to study abroad for Pakistani students?", a: "There's no single best country, it depends on your budget, field of study, and career goals. The UK and Ireland suit students who want shorter, focused degrees; the USA offers flexibility and strong research programs; Canada and Australia pair affordable living with generous post-study work visas. Apex compares all of this against your profile in a free consultation." },
+  { q: "How do I choose the right study abroad destination?", a: "Start with your field of study and budget, then narrow down by university rankings, visa requirements, post-study work options, and living costs. Most students shortlist 2 to 3 countries before comparing specific universities and programs in each." },
+  { q: "What are the benefits of studying abroad?", a: "Beyond the degree itself, studying abroad builds global exposure, stronger language and communication skills, an international professional network, and genuine independence, all of which carry weight with employers long after graduation." },
+  { q: "How can I find scholarships to study abroad?", a: "Scholarships typically come from three sources: government-funded awards (like Chevening or Commonwealth Scholarships), university merit scholarships, and need-based bursaries. Apex maps out realistic scholarship options for your target destinations during your consultation." },
+  { q: "What documents do I need to apply to study abroad?", a: "Most applications need academic transcripts, proof of English proficiency (IELTS/PTE/TOEFL), a statement of purpose, letters of recommendation, a valid passport, and proof of financial support for your visa. Exact requirements vary by country and university." },
+] as const;
+
+const title = "Best Study Abroad Destinations for Pakistani Students";
+const description = "Compare the best study abroad destinations for Pakistani students, universities, tuition fees, and post-study work visas for the UK, USA, Canada, Australia, and 14 more countries.";
+---
+<BaseLayout title={title} description={description} canonical="/destinations">
+  <JsonLd data={breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "Study Destinations", path: "/destinations" }])} />
+  <JsonLd data={faqJsonLd(destinationsFaqs)} />
+
+  <section class="mx-auto max-w-7xl px-5 pb-12 pt-10 lg:px-8 lg:pt-14">
+    <Breadcrumb current="Study Destinations" />
+    <div class="mt-6 grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+      <div>
+        <p class="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">Study abroad destinations</p>
+        <h1 class="mt-3 text-4xl font-semibold leading-[1.06] text-ink sm:text-5xl">Best Study Abroad <span class="text-brand">Destinations</span> for Pakistani Students</h1>
+        <p class="mt-6 max-w-xl text-base leading-relaxed text-ink-soft sm:text-lg">
+          Apex Consulting Services has guided students from Karachi, Hyderabad, and beyond into leading
+          universities since 2009. Below is comprehensive information on the {destinations.length} study
+          destinations we cover, university counts, tuition ranges, and post-study work visas, so you can
+          compare countries side by side before choosing where to apply.
+        </p>
+      </div>
+      <TiltCard class="relative aspect-[4/3] overflow-hidden rounded-3xl border border-line shadow-lg shadow-ink/10" max={4}>
+        <Image src={img("/images/stock/airplane-wing-sky.webp")} alt="Airplane wing above the clouds, on a flight to a study abroad destination" loading="eager" fetchpriority="high" widths={[480, 768, 1024]} sizes="(min-width: 1024px) 45vw, 90vw" class="h-full w-full object-cover" />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent"></div>
+      </TiltCard>
+    </div>
+  </section>
+
+  <section class="border-t border-line bg-surface-2/60 py-16">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <p class="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">All destinations</p>
+      <h2 class="mt-1.5 text-2xl font-semibold text-ink sm:text-3xl">Every Study Destination We Cover</h2>
+      <div class="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {destinations.map((d) => {
+          const fs = flagSize(d.flag, 18);
+          return (
+            <TiltCard class="group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface shadow-sm shadow-ink/[0.03] transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-ink/10" max={3}>
+              <a href={`/${d.slug}`} class="relative block aspect-[16/10] overflow-hidden">
+                <div class="absolute inset-0 scale-105 transition-transform duration-700 group-hover:scale-[1.12]">
+                  <Image src={img(destinationPhoto(d.slug))} alt={`${d.name} skyline`} loading="lazy" widths={[320, 480, 640]} sizes="(min-width: 1024px) 24vw, (min-width: 640px) 45vw, 90vw" class="h-full w-full object-cover" />
+                </div>
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent"></div>
+                <div class="absolute left-3 top-3 rotate-[-6deg] rounded-sm border border-white/70 bg-white/90 p-1 shadow-sm transition-transform group-hover:rotate-0">
+                  <img src={`/images/flags/${d.flag}.svg`} alt="" width={fs.width} height={fs.height} class="block rounded-[1px]" />
+                </div>
+                <div class="absolute inset-x-0 bottom-0 p-4">
+                  <span class="block text-lg font-semibold text-white">{d.name}</span>
+                </div>
+              </a>
+              <div class="flex flex-1 flex-col gap-2 px-5 py-4">
+                {d.heroStats.map((stat) => (
+                  <span class="flex items-start gap-2 text-xs leading-relaxed text-ink-soft">
+                    <span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-brand" aria-hidden="true"></span>
+                    {stat}
+                  </span>
+                ))}
+                <a href={`/${d.slug}`} class="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-brand-text hover:underline">Explore {d.short} guide →</a>
+              </div>
+            </TiltCard>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+    <div class="max-w-2xl">
+      <p class="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">Why go abroad</p>
+      <h2 class="mt-2 text-3xl font-semibold leading-tight text-ink sm:text-4xl">Benefits of <span class="text-brand">Studying Abroad</span></h2>
+      <p class="mt-4 text-base leading-relaxed text-ink-soft">A degree earned overseas changes more than your CV. Here's what students consistently tell us they gained beyond the classroom.</p>
+    </div>
+    <div class="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {whyStudyAbroad.map((item) => (
+        <TiltCard class="flex h-full flex-col rounded-2xl border border-line bg-surface p-6 shadow-sm shadow-ink/[0.03] transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-ink/[0.07]" max={4}>
+          <span class="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-brand to-brand-deep text-white shadow-md shadow-brand/25">
+            <WhyIcon name={item.icon} />
+          </span>
+          <h3 class="mt-4 text-base font-semibold text-ink">{item.title}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-ink-soft">{item.body}</p>
+        </TiltCard>
+      ))}
+    </div>
+  </section>
+
+  <section class="border-y border-line bg-surface-2/60 py-16">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="max-w-2xl">
+        <p class="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">End-to-end support</p>
+        <h2 class="mt-2 text-2xl font-semibold text-ink sm:text-3xl">What Apex Handles For You</h2>
+      </div>
+      <div class="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {homeServiceHighlights.map((s) => (
+          <a href={`/${s.slug}`} class="group flex items-start gap-3 rounded-2xl border border-line bg-surface p-5 shadow-sm shadow-ink/[0.03] transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-ink/[0.07]">
+            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand-tint text-brand-text">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 12 5 5 9-9" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </span>
+            <span>
+              <span class="block text-sm font-semibold text-ink">{s.title}</span>
+              <span class="mt-1 block text-xs leading-relaxed text-ink-soft">{s.body}</span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+    <div class="max-w-2xl">
+      <p class="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">Making the decision</p>
+      <h2 class="mt-2 text-3xl font-semibold leading-tight text-ink sm:text-4xl">Key Factors to Consider When <span class="text-brand">Choosing a Destination</span></h2>
+    </div>
+    <div class="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-3">
+      {keyFactors.map((item) => (
+        <div class="h-full rounded-2xl border border-line bg-surface p-6 shadow-sm shadow-ink/[0.03]">
+          <span class="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-ink to-[#0a0d0e] text-white shadow-md shadow-ink/20">
+            <KeyFactorIcon name={item.icon} />
+          </span>
+          <h3 class="mt-4 text-base font-semibold text-ink">{item.title}</h3>
+          <p class="mt-2 text-sm leading-relaxed text-ink-soft">{item.body}</p>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <section class="border-t border-line bg-surface-2/60 py-20">
+    <div class="mx-auto max-w-3xl px-5 lg:px-8">
+      <div class="text-center">
+        <p class="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">Common questions</p>
+        <h2 class="mt-2 text-3xl font-semibold text-ink sm:text-4xl">Study Destination FAQs</h2>
+      </div>
+      <div class="mt-10"><FaqAccordion items={destinationsFaqs} /></div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+    <div class="flex flex-col items-start justify-between gap-8 rounded-3xl bg-brand px-8 py-12 sm:px-12 lg:flex-row lg:items-center">
+      <div>
+        <h2 class="text-3xl font-semibold text-white sm:text-4xl">Not sure which country fits you?</h2>
+        <p class="mt-3 max-w-lg text-white">Tell us your grades, budget, and goals, and we will match you to the right destination.</p>
+      </div>
+      <div class="flex shrink-0 flex-wrap gap-3">
+        <a href="/contact-us" class="rounded-full bg-white px-6 py-3 text-sm font-semibold text-brand-deep transition-all hover:-translate-y-0.5 hover:bg-white/90">Book free consultation</a>
+        <a href={contact.whatsappHref} data-track="whatsapp_click" target="_blank" rel="noopener noreferrer" class="rounded-full border border-white/40 px-6 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:border-white">Chat on WhatsApp</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

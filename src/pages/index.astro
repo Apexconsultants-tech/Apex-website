@@ -1,0 +1,322 @@
+---
+import { Image } from "astro:assets";
+import { img } from "@/lib/images";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import AccreditationsStrip from "@/components/AccreditationsStrip.astro";
+import FaqAccordion from "@/components/FaqAccordion.astro";
+import HeroClassic from "@/components/HeroClassic.astro";
+import IcefSection from "@/components/IcefSection.astro";
+import PartnerLogoStrip from "@/components/PartnerLogoStrip.astro";
+import Reveal from "@/components/Reveal.astro";
+import ScrollPopGroup from "@/components/ScrollPopGroup.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import TestimonialCarousel from "@/components/TestimonialCarousel.astro";
+import TiltCard from "@/components/TiltCard.astro";
+import ServiceIcon from "@/components/icons/ServiceIcon.astro";
+import JourneyIcon from "@/components/icons/JourneyIcon.astro";
+import { destinationPhoto, destinations } from "@/lib/destinations-data";
+import { flagSize } from "@/lib/flags";
+import { contact, homeServiceHighlights, serviceLinks, testimonials, site } from "@/lib/site-config";
+
+const featuredDestinations = destinations.slice(0, 8);
+
+const journeySteps = [
+  { title: "Discover", body: "Choose your destination and course with a free consultation.", icon: "discover", from: "#15803d", to: "#166534" },
+  { title: "Apply", body: "Shortlist universities and submit strong, complete applications.", icon: "apply", from: "#2563eb", to: "#1d4ed8" },
+  { title: "Get Accepted", body: "Receive your offer and start planning finances and scholarships.", icon: "accepted", from: "#0d9488", to: "#0f766e" },
+  { title: "Visa", body: "Prepare your student visa application and supporting documents.", icon: "visa", from: "#7c3aed", to: "#6d28d9" },
+  { title: "Fly", body: "Pre-departure prep, travel, and accommodation, sorted.", icon: "fly", from: "#0ea5e9", to: "#0284c7" },
+  { title: "Study", body: "Begin your international education, with support that doesn't stop.", icon: "study", from: "#166534", to: "#14181a" },
+] as const;
+
+const FAQ_WALL_WORDS = [
+  { text: "VISA", top: "6%", left: "4%", size: "5rem", rotate: -10, opacity: 0.05 },
+  { text: "CAMPUS", top: "16%", left: "78%", size: "3.5rem", rotate: 8, opacity: 0.045 },
+  { text: "HOUSING", top: "2%", left: "62%", size: "2.75rem", rotate: -6, opacity: 0.04 },
+  { text: "PLANNING", top: "34%", left: "2%", size: "3rem", rotate: 6, opacity: 0.045 },
+  { text: "SUPPORT", top: "80%", left: "80%", size: "4rem", rotate: -8, opacity: 0.05 },
+  { text: "ADMISSION", top: "48%", left: "83%", size: "2.5rem", rotate: 10, opacity: 0.04 },
+  { text: "UNIVERSITY", top: "88%", left: "3%", size: "3.25rem", rotate: -5, opacity: 0.045 },
+  { text: "TRAVEL", top: "62%", left: "0%", size: "3.75rem", rotate: 12, opacity: 0.045 },
+  { text: "DOCUMENTS", top: "22%", left: "24%", size: "2.25rem", rotate: -14, opacity: 0.03 },
+  { text: "SCHOLARSHIP", top: "70%", left: "30%", size: "2.25rem", rotate: 9, opacity: 0.03 },
+  { text: "APPLICATION", top: "0%", left: "18%", size: "2.5rem", rotate: 4, opacity: 0.035 },
+  { text: "STUDENT LIFE", top: "92%", left: "45%", size: "2.5rem", rotate: -7, opacity: 0.035 },
+  { text: "DESTINATION", top: "40%", left: "40%", size: "2.25rem", rotate: 5, opacity: 0.028 },
+  { text: "EDUCATION", top: "10%", left: "40%", size: "2.5rem", rotate: -4, opacity: 0.03 },
+  { text: "PASSPORT", top: "56%", left: "88%", size: "3rem", rotate: -11, opacity: 0.045 },
+  { text: "ARRIVAL", top: "78%", left: "12%", size: "2.5rem", rotate: 7, opacity: 0.035 },
+] as const;
+
+const title = `${site.name} | Study Abroad Consultants`;
+const description = site.description;
+---
+<BaseLayout title={title} description={description} canonical="/">
+  <HeroClassic />
+
+  <section class="mx-auto max-w-7xl px-5 pb-20 lg:px-8">
+    <Reveal><IcefSection /></Reveal>
+  </section>
+
+  <PartnerLogoStrip />
+
+  <section id="services" class="border-y border-line bg-surface-2/60 py-20">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <Reveal>
+        <SectionHeading eyebrow="What we do" title="Admissions, visas &amp; student support" lead="Four pillars of end-to-end guidance, from choosing the right course to settling in after you land." />
+      </Reveal>
+      <div class="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        {homeServiceHighlights.map((s, i) => (
+          <Reveal delay={i * 80}>
+            <TiltCard class="flex h-full flex-col rounded-2xl border border-line bg-surface p-6 shadow-sm shadow-ink/[0.03] transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-ink/[0.07]" max={4}>
+              <div class="flex items-center justify-between">
+                <span class="flex h-11 w-11 items-center justify-center rounded-full bg-gradient-to-br from-brand to-brand-deep text-white shadow-md shadow-brand/25">
+                  <ServiceIcon name={s.icon} />
+                </span>
+                <span class="font-display text-xs font-bold text-ink-faint">{s.number}</span>
+              </div>
+              <h3 class="mt-4 text-base font-semibold text-ink">{s.title}</h3>
+              <p class="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">{s.body}</p>
+              <a href={`/${s.slug}`} class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand-text hover:underline">Learn more →</a>
+            </TiltCard>
+          </Reveal>
+        ))}
+      </div>
+      <Reveal delay={320} class="mt-8 flex flex-wrap gap-2">
+        {serviceLinks.map((s) => (
+          <a href={`/${s.slug}`} class="rounded-full border border-line bg-surface px-4 py-2 text-xs font-medium text-ink-soft transition-colors hover:border-brand hover:text-brand">{s.label}</a>
+        ))}
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+    <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+      <Reveal>
+        <p class="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">Since 2009</p>
+        <h2 class="mt-2 text-3xl font-semibold text-ink sm:text-4xl">Your <span class="text-brand">trusted partner</span> in global education</h2>
+        <p class="mt-4 max-w-lg text-ink-soft">
+          Apex has helped students across Pakistan and beyond with admissions to top universities
+          abroad and end-to-end support, from course selection through visas, scholarships, and
+          pre-departure preparation.
+        </p>
+        <a href="/about-us" class="mt-6 inline-flex rounded-full border border-line px-5 py-2.5 text-sm font-semibold text-ink transition-all hover:-translate-y-0.5 hover:border-brand hover:text-brand">More about Apex →</a>
+        <TiltCard class="mt-8 overflow-hidden rounded-2xl border border-line shadow-lg shadow-ink/10" max={4}>
+          <Image src={img("/images/stock/campus-students-walking.webp")} alt="Students and visitors on a modern university campus" width={1000} height={667} loading="lazy" class="h-56 w-full object-cover sm:h-64" />
+        </TiltCard>
+      </Reveal>
+      <Reveal delay={120} class="grid grid-cols-2 gap-4">
+        <TiltCard class="rounded-2xl bg-gradient-to-br from-brand-tint to-surface p-6 shadow-sm shadow-brand/10" max={5}>
+          <p class="font-display text-3xl font-semibold text-brand">15+</p>
+          <p class="mt-1 text-sm text-ink-soft">Years guiding students abroad</p>
+        </TiltCard>
+        <TiltCard class="mt-8 rounded-2xl bg-gradient-to-br from-ink to-[#0a0d0e] p-6 shadow-lg shadow-ink/20" max={5}>
+          <p class="font-display text-3xl font-semibold text-white">3</p>
+          <p class="mt-1 text-sm text-white/90">Offices in Karachi, Hyderabad, and the UK</p>
+        </TiltCard>
+        <TiltCard class="rounded-2xl border border-line bg-surface-2 p-6 shadow-sm shadow-ink/[0.03]" max={5}>
+          <p class="font-display text-3xl font-semibold text-ink">1000+</p>
+          <p class="mt-1 text-sm text-ink-soft">University partners</p>
+        </TiltCard>
+        <TiltCard class="mt-8 rounded-2xl border border-line bg-surface p-6 shadow-sm shadow-ink/[0.03]" max={5}>
+          <p class="font-display text-3xl font-semibold text-ink">ICEF</p>
+          <p class="mt-1 text-sm text-ink-soft">Agency Status certified</p>
+        </TiltCard>
+      </Reveal>
+    </div>
+  </section>
+
+  <section id="destinations" class="relative overflow-hidden border-y border-line py-20">
+    <Image src={img("/images/stock/airplane-wing-sky.webp")} alt="" loading="lazy" widths={[640, 1280, 1920]} sizes="100vw" class="absolute inset-0 h-full w-full object-cover object-[50%_38%]" />
+    <div class="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/60"></div>
+    <div class="absolute inset-0 bg-gradient-to-t from-brand-deep/50 via-transparent to-transparent"></div>
+    <div class="relative mx-auto max-w-7xl px-5 lg:px-8">
+      <Reveal>
+        <SectionHeading
+          tone="white"
+          eyebrow="Study destinations"
+          title="Your dream study destination awaits"
+          lead="We guide students across 50+ countries in total. Here are the 19 we've built full destination guides for, from the UK and USA to Northern Europe and East Asia."
+        />
+      </Reveal>
+      <div class="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        {featuredDestinations.map((d, i) => {
+          const fs = flagSize(d.flag, 16);
+          return (
+            <Reveal delay={i * 60}>
+              <a href={`/${d.slug}`} class="group block">
+                <TiltCard class="relative aspect-[4/3] overflow-hidden rounded-2xl border-2 border-dashed border-white/25 shadow-xl shadow-black/25 transition-all hover:shadow-2xl hover:shadow-black/40 group-hover:border-white/50" max={5}>
+                  <div class="absolute inset-0 scale-110 transition-transform duration-700 group-hover:scale-[1.18]">
+                    <Image src={img(destinationPhoto(d.slug))} alt={`${d.name} skyline`} loading="lazy" widths={[320, 480, 640]} sizes="(min-width: 1024px) 22vw, (min-width: 640px) 30vw, 45vw" class="h-full w-full object-cover" />
+                  </div>
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/10 to-transparent"></div>
+                  <div class="absolute left-3 top-3 rotate-[-6deg] rounded-sm border border-white/70 bg-white/90 p-1 shadow-sm transition-transform group-hover:rotate-0">
+                    <img src={`/images/flags/${d.flag}.svg`} alt="" width={fs.width} height={fs.height} class="block rounded-[1px]" />
+                  </div>
+                  <div class="absolute inset-x-0 bottom-0 p-3">
+                    <span class="block text-sm font-semibold text-white">{d.short}</span>
+                    <div class="grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 group-hover:grid-rows-[1fr]">
+                      <div class="overflow-hidden">
+                        <p class="mt-1.5 text-[11px] leading-snug text-white/90">Universities &middot; Applications &middot; Visa support</p>
+                        <span class="mt-1 inline-flex items-center gap-1 text-xs font-semibold text-white">Explore {d.short} →</span>
+                      </div>
+                    </div>
+                  </div>
+                </TiltCard>
+              </a>
+            </Reveal>
+          );
+        })}
+      </div>
+      <Reveal delay={200} class="mt-8 text-center">
+        <a href="/destinations" class="inline-flex rounded-full border border-white/30 px-6 py-2.5 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:border-white">View all destinations</a>
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="relative overflow-hidden py-20">
+    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,var(--color-brand-tint),transparent_70%)]"></div>
+    <div class="pointer-events-none absolute inset-0 opacity-[0.1] [mask-image:linear-gradient(to_bottom,black,transparent)]">
+      <Image src={img("/images/brand/world-map.webp")} alt="" loading="lazy" widths={[640, 1280, 1920]} sizes="100vw" class="h-full w-full object-cover object-center" />
+    </div>
+    <svg class="pointer-events-none absolute inset-x-0 top-[210px] hidden w-full lg:block" height="60" viewBox="0 0 1200 60" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0,45 C 200,10 400,50 600,20 S 1000,50 1200,15" fill="none" stroke="var(--color-brand)" stroke-opacity="0.25" stroke-width="2" stroke-dasharray="1 9" stroke-linecap="round" />
+    </svg>
+
+    <div class="relative mx-auto max-w-7xl px-5 lg:px-8">
+      <Reveal><SectionHeading eyebrow="How it works" title="Your study abroad journey" lead="Six stages, one team with you at every one of them." /></Reveal>
+
+      <div class="mt-12 hidden items-stretch lg:flex">
+        {journeySteps.map((step, i) => (
+          <div class="flex flex-1 items-stretch">
+            <Reveal delay={i * 80} class="flex-1">
+              <TiltCard class="h-full overflow-hidden rounded-2xl border border-line bg-surface p-6 shadow-sm shadow-ink/[0.03] transition-shadow hover:shadow-lg hover:shadow-ink/5" max={4}>
+                <span class="flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-md" style={`background: linear-gradient(135deg, ${step.from}, ${step.to}); box-shadow: 0 8px 16px -6px ${step.to}66`}>
+                  <JourneyIcon name={step.icon} />
+                </span>
+                <h3 class="mt-4 text-base font-semibold text-ink">{step.title}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-ink-soft">{step.body}</p>
+              </TiltCard>
+            </Reveal>
+            {i < journeySteps.length - 1 && (
+              <div class="flex w-10 shrink-0 flex-col items-center justify-start pt-[38px]" aria-hidden="true">
+                <div class="h-0.5 w-full rounded-full" style={`background: linear-gradient(to right, ${step.to}, ${journeySteps[i + 1].from})`}></div>
+                <span class="-mt-[7px] flex h-3.5 w-3.5 items-center justify-center rounded-full text-white" style={`background-color: ${journeySteps[i + 1].from}`}>
+                  <svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 15v-2l-8-5V4.5a1.5 1.5 0 0 0-3 0V8l-8 5v2l8-2.5V17l-2.5 1.5V20l4-1 4 1v-1.5L13 17v-4.5l8 2.5Z" /></svg>
+                </span>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <div class="relative mt-10 lg:hidden">
+        <div class="absolute left-6 top-6 bottom-6 w-px border-l-2 border-dashed border-line sm:hidden" aria-hidden="true"></div>
+        <div class="grid grid-cols-1 gap-5 sm:grid-cols-2">
+          {journeySteps.map((step, i) => (
+            <Reveal delay={i * 60}>
+              <TiltCard class="h-full overflow-hidden rounded-2xl border border-line bg-surface p-6 shadow-sm shadow-ink/[0.03] transition-shadow hover:shadow-lg hover:shadow-ink/5" max={4}>
+                <span class="flex h-12 w-12 items-center justify-center rounded-2xl text-white shadow-md" style={`background: linear-gradient(135deg, ${step.from}, ${step.to}); box-shadow: 0 8px 16px -6px ${step.to}66`}>
+                  <JourneyIcon name={step.icon} />
+                </span>
+                <h3 class="mt-4 text-base font-semibold text-ink">{step.title}</h3>
+                <p class="mt-2 text-sm leading-relaxed text-ink-soft">{step.body}</p>
+              </TiltCard>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-5 pb-20 overflow-x-clip lg:px-8">
+    <ScrollPopGroup class="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3 lg:gap-5">
+      <div class="card-left lg:mt-6">
+        <a href="/destinations" class="group relative flex h-full flex-col overflow-hidden rounded-2xl border-2 border-dashed border-line bg-surface px-6 py-6 shadow-md shadow-ink/[0.04] transition-all hover:-translate-y-1 hover:border-brand hover:shadow-xl hover:shadow-ink/10">
+          <div class="flex items-center justify-between border-b border-dashed border-line pb-4">
+            <span class="flex h-9 w-9 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 15v-2l-8-5V4.5a1.5 1.5 0 0 0-3 0V8l-8 5v2l8-2.5V17l-2.5 1.5V20l4-1 4 1v-1.5L13 17v-4.5l8 2.5Z" /></svg>
+            </span>
+            <span class="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-faint">Boarding Pass</span>
+          </div>
+          <p class="mt-4 font-display text-lg font-semibold text-ink">Explore your destination</p>
+          <p class="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">Compare 19 country guides, from tuition and visas to scholarships and universities, before you commit.</p>
+          <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-text">Explore destinations<span class="transition-transform group-hover:translate-x-1">→</span></span>
+        </a>
+      </div>
+
+      <div class="card-center relative z-10 lg:-my-2">
+        <a href="/contact-us" class="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/15 bg-gradient-to-br from-brand-deep to-ink px-7 py-8 shadow-2xl shadow-ink/25 transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-ink/35">
+          <div class="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-white/5 blur-2xl"></div>
+          <div class="flex items-center justify-between">
+            <span class="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/90">Study Abroad Passport</span>
+            <span class="flex h-9 w-9 items-center justify-center rounded-full border border-white/30 text-white/90">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5" /><path d="M12 3c2.5 2.5 2.5 15.5 0 18M12 3c-2.5 2.5-2.5 15.5 0 18M3 12h18" stroke="currentColor" stroke-width="1.2" /></svg>
+            </span>
+          </div>
+          <p class="mt-5 font-display text-2xl font-semibold text-white">Start your journey</p>
+          <p class="mt-2 flex-1 text-sm text-white/90">One free consultation is all it takes to find out where you could go, and what it takes to get there.</p>
+          <span class="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-brand-tint">Book free consultation<span class="transition-transform group-hover:translate-x-1">→</span></span>
+        </a>
+      </div>
+
+      <div class="card-right lg:mt-6">
+        <a href={contact.whatsappHref} data-track="whatsapp_click" target="_blank" rel="noopener noreferrer" class="group relative flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface px-6 py-6 shadow-md shadow-ink/[0.04] transition-all hover:-translate-y-1 hover:border-amber-400 hover:shadow-xl hover:shadow-ink/10">
+          <div class="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full bg-amber-400/10 blur-2xl"></div>
+          <div class="flex items-center justify-between">
+            <span class="flex h-9 w-9 items-center justify-center rounded-full bg-amber-50 text-amber-600">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2 4 5.5v6c0 5 3.4 8.7 8 9.5 4.6-.8 8-4.5 8-9.5v-6L12 2Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" /><path d="m8.5 12 2.5 2.5 4.5-4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            </span>
+            <span class="text-[10px] font-semibold uppercase tracking-[0.18em] text-ink-faint">Free Consultation</span>
+          </div>
+          <p class="mt-4 font-display text-lg font-semibold text-ink">Talk to an advisor</p>
+          <p class="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">Real answers, no obligation. Chat with a counsellor on WhatsApp, {contact.hours.toLowerCase()}.</p>
+          <span class="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-amber-700">Chat on WhatsApp<span class="transition-transform group-hover:translate-x-1">→</span></span>
+        </a>
+      </div>
+    </ScrollPopGroup>
+  </section>
+
+  <AccreditationsStrip />
+
+  <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+    <Reveal><SectionHeading eyebrow="Real outcomes" title="Student success stories" lead="A few of the students Apex has guided to offers abroad, real names, real universities." /></Reveal>
+    <Reveal delay={100} class="mt-10"><TestimonialCarousel items={testimonials} /></Reveal>
+    <Reveal delay={260} class="mt-8 text-center">
+      <a href="/success-stories" class="inline-flex rounded-full border border-line px-6 py-2.5 text-sm font-semibold text-ink transition-all hover:-translate-y-0.5 hover:border-brand hover:text-brand">View all success stories</a>
+    </Reveal>
+  </section>
+
+  <section id="faqs" class="relative overflow-hidden border-t border-line bg-surface-2/60 py-20">
+    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+      {FAQ_WALL_WORDS.map((w) => (
+        <span class="absolute whitespace-nowrap font-display font-bold uppercase tracking-tight text-ink" style={`top: ${w.top}; left: ${w.left}; font-size: ${w.size}; opacity: ${w.opacity}; transform: rotate(${w.rotate}deg)`}>
+          {w.text}
+        </span>
+      ))}
+    </div>
+    <div class="relative mx-auto max-w-3xl px-5 lg:px-8">
+      <Reveal><SectionHeading align="center" eyebrow="Common questions" title="Visa FAQs" /></Reveal>
+      <Reveal delay={100} class="mt-10"><FaqAccordion /></Reveal>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+    <Reveal>
+      <div class="relative flex flex-col items-start justify-between gap-8 overflow-hidden rounded-3xl bg-gradient-to-br from-brand to-brand-deep px-8 py-12 shadow-2xl shadow-brand/25 sm:px-12 lg:flex-row lg:items-center">
+        <div class="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-white/10 blur-3xl"></div>
+        <div class="relative">
+          <h2 class="text-3xl font-semibold text-white sm:text-4xl">Get ready to begin <span class="text-brand-tint">your journey</span></h2>
+          <p class="mt-3 max-w-lg text-white">
+            Apex Consulting Services is a trusted overseas education consultancy since 2009,
+            helping students reach leading universities abroad with transparent, end-to-end guidance.
+          </p>
+        </div>
+        <div class="flex shrink-0 flex-wrap gap-3">
+          <a href="/contact-us" class="rounded-full bg-white px-6 py-3 text-sm font-semibold text-brand-deep transition-all hover:-translate-y-0.5 hover:bg-white/90">Contact Us</a>
+          <a href={contact.whatsappHref} data-track="whatsapp_click" target="_blank" rel="noopener noreferrer" class="rounded-full border border-white/40 px-6 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:border-white">WhatsApp Us</a>
+        </div>
+      </div>
+    </Reveal>
+  </section>
+</BaseLayout>

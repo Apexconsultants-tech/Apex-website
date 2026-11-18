@@ -1,0 +1,50 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import DestinationTemplate from "@/components/destination/DestinationTemplate.astro";
+import JsonLd from "@/components/JsonLd.astro";
+import ServiceTemplate from "@/components/service/ServiceTemplate.astro";
+import { destinationPhoto, destinations, getDestination } from "@/lib/destinations-data";
+import { getService, services } from "@/lib/services-data";
+import { serviceImage } from "@/lib/service-photos.server";
+import { ogUrl } from "@/lib/images";
+import { breadcrumbJsonLd, faqJsonLd, serviceJsonLd } from "@/lib/structured-data";
+
+export function getStaticPaths() {
+  const destSlugs = destinations.map((d) => ({ params: { slug: d.slug } }));
+  const serviceSlugs = services.map((s) => ({ params: { slug: s.slug } }));
+  return [...destSlugs, ...serviceSlugs];
+}
+
+const { slug } = Astro.params;
+const destination = getDestination(slug!);
+const service = destination ? undefined : getService(slug!);
+
+let title = "";
+let description = "";
+let ogImage: string | undefined;
+
+if (destination) {
+  title = `Study in ${destination.name}: Consultants in Pakistan`;
+  description = destination.intro.slice(0, 155);
+  ogImage = await ogUrl(destinationPhoto(slug!));
+} else if (service) {
+  title = service.name;
+  description = service.intro.slice(0, 155);
+  const image = serviceImage(slug!);
+  ogImage = image ? await ogUrl(image) : undefined;
+}
+---
+<BaseLayout title={title} description={description} canonical={`/${slug}`} ogImage={ogImage}>
+  {destination && (
+    <>
+      <JsonLd data={[breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: destination.name, path: `/${slug}` }]), faqJsonLd(destination.faqs)]} />
+      <DestinationTemplate d={destination} />
+    </>
+  )}
+  {service && (
+    <>
+      <JsonLd data={[breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: service.name, path: `/${slug}` }]), faqJsonLd(service.faqs), serviceJsonLd(service)]} />
+      <ServiceTemplate s={service} />
+    </>
+  )}
+</BaseLayout>

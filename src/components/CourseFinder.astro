@@ -1,0 +1,81 @@
+---
+import Dropdown from "@/components/ui/Dropdown.astro";
+import LevelDropdown from "@/components/ui/LevelDropdown.astro";
+import { destinations } from "@/lib/destinations-data";
+import { courseCountries, courses } from "@/lib/courses-data";
+
+const FIELDS = [
+  "Business & Management", "Engineering", "Computer Science & IT", "Data Science & Analytics",
+  "Medicine & Health Sciences", "Nursing", "Law", "Arts & Design", "Architecture & Construction",
+  "Hospitality & Tourism", "Social Sciences", "Psychology", "Education & Teaching",
+  "Finance & Accounting", "Media & Communication", "Environmental Science & Agriculture",
+];
+const INTAKES = ["Fall 2026", "Spring 2027", "Fall 2027", "Not sure yet"];
+const BUDGETS = ["Under $15,000/yr", "$15,000–$30,000/yr", "$30,000+/yr", "Not sure yet"];
+
+const destinationOptions = destinations.map((d) => ({ value: d.slug, label: d.name }));
+const destinationMap = Object.fromEntries(destinations.map((d) => [d.slug, { name: d.name, short: d.short }]));
+const courseSummary = courses.map((c) => ({ name: c.name, country: c.country }));
+---
+<form
+  data-course-finder
+  data-course-countries={JSON.stringify(courseCountries)}
+  data-courses={JSON.stringify(courseSummary)}
+  data-destinations={JSON.stringify(destinationMap)}
+  class="relative rounded-2xl border-4 border-brand bg-surface p-0 shadow-xl shadow-ink/10 transition-shadow duration-300"
+>
+  <div class="flex flex-wrap items-center justify-between gap-3 border-b border-black px-5 py-4">
+    <div class="flex items-center gap-3">
+      <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand to-brand-deep text-white shadow-sm shadow-brand/30">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="2.2" /><path d="m21 21-4.35-4.35" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" /></svg>
+      </span>
+      <div>
+        <span class="block text-sm font-bold text-ink">Course Finder</span>
+        <span class="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-ink-faint">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2.5 1.5V22l4-1 4 1v-1.5L13 19v-5.5l8 2.5Z" /></svg>
+          Boarding pass to your next degree
+        </span>
+      </div>
+    </div>
+    <span class="font-mono text-[11px] uppercase tracking-wider text-ink-faint">Apex</span>
+  </div>
+
+  <div class="grid grid-cols-1 gap-0 sm:grid-cols-3">
+    <div class="border-b border-black px-5 py-3 last:border-b-0 sm:border-b-0 sm:border-r sm:border-black">
+      <span class="mb-2 block text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-text">Destination</span>
+      <Dropdown name="destination" ariaLabel="Destination" placeholder="Where to?" options={destinationOptions} />
+    </div>
+    <div class="border-b border-black px-5 py-3 last:border-b-0 sm:border-b-0 sm:border-r sm:border-black">
+      <span class="mb-2 block text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-text">Class</span>
+      <LevelDropdown />
+    </div>
+    <div class="border-b border-black px-5 py-3 last:border-b-0 sm:border-b-0">
+      <span class="mb-2 block text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-text">Route</span>
+      <Dropdown name="field" ariaLabel="Route" placeholder="Any field" options={FIELDS.map((f) => ({ value: f, label: f }))} />
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 gap-0 border-t border-black sm:grid-cols-[1fr_1fr_auto]">
+    <div class="border-b border-black px-5 py-3 last:border-b-0 sm:border-b-0 sm:border-r sm:border-black">
+      <span class="mb-2 block text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-text">Intake</span>
+      <Dropdown name="intake" ariaLabel="Intake" placeholder="When?" options={INTAKES.map((i) => ({ value: i, label: i }))} />
+    </div>
+    <div class="border-b border-black px-5 py-3 last:border-b-0 sm:border-b-0 sm:border-r sm:border-black">
+      <span class="mb-2 block text-[10px] font-semibold uppercase tracking-[0.14em] text-brand-text">Budget</span>
+      <Dropdown name="budget" ariaLabel="Budget" placeholder="Any budget" options={BUDGETS.map((b) => ({ value: b, label: b }))} />
+    </div>
+    <div class="flex items-center p-3 sm:p-2">
+      <button type="submit" disabled class="flex w-full items-center justify-center gap-1.5 rounded-xl bg-gradient-to-b from-brand to-brand-deep px-5 py-3.5 text-sm font-semibold text-white shadow-md shadow-brand/20 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand/30 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:translate-y-0 sm:px-6">
+        Board
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+      </button>
+    </div>
+  </div>
+
+  <div data-match-line class="hidden border-t border-black px-5 py-2.5 text-xs"></div>
+</form>
+
+<script>
+  import "@/scripts/dropdown";
+  import "@/scripts/course-finder";
+</script>

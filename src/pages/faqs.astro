@@ -1,0 +1,46 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import FaqAccordion from "@/components/FaqAccordion.astro";
+import JsonLd from "@/components/JsonLd.astro";
+import Reveal from "@/components/Reveal.astro";
+import { contact, faqs } from "@/lib/site-config";
+import { breadcrumbJsonLd, faqJsonLd } from "@/lib/structured-data";
+
+const title = "Frequently Asked Questions";
+const description = "Answers to common questions about studying abroad with Apex Consulting Services: visas, scholarships, accreditation, and getting started.";
+---
+<BaseLayout title={title} description={description} canonical="/faqs">
+  <JsonLd data={[breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "FAQs", path: "/faqs" }]), faqJsonLd(faqs)]} />
+  <section class="mx-auto max-w-3xl px-5 pb-12 pt-10 lg:px-8 lg:pt-14">
+    <Breadcrumb current="FAQs" />
+    <div class="mt-6 animate-hero-in">
+      <p class="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">Common questions</p>
+      <h1 class="mt-3 text-4xl font-semibold leading-[1.06] text-ink sm:text-5xl">Frequently Asked <span class="text-brand">Questions</span></h1>
+      <p class="mt-6 text-base leading-relaxed text-ink-soft">
+        We understand students often have many questions about studying abroad. Our experts provide
+        clear, practical answers. For anything specific to your destination, each
+        <a href="/#destinations" class="font-semibold text-brand-text underline underline-offset-2 hover:decoration-2">destination page</a> also has its own FAQ section.
+      </p>
+    </div>
+  </section>
+
+  <section class="border-t border-line bg-surface-2/60 py-16">
+    <div class="mx-auto max-w-3xl px-5 lg:px-8">
+      <Reveal><FaqAccordion items={faqs} /></Reveal>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-3xl px-5 py-16 lg:px-8">
+    <Reveal>
+      <div class="rounded-3xl bg-brand px-8 py-10 text-center">
+        <h2 class="text-2xl font-semibold text-white">Still have questions?</h2>
+        <p class="mt-2 text-white/90">Talk to a counselor directly, no obligation.</p>
+        <div class="mt-6 flex flex-wrap justify-center gap-3">
+          <a href="/contact-us" class="rounded-full bg-white px-6 py-3 text-sm font-semibold text-brand-deep transition-all hover:-translate-y-0.5 hover:bg-white/90">Contact Us</a>
+          <a href={contact.whatsappHref} data-track="whatsapp_click" target="_blank" rel="noopener noreferrer" class="rounded-full border border-white/40 px-6 py-3 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:border-white">Chat on WhatsApp</a>
+        </div>
+      </div>
+    </Reveal>
+  </section>
+</BaseLayout>

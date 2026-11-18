@@ -1,0 +1,19 @@
+---
+interface Option { value: string; label: string }
+interface Props { name: string; ariaLabel: string; placeholder: string; options: Option[] }
+const { name, ariaLabel, placeholder, options } = Astro.props;
+---
+<div data-dropdown class="relative mt-1">
+  <input type="hidden" name={name} value="" />
+  <button type="button" data-dropdown-trigger aria-haspopup="listbox" aria-expanded="false" aria-label={ariaLabel} class="flex w-full items-center justify-between gap-2 bg-transparent py-1 text-left text-sm font-medium text-ink focus:outline-none">
+    <span data-dropdown-label class="text-ink-faint">{placeholder}</span>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 9 6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+  </button>
+  <div data-dropdown-panel role="listbox" class="hidden absolute left-0 top-full z-20 mt-2 max-h-80 w-64 overflow-y-auto rounded-xl border border-line bg-surface p-2 shadow-xl shadow-ink/10">
+    {options.map((o) => (
+      <button type="button" data-dropdown-option data-value={o.value} role="option" aria-selected="false" class="block w-full rounded-md px-2 py-1.5 text-left text-sm text-ink transition-colors hover:bg-surface-2">
+        {o.label}
+      </button>
+    ))}
+  </div>
+</div>

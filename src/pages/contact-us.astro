@@ -1,0 +1,118 @@
+---
+import { Image } from "astro:assets";
+import { img } from "@/lib/images";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import ContactForm from "@/components/ContactForm.astro";
+import JsonLd from "@/components/JsonLd.astro";
+import OfficeLocations from "@/components/OfficeLocations.astro";
+import Reveal from "@/components/Reveal.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import TiltCard from "@/components/TiltCard.astro";
+import ContactCardContent from "@/components/icons/ContactCardContent.astro";
+import { contact, socials } from "@/lib/site-config";
+import { breadcrumbJsonLd } from "@/lib/structured-data";
+
+const title = "Contact Us | Karachi, Hyderabad & UK";
+const description =
+  "Get in touch with Apex Consulting Services for a free study abroad consultation. Offices in Karachi (Head Office), Hyderabad & the UK. Call or WhatsApp.";
+
+type QuickCard = {
+  title: string;
+  value: string;
+  icon: "phone" | "email" | "whatsapp" | "clock";
+  href?: string;
+  external?: boolean;
+  track?: string;
+};
+const quickCards: QuickCard[] = [
+  { title: "Helpline", value: contact.phoneDisplay, href: contact.phoneHref, track: "phone_click", icon: "phone" },
+  { title: "Email Us", value: contact.email, href: `mailto:${contact.email}`, icon: "email" },
+  { title: "WhatsApp", value: "Quick chat with our team", href: contact.whatsappHref, external: true, track: "whatsapp_click", icon: "whatsapp" },
+  { title: "Office Hours", value: contact.hours, icon: "clock" },
+];
+---
+<BaseLayout title={title} description={description} canonical="/contact-us">
+  <JsonLd data={breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "Contact Us", path: "/contact-us" }])} />
+
+  <section class="relative overflow-hidden">
+    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--color-brand-tint),transparent_55%)]"></div>
+    <div class="mx-auto max-w-7xl px-5 pb-16 pt-14 lg:px-8 lg:pb-20 lg:pt-20">
+      <Breadcrumb current="Contact Us" />
+      <div class="mt-6 grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+        <div class="animate-hero-in">
+          <h1 class="text-4xl font-semibold leading-[1.08] text-ink sm:text-5xl">We are <span class="text-brand">here for you</span></h1>
+          <p class="mt-6 text-base leading-relaxed text-ink-soft sm:text-lg">
+            Have questions about studying abroad, admissions, or visas? Our counselors in
+            <strong class="text-ink">Karachi</strong>, <strong class="text-ink">Hyderabad</strong>,
+            and the <strong class="text-ink">UK</strong> are ready to help with transparent, student-first guidance.
+          </p>
+          <p class="mt-4 text-ink-soft">Call our helpline, message us on WhatsApp, or send an enquiry. We typically respond during office hours: <strong class="text-ink">{contact.hours}</strong>.</p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <a href={contact.phoneHref} data-track="phone_click" class="rounded-full bg-gradient-to-b from-brand to-brand-deep px-6 py-3 text-sm font-semibold text-white shadow-md shadow-brand/20 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand/30">{contact.phoneDisplay}</a>
+            <a href={contact.whatsappHref} data-track="whatsapp_click" target="_blank" rel="noopener noreferrer" class="rounded-full border border-line px-6 py-3 text-sm font-semibold text-ink transition-all hover:-translate-y-0.5 hover:border-brand hover:text-brand">Chat on WhatsApp</a>
+          </div>
+        </div>
+        <TiltCard class="overflow-hidden rounded-3xl border border-line shadow-lg shadow-ink/10" max={4}>
+          <Image src={img("/images/stock/advisor-consultation.webp")} alt="Apex counselors ready to help with your study abroad questions" width={1000} height={667} loading="eager" fetchpriority="high" class="h-64 w-full object-cover sm:h-80" />
+        </TiltCard>
+      </div>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-5 pb-20 lg:px-8">
+    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {quickCards.map((c, i) => (
+        <Reveal delay={i * 70} class="h-full">
+          <TiltCard max={4} class="h-full">
+            {c.href ? (
+              <a href={c.href} target={c.external ? "_blank" : undefined} rel={c.external ? "noopener noreferrer" : undefined} data-track={c.track} class="flex h-full flex-col justify-center rounded-2xl border border-line bg-surface p-5 transition-all hover:-translate-y-0.5 hover:border-brand hover:shadow-md hover:shadow-ink/5">
+                <ContactCardContent title={c.title} value={c.value} icon={c.icon} />
+              </a>
+            ) : (
+              <div class="flex h-full flex-col justify-center rounded-2xl border border-line bg-surface p-5">
+                <ContactCardContent title={c.title} value={c.value} icon={c.icon} />
+              </div>
+            )}
+          </TiltCard>
+        </Reveal>
+      ))}
+    </div>
+  </section>
+
+  <section class="border-y border-line bg-surface-2/60 py-20">
+    <div class="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-5 lg:grid-cols-[1fr_1.2fr] lg:px-8">
+      <Reveal>
+        <SectionHeading eyebrow="Get in touch" title="Send us an enquiry" />
+        <p class="mt-4 text-ink-soft">Fill in the form and our counselors will reach out with personalized advice for your preferred destination and intake.</p>
+        <ul class="mt-5 space-y-2 text-sm text-ink-soft">
+          <li>Free expert consultation</li>
+          <li>Admissions &amp; visa guidance</li>
+          <li>Response via call, WhatsApp, or email</li>
+        </ul>
+      </Reveal>
+      <Reveal delay={120} class="rounded-3xl border border-line bg-surface p-6 sm:p-8">
+        <ContactForm />
+      </Reveal>
+    </div>
+  </section>
+
+  <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+    <Reveal><SectionHeading align="center" eyebrow="Find us" title="Our office locations" /></Reveal>
+    <Reveal delay={120} class="mt-10"><OfficeLocations /></Reveal>
+  </section>
+
+  <section class="border-t border-line bg-brand-deep py-16">
+    <div class="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 px-5 lg:flex-row lg:items-center lg:px-8">
+      <div>
+        <h2 class="text-2xl font-semibold text-white">Connect with Apex online</h2>
+        <p class="mt-2 max-w-md text-white/90">Follow us for admissions updates, visa tips, counseling events, and student success stories.</p>
+      </div>
+      <div class="flex flex-wrap gap-3">
+        <a href={socials.facebook} target="_blank" rel="noopener noreferrer" class="rounded-full border border-white/30 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:border-white">Facebook</a>
+        <a href={socials.linkedin} target="_blank" rel="noopener noreferrer" class="rounded-full border border-white/30 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:border-white">LinkedIn</a>
+        <a href={contact.whatsappHref} data-track="whatsapp_click" target="_blank" rel="noopener noreferrer" class="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-brand-deep transition-colors hover:bg-white/90">WhatsApp</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

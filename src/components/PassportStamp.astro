@@ -1,0 +1,51 @@
+---
+interface Props { code: string; rotate?: number; class?: string }
+const { code, rotate = -8, class: className = "" } = Astro.props;
+const safe = code.replace(/\s+/g, "-");
+const filterId = `stamp-ink-${safe}`;
+const topPathId = `stamp-top-${safe}`;
+const bottomPathId = `stamp-bottom-${safe}`;
+const codeFontSize = code.length <= 4 ? 32 : code.length <= 6 ? 25 : code.length <= 9 ? 18 : 14;
+---
+<svg
+  viewBox="0 0 200 200"
+  class={className}
+  style={`transform: rotate(${rotate}deg); filter: drop-shadow(0 8px 18px rgba(20,24,26,0.4)) drop-shadow(0 2px 5px rgba(20,24,26,0.3))`}
+  aria-hidden="true"
+>
+  <defs>
+    <filter id={filterId} x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.045" numOctaves="2" seed="7" result="noise" />
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="4.5" xChannelSelector="R" yChannelSelector="G" />
+    </filter>
+    <path id={topPathId} d="M 24,100 A 76,76 0 0 1 176,100" fill="none" />
+    <path id={bottomPathId} d="M 176,108 A 76,76 0 0 0 24,108" fill="none" />
+  </defs>
+
+  <circle cx="100" cy="100" r="96" style="fill: var(--color-paper)" />
+  <circle cx="100" cy="100" r="96" fill="none" stroke="rgba(20,24,26,0.08)" stroke-width="1" />
+
+  <g class="fill-none stroke-brand-deep" style={`filter: url(#${filterId}); opacity: 0.18; transform: translate(2.5px, -1.5px)`}>
+    <circle cx="100" cy="100" r="88" stroke-width="4.5" />
+  </g>
+
+  <g class="fill-none stroke-brand-deep text-brand-deep" style={`filter: url(#${filterId}); opacity: 0.9`}>
+    <circle cx="100" cy="100" r="88" stroke-width="4.5" />
+    <circle cx="100" cy="100" r="74" stroke-width="1.5" />
+
+    <text class="fill-brand-deep" style="font-size: 13.5px; font-weight: 700; letter-spacing: 2.5px">
+      <textPath href={`#${topPathId}`} startOffset="50%" text-anchor="middle">STUDY ABROAD</textPath>
+    </text>
+    <text class="fill-brand-deep" style="font-size: 11px; font-weight: 600; letter-spacing: 2px">
+      <textPath href={`#${bottomPathId}`} startOffset="50%" text-anchor="middle">★ APEX CONSULTING ★</textPath>
+    </text>
+
+    <text x="100" y="106" text-anchor="middle" class="fill-brand-deep" style={`font-size: ${codeFontSize}px; font-weight: 800; font-family: var(--font-display)`}>
+      {code}
+    </text>
+    <line x1="55" y1="116" x2="145" y2="116" stroke-width="2" />
+    <text x="100" y="130" text-anchor="middle" class="fill-brand-deep" style="font-size: 9px; font-weight: 700; letter-spacing: 1.5px">
+      EST. 2009
+    </text>
+  </g>
+</svg>
