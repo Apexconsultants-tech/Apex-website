@@ -123,6 +123,7 @@ console.log(`Lighthouse mobile targets: Performance >= ${TARGETS.performance}, L
 console.log(`${RUNS_PER_URL} runs per URL, scored on the median.\n`);
 
 let failed = false;
+const results = [];
 for (const route of ROUTES) {
   const chrome = await launch({ chromeFlags: ["--headless=new", "--disable-gpu", "--no-sandbox"] });
   const runs = [];
@@ -141,12 +142,18 @@ for (const route of ROUTES) {
   const ok = perf >= TARGETS.performance && lcp < TARGETS.lcp && tbt < TARGETS.tbt && cls <= TARGETS.cls;
   if (!ok) failed = true;
 
+  results.push({ route, perf, lcp, tbt, cls, ok, runs });
+
   console.log(
     `${ok ? "PASS" : "FAIL"}  ${route.padEnd(55)} perf=${String(perf).padStart(3)}  lcp=${lcp.toFixed(0).padStart(5)}ms  tbt=${tbt.toFixed(0).padStart(4)}ms  cls=${cls.toFixed(3)}`
   );
 }
 
 server.close();
+
+const reportPath = path.resolve("lighthouse-results.json");
+fs.writeFileSync(reportPath, JSON.stringify({ targets: TARGETS, runsPerUrl: RUNS_PER_URL, generatedAt: new Date().toISOString(), results }, null, 2));
+console.log(`\nWrote ${reportPath}`);
 
 if (failed) {
   console.error("\nLighthouse budget check FAILED.");

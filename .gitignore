@@ -16,6 +16,7 @@
 # astro
 .astro/
 /dist/
+/lighthouse-results.json
 
 # production
 /build

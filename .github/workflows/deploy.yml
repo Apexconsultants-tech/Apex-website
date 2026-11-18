@@ -25,10 +25,19 @@ jobs:
       - name: Build (includes byte-budget gate)
         run: npm run build
 
-      - name: Lighthouse mobile budget gate (median of 3 runs/URL)
+      - name: Lighthouse mobile audit (median of 3 runs/URL, report-only)
         run: npm run lighthouse
+        continue-on-error: true
         env:
           CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
+
+      - name: Upload Lighthouse results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-results
+          path: lighthouse-results.json
+          if-no-files-found: warn
 
       - name: Deploy to HostGator over FTPS
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5

@@ -33,6 +33,15 @@
   live site** via `.github/workflows/deploy.yml`. At minimum run
   `npm run build` (fast, byte budgets); run `npm run lighthouse` too before
   anything that touches images, fonts, or above-the-fold markup.
+- `.github/workflows/check.yml` runs on every push to `astro-rebuild`
+  (build + byte budgets + Lighthouse, no deploy) and uploads
+  `lighthouse-results.json` as a build artifact — use that for real numbers
+  from a clean runner instead of a local run, which is noisy on contended
+  dev machines. In `deploy.yml`, the Lighthouse step is currently
+  `continue-on-error: true` (report-only) while real CI numbers are being
+  gathered; byte budgets remain a hard gate in both workflows. Tighten
+  Lighthouse back into a hard gate in `deploy.yml` once the numbers are in —
+  don't assume it's already blocking deploys.
 - Commits on this repo: author is the repo owner only, no `Co-Authored-By`
   trailer. Messages are short, plain, and in the past tense (e.g. "fixed
   mobile nav overflow", not "Fix: Mobile Nav Overflow Issue").
