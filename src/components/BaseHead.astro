@@ -1,7 +1,11 @@
 ---
 import { site } from "@/lib/site-config";
 import soraBold from "@fontsource/sora/files/sora-latin-700-normal.woff2?url";
+import soraSemibold from "@fontsource/sora/files/sora-latin-600-normal.woff2?url";
 import publicSansRegular from "@fontsource/public-sans/files/public-sans-latin-400-normal.woff2?url";
+import publicSansMedium from "@fontsource/public-sans/files/public-sans-latin-500-normal.woff2?url";
+import publicSansSemibold from "@fontsource/public-sans/files/public-sans-latin-600-normal.woff2?url";
+import publicSansBold from "@fontsource/public-sans/files/public-sans-latin-700-normal.woff2?url";
 
 interface Props {
   title: string;
@@ -20,7 +24,11 @@ const ogImageUrl = new URL(ogImage, site.url).toString();
 <link rel="icon" type="image/png" href="/icon.png" />
 
 <link rel="preload" as="font" type="font/woff2" href={soraBold} crossorigin="anonymous" />
+<link rel="preload" as="font" type="font/woff2" href={soraSemibold} crossorigin="anonymous" />
 <link rel="preload" as="font" type="font/woff2" href={publicSansRegular} crossorigin="anonymous" />
+<link rel="preload" as="font" type="font/woff2" href={publicSansMedium} crossorigin="anonymous" />
+<link rel="preload" as="font" type="font/woff2" href={publicSansSemibold} crossorigin="anonymous" />
+<link rel="preload" as="font" type="font/woff2" href={publicSansBold} crossorigin="anonymous" />
 
 <title>{title}</title>
 <meta name="description" content={description} />
