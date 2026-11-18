@@ -6,7 +6,8 @@ import ServiceTemplate from "@/components/service/ServiceTemplate.astro";
 import { destinationPhoto, destinations, getDestination } from "@/lib/destinations-data";
 import { getService, services } from "@/lib/services-data";
 import { serviceImage } from "@/lib/service-photos.server";
-import { ogUrl } from "@/lib/images";
+import { heroPreload, ogUrl } from "@/lib/images";
+import type { HeroPreload } from "@/lib/images";
 import { breadcrumbJsonLd, faqJsonLd, serviceJsonLd } from "@/lib/structured-data";
 
 export function getStaticPaths() {
@@ -22,19 +23,24 @@ const service = destination ? undefined : getService(slug!);
 let title = "";
 let description = "";
 let ogImage: string | undefined;
+let hero: HeroPreload | undefined;
+
+const HERO_IMAGE_OPTS = { widths: [480, 768, 1024], sizes: "(min-width: 1024px) 45vw, 90vw", format: "avif" as const, quality: 42 };
 
 if (destination) {
   title = `Study in ${destination.name}: Consultants in Pakistan`;
   description = destination.intro.slice(0, 155);
   ogImage = await ogUrl(destinationPhoto(slug!));
+  hero = await heroPreload(destinationPhoto(slug!), HERO_IMAGE_OPTS);
 } else if (service) {
   title = service.name;
   description = service.intro.slice(0, 155);
   const image = serviceImage(slug!);
   ogImage = image ? await ogUrl(image) : undefined;
+  hero = image ? await heroPreload(image, HERO_IMAGE_OPTS) : undefined;
 }
 ---
-<BaseLayout title={title} description={description} canonical={`/${slug}`} ogImage={ogImage}>
+<BaseLayout title={title} description={description} canonical={`/${slug}`} ogImage={ogImage} heroPreload={hero}>
   {destination && (
     <>
       <JsonLd data={[breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: destination.name, path: `/${slug}` }]), faqJsonLd(destination.faqs)]} />

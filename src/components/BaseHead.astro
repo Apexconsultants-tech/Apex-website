@@ -7,6 +7,8 @@ import publicSansMedium from "@fontsource/public-sans/files/public-sans-latin-50
 import publicSansSemibold from "@fontsource/public-sans/files/public-sans-latin-600-normal.woff2?url";
 import publicSansBold from "@fontsource/public-sans/files/public-sans-latin-700-normal.woff2?url";
 
+import type { HeroPreload } from "@/lib/images";
+
 interface Props {
   title: string;
   description: string;
@@ -14,8 +16,9 @@ interface Props {
   ogImage?: string;
   noindex?: boolean;
   type?: "website" | "article";
+  heroPreload?: HeroPreload;
 }
-const { title, description, canonical, ogImage = "/opengraph-image.png", noindex = false, type = "website" } = Astro.props;
+const { title, description, canonical, ogImage = "/opengraph-image.png", noindex = false, type = "website", heroPreload } = Astro.props;
 const canonicalUrl = new URL(canonical, site.url).toString();
 const ogImageUrl = new URL(ogImage, site.url).toString();
 ---
@@ -29,6 +32,8 @@ const ogImageUrl = new URL(ogImage, site.url).toString();
 <link rel="preload" as="font" type="font/woff2" href={publicSansMedium} crossorigin="anonymous" />
 <link rel="preload" as="font" type="font/woff2" href={publicSansSemibold} crossorigin="anonymous" />
 <link rel="preload" as="font" type="font/woff2" href={publicSansBold} crossorigin="anonymous" />
+
+{heroPreload && <link rel="preload" as="image" imagesrcset={heroPreload.srcset} imagesizes={heroPreload.sizes} fetchpriority="high" />}
 
 <title>{title}</title>
 <meta name="description" content={description} />

@@ -27,3 +27,25 @@ export async function ogUrl(publicPath: string): Promise<string> {
   const image = await getImage({ src: img(publicPath), width: 1200, format: "webp" });
   return image.src;
 }
+
+// For <link rel="preload" as="image" imagesrcset imagesizes>: computes the
+// exact same srcset a page's <Image>/<Picture> LCP element will render, so
+// the browser can start fetching the real candidate before the body is even
+// parsed, instead of discovering it only once the <img>/<source> tag arrives.
+// format/quality/widths must match the component's props exactly, or the
+// preload fetches a URL the page never actually requests (wasted bandwidth,
+// no benefit).
+export type HeroPreload = { srcset: string; sizes: string };
+export async function heroPreload(
+  publicPath: string,
+  opts: { widths: number[]; sizes: string; format?: "webp" | "avif"; quality?: number }
+): Promise<HeroPreload> {
+  const { getImage } = await import("astro:assets");
+  const image = await getImage({
+    src: img(publicPath),
+    widths: opts.widths,
+    format: opts.format ?? "webp",
+    quality: opts.quality,
+  });
+  return { srcset: image.srcSet.attribute, sizes: opts.sizes };
+}

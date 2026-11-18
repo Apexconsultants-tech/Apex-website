@@ -6,7 +6,7 @@ import Breadcrumb from "@/components/Breadcrumb.astro";
 import JsonLd from "@/components/JsonLd.astro";
 import Reveal from "@/components/Reveal.astro";
 import { blogPosts, getBlogPost } from "@/lib/blog-data";
-import { ogUrl } from "@/lib/images";
+import { heroPreload, ogUrl } from "@/lib/images";
 import { contact } from "@/lib/site-config";
 import { articleJsonLd, breadcrumbJsonLd } from "@/lib/structured-data";
 
@@ -23,8 +23,11 @@ const wordCount =
   (post.closing?.split(/\s+/).length ?? 0);
 const readingMinutes = Math.max(1, Math.round(wordCount / 200));
 const ogImage = post.image ? await ogUrl(post.image) : undefined;
+const hero = post.image
+  ? await heroPreload(post.image, { widths: [480, 768, 1000], sizes: "(min-width: 1024px) 700px, 100vw", format: "webp", quality: 60 })
+  : undefined;
 ---
-<BaseLayout title={post.title} description={post.excerpt} canonical={`/blogs/${slug}`} ogImage={ogImage} type="article">
+<BaseLayout title={post.title} description={post.excerpt} canonical={`/blogs/${slug}`} ogImage={ogImage} type="article" heroPreload={hero}>
   <JsonLd data={[breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "Blog", path: "/blogs" }, { name: post.title, path: `/blogs/${slug}` }]), articleJsonLd(post)]} />
   <article class="mx-auto max-w-3xl px-5 pb-16 pt-10 lg:px-8 lg:pt-14">
     <Breadcrumb current={post.title} />
@@ -36,7 +39,7 @@ const ogImage = post.image ? await ogUrl(post.image) : undefined;
 
     {post.image && (
       <div class="mt-8 overflow-hidden rounded-2xl border border-line animate-hero-in" style="animation-delay: 60ms">
-        <Image src={img(post.image)} alt={post.imageAlt ?? post.title} width={1000} height={667} loading="eager" fetchpriority="high" class="h-56 w-full object-cover sm:h-80" />
+        <Image src={img(post.image)} alt={post.imageAlt ?? post.title} width={1000} height={667} loading="eager" fetchpriority="high" decoding="async" widths={[480, 768, 1000]} sizes="(min-width: 1024px) 700px, 100vw" quality={60} class="h-56 w-full object-cover sm:h-80" />
       </div>
     )}
 

@@ -7,6 +7,7 @@ import FloatingLuggageTag from "@/components/FloatingLuggageTag.astro";
 import GoogleAnalytics from "@/components/GoogleAnalytics.astro";
 import JsonLd from "@/components/JsonLd.astro";
 import { localBusinessJsonLd, organizationJsonLd, websiteJsonLd } from "@/lib/structured-data";
+import type { HeroPreload } from "@/lib/images";
 import "@/styles/globals.css";
 
 interface Props {
@@ -16,13 +17,14 @@ interface Props {
   ogImage?: string;
   noindex?: boolean;
   type?: "website" | "article";
+  heroPreload?: HeroPreload;
 }
-const { title, description, canonical, ogImage, noindex, type } = Astro.props;
+const { title, description, canonical, ogImage, noindex, type, heroPreload } = Astro.props;
 ---
 <!doctype html>
 <html lang="en" class="h-full antialiased">
   <head>
-    <BaseHead title={title} description={description} canonical={canonical} ogImage={ogImage} noindex={noindex} type={type} />
+    <BaseHead title={title} description={description} canonical={canonical} ogImage={ogImage} noindex={noindex} type={type} heroPreload={heroPreload} />
   </head>
   <body class="min-h-full flex flex-col font-sans text-ink bg-paper">
     <a href="#main-content" class="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-brand focus:px-4 focus:py-2.5 focus:text-sm focus:font-semibold focus:text-white">

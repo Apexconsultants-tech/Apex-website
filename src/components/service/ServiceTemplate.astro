@@ -32,7 +32,7 @@ const imagePath = serviceImage(s.slug);
       </div>
       {imagePath && (
         <TiltCard class="relative aspect-[4/3] overflow-hidden rounded-3xl border border-line shadow-lg shadow-ink/10" max={4}>
-          <Picture src={img(imagePath)} formats={["avif", "webp"]} fallbackFormat="webp" alt={s.name} loading="eager" fetchpriority="high" widths={[480, 768, 1024]} sizes="(min-width: 1024px) 45vw, 90vw" class="h-full w-full object-cover" />
+          <Picture src={img(imagePath)} formats={["avif", "webp"]} fallbackFormat="webp" alt={s.name} loading="eager" fetchpriority="high" decoding="async" widths={[480, 768, 1024]} sizes="(min-width: 1024px) 45vw, 90vw" quality={42} class="h-full w-full object-cover" />
           <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
         </TiltCard>
       )}
