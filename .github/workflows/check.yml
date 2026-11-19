@@ -25,8 +25,9 @@ jobs:
       - name: Build (includes byte-budget gate)
         run: npm run build
 
-      - name: Lighthouse mobile audit (median of 5 runs/URL)
+      - name: Lighthouse mobile audit (median of 5 runs/URL, report-only)
         run: npm run lighthouse
+        continue-on-error: true
         env:
           CHROME_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
 

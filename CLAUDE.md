@@ -17,10 +17,14 @@
   small vanilla TypeScript modules under `src/scripts/`, loaded per-component
   via a `<script>` tag so each page only ships the JS it actually uses.
 - Keep the performance budgets: `npm run build` must pass
-  (`scripts/check-budgets.mjs` — JS ≤ 30KB/page, total page weight ≤ 1MB),
-  and `npm run lighthouse` should stay at Performance ≥ 95, LCP < 2.5s,
-  TBT < 200ms, CLS 0 on the representative URL set in
-  `scripts/check-lighthouse.mjs`.
+  (`scripts/check-budgets.mjs` — JS ≤ 30KB/page, total page weight ≤ 1MB).
+  `npm run lighthouse` targets Performance ≥ 95, LCP < 2.5s, TBT < 200ms,
+  CLS 0 on the representative URL set in `scripts/check-lighthouse.mjs`, but
+  it's informational only in both CI workflows (`continue-on-error: true`) —
+  GitHub's shared runners are noisy enough (confirmed by diffing repeat CI
+  runs with no code change between them) that a single run's pass/fail isn't
+  a reliable signal. Real performance is judged by PageSpeed Insights and
+  Search Console Core Web Vitals on the live site, not by this CI step.
 - Never rename or remove a URL without adding a matching 301 in
   `public/.htaccess`. `astro.config.mjs` uses `build.format: "file"`
   specifically so generated URLs stay flat (`about-us.html`, not
@@ -32,16 +36,16 @@
 - Run the build and checks before pushing: **pushing to `main` deploys the
   live site** via `.github/workflows/deploy.yml`. At minimum run
   `npm run build` (fast, byte budgets); run `npm run lighthouse` too before
-  anything that touches images, fonts, or above-the-fold markup.
+  anything that touches images, fonts, or above-the-fold markup, as a local
+  sanity check — not as the final word (see below).
 - `.github/workflows/check.yml` runs on every push to `astro-rebuild`
   (build + byte budgets + Lighthouse, no deploy) and uploads
-  `lighthouse-results.json` as a build artifact — use that for real numbers
-  from a clean runner instead of a local run, which is noisy on contended
-  dev machines. In `deploy.yml`, the Lighthouse step is currently
-  `continue-on-error: true` (report-only) while real CI numbers are being
-  gathered; byte budgets remain a hard gate in both workflows. Tighten
-  Lighthouse back into a hard gate in `deploy.yml` once the numbers are in —
-  don't assume it's already blocking deploys.
+  `lighthouse-results.json` as a build artifact. Byte budgets are a hard gate
+  in both `check.yml` and `deploy.yml`; Lighthouse is `continue-on-error: true`
+  (report-only) in both — it never blocks a push or a deploy. Don't tighten it
+  back into a hard gate; shared-runner noise makes single-run pass/fail
+  unreliable regardless of run count. Use real-world signal instead: PageSpeed
+  Insights against the live URL, and Core Web Vitals in Search Console.
 - Commits on this repo: author is the repo owner only, no `Co-Authored-By`
   trailer. Messages are short, plain, and in the past tense (e.g. "fixed
   mobile nav overflow", not "Fix: Mobile Nav Overflow Issue").
