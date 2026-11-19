@@ -60,13 +60,13 @@ const hero = await heroPreload("/images/stock/hero-cinematic-bg.webp", {
 <BaseLayout title={title} description={description} canonical="/" heroPreload={hero}>
   <HeroClassic />
 
-  <section class="mx-auto max-w-7xl px-5 pb-20 lg:px-8">
+  <section class="cv-auto mx-auto max-w-7xl px-5 pb-20 lg:px-8" style="--cv-size: 1060px">
     <Reveal><IcefSection /></Reveal>
   </section>
 
   <PartnerLogoStrip />
 
-  <section id="services" class="border-y border-line bg-surface-2/60 py-20">
+  <section id="services" class="cv-auto border-y border-line bg-surface-2/60 py-20" style="--cv-size: 1770px">
     <div class="mx-auto max-w-7xl px-5 lg:px-8">
       <Reveal>
         <SectionHeading eyebrow="What we do" title="Admissions, visas &amp; student support" lead="Four pillars of end-to-end guidance, from choosing the right course to settling in after you land." />
@@ -96,7 +96,7 @@ const hero = await heroPreload("/images/stock/hero-cinematic-bg.webp", {
     </div>
   </section>
 
-  <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+  <section class="cv-auto mx-auto max-w-7xl px-5 py-20 lg:px-8" style="--cv-size: 1130px">
     <div class="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
       <Reveal>
         <p class="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">Since 2009</p>
@@ -132,7 +132,7 @@ const hero = await heroPreload("/images/stock/hero-cinematic-bg.webp", {
     </div>
   </section>
 
-  <section id="destinations" class="relative overflow-hidden border-y border-line py-20">
+  <section id="destinations" class="cv-auto relative overflow-hidden border-y border-line py-20" style="--cv-size: 1050px">
     <Image src={img("/images/stock/airplane-wing-sky.webp")} alt="" loading="lazy" widths={[640, 1280, 1920]} sizes="100vw" class="absolute inset-0 h-full w-full object-cover object-[50%_38%]" />
     <div class="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/60"></div>
     <div class="absolute inset-0 bg-gradient-to-t from-brand-deep/50 via-transparent to-transparent"></div>
@@ -180,7 +180,7 @@ const hero = await heroPreload("/images/stock/hero-cinematic-bg.webp", {
     </div>
   </section>
 
-  <section class="relative overflow-hidden py-20">
+  <section class="cv-auto relative overflow-hidden py-20" style="--cv-size: 1620px">
     <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,var(--color-brand-tint),transparent_70%)]"></div>
     <div class="pointer-events-none absolute inset-0 opacity-[0.1] [mask-image:linear-gradient(to_bottom,black,transparent)]">
       <Image src={img("/images/brand/world-map.webp")} alt="" loading="lazy" widths={[640, 1280, 1920]} sizes="100vw" class="h-full w-full object-cover object-center" />
@@ -235,7 +235,7 @@ const hero = await heroPreload("/images/stock/hero-cinematic-bg.webp", {
     </div>
   </section>
 
-  <section class="mx-auto max-w-7xl px-5 pb-20 overflow-x-clip lg:px-8">
+  <section class="cv-auto mx-auto max-w-7xl px-5 pb-20 overflow-x-clip lg:px-8" style="--cv-size: 910px">
     <ScrollPopGroup class="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-3 lg:gap-5">
       <div class="card-left lg:mt-6">
         <a href="/destinations" class="group relative flex h-full flex-col overflow-hidden rounded-2xl border-2 border-dashed border-line bg-surface px-6 py-6 shadow-md shadow-ink/[0.04] transition-all hover:-translate-y-1 hover:border-brand hover:shadow-xl hover:shadow-ink/10">
@@ -285,7 +285,7 @@ const hero = await heroPreload("/images/stock/hero-cinematic-bg.webp", {
 
   <AccreditationsStrip />
 
-  <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+  <section class="cv-auto mx-auto max-w-7xl px-5 py-20 lg:px-8" style="--cv-size: 790px">
     <Reveal><SectionHeading eyebrow="Real outcomes" title="Student success stories" lead="A few of the students Apex has guided to offers abroad, real names, real universities." /></Reveal>
     <Reveal delay={100} class="mt-10"><TestimonialCarousel items={testimonials} /></Reveal>
     <Reveal delay={260} class="mt-8 text-center">
@@ -293,7 +293,7 @@ const hero = await heroPreload("/images/stock/hero-cinematic-bg.webp", {
     </Reveal>
   </section>
 
-  <section id="faqs" class="relative overflow-hidden border-t border-line bg-surface-2/60 py-20">
+  <section id="faqs" class="cv-auto relative overflow-hidden border-t border-line bg-surface-2/60 py-20" style="--cv-size: 1370px">
     <div class="pointer-events-none absolute inset-0" aria-hidden="true">
       {FAQ_WALL_WORDS.map((w) => (
         <span class="absolute whitespace-nowrap font-display font-bold uppercase tracking-tight text-ink" style={`top: ${w.top}; left: ${w.left}; font-size: ${w.size}; opacity: ${w.opacity}; transform: rotate(${w.rotate}deg)`}>
@@ -307,7 +307,7 @@ const hero = await heroPreload("/images/stock/hero-cinematic-bg.webp", {
     </div>
   </section>
 
-  <section class="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+  <section class="cv-auto mx-auto max-w-7xl px-5 py-20 lg:px-8" style="--cv-size: 540px">
     <Reveal>
       <div class="relative flex flex-col items-start justify-between gap-8 overflow-hidden rounded-3xl bg-gradient-to-br from-brand to-brand-deep px-8 py-12 shadow-2xl shadow-brand/25 sm:px-12 lg:flex-row lg:items-center">
         <div class="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-white/10 blur-3xl"></div>

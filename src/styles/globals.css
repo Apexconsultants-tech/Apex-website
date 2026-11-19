@@ -239,6 +239,17 @@ summary:focus-visible {
   animation: hero-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* Skips layout/paint for below-the-fold sections until they're about to
+   scroll into view, so the browser doesn't spend main-thread time on them
+   while the hero is still painting. --cv-size is a rough pre-render height
+   guess (real sections are usually taller than one phone screen); `auto`
+   replaces it with the real measured height after first render, so later
+   reflows don't shift. Never apply this to anything above the fold. */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto var(--cv-size, 800px);
+}
+
 @keyframes skeleton-pulse {
   0%, 100% { opacity: 0.5; }
   50% { opacity: 0.85; }

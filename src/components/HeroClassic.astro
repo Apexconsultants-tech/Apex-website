@@ -7,7 +7,14 @@ import StatStrip from "@/components/StatStrip.astro";
 import { contact } from "@/lib/site-config";
 ---
 <section class="relative overflow-hidden">
-  <div class="absolute inset-0">
+  {/* On mobile, the section is much taller than one screen (H1 + globe +
+      course finder + stat strip all stack under it), so a full-bleed photo
+      behind the whole thing meant rasterizing 2-3 screens of image under
+      throttled CPU. Capped to the first screen on mobile; everything below
+      it continues with a flat tone sampled from the photo's own bottom
+      edge, fading to the page background, so there's no visible seam.
+      Desktop (lg:) is unchanged — full-bleed for the whole section. */}
+  <div class="absolute inset-x-0 top-0 h-[100svh] lg:inset-0 lg:h-auto">
     {/* WebP only, not AVIF, and capped at 1024w: this is the page's true
         LCP element (full-bleed background), and a large AVIF frame here
         measurably cost multiple seconds of decode time under throttled
@@ -26,6 +33,7 @@ import { contact } from "@/lib/site-config";
       class="h-full w-full object-cover object-center"
     />
   </div>
+  <div class="pointer-events-none absolute inset-x-0 top-[100svh] bottom-0 bg-gradient-to-b from-[#2b3336] to-[var(--color-paper)] lg:hidden" aria-hidden="true"></div>
   <div class="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/20"></div>
   <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-black/10"></div>
   <div class="pointer-events-none absolute inset-0 bg-brand-deep/10"></div>

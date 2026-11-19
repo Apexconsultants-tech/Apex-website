@@ -1,8 +1,13 @@
 // Mobile Lighthouse gate, run separately from `npm run build` via
 // `npm run lighthouse` (see CI: it runs after the build, against the
-// already-built dist/). Audits each representative URL 3 times and scores
+// already-built dist/). Audits each representative URL 5 times and scores
 // the median of each metric individually, so ordinary run-to-run variance
-// doesn't flip a pass/fail on a single noisy run.
+// doesn't flip a pass/fail on a single noisy run. 5 instead of 3: diffing
+// two real GitHub Actions check.yml runs showed the same pages regress and
+// recover with no code change behind it — shared-runner contention adds a
+// further ~1-1.5s on top of a clean run on roughly a third of samples. 5
+// runs needs 3 contended samples to drag the median down instead of 2,
+// which meaningfully cuts how often that flips a borderline page's result.
 import { launch } from "chrome-launcher";
 import lighthouse from "lighthouse";
 import http from "node:http";
@@ -11,7 +16,7 @@ import path from "node:path";
 import zlib from "node:zlib";
 
 const DIST = path.resolve("dist");
-const RUNS_PER_URL = 3;
+const RUNS_PER_URL = 5;
 
 const TARGETS = {
   performance: 95, // minimum score (0-100)

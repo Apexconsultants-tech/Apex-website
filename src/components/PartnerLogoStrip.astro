@@ -10,7 +10,7 @@ partnerLogos.forEach((u, i) => rows[i % 3].push(u));
 const marqueeRows = rows.map((row) => [...row, ...row]);
 const rowDurations = ["70s", "85s", "100s"];
 ---
-<section id="partner-logos" class="scroll-mt-20">
+<section id="partner-logos" class="cv-auto scroll-mt-20" style="--cv-size: 615px">
   <div class="mx-auto max-w-7xl px-5 pt-20 lg:px-8">
     <Reveal>
       <SectionHeading
