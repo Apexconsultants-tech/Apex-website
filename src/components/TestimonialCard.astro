@@ -1,0 +1,25 @@
+---
+import { Image } from "astro:assets";
+import { img } from "@/lib/images";
+import type { testimonials } from "@/lib/site-config";
+
+interface Props { item: (typeof testimonials)[number] }
+const { item } = Astro.props;
+---
+<div class="flex h-full flex-col rounded-2xl border border-line bg-surface p-6 shadow-sm shadow-ink/[0.02] transition-shadow hover:shadow-lg hover:shadow-ink/5 sm:p-7">
+  <svg width="28" height="22" viewBox="0 0 28 22" fill="none" class="text-brand-tint" aria-hidden="true">
+    <path d="M11.5 0 6 11h5v11H0V11.5L5 0h6.5Zm16.5 0-5.5 11H28v11H16.5V11.5L21.5 0H28Z" fill="currentColor" />
+  </svg>
+  <p class="mt-3 flex-1 text-sm leading-relaxed text-ink-soft sm:text-base">
+    {item.name.split(" ")[0]} secured admission to <strong class="text-ink">{item.university}</strong>
+    {item.program ? <> for <strong class="text-ink">{item.program}</strong></> : null} with end-to-end guidance from Apex, from applications and documentation to visa support.
+  </p>
+  <div class="mt-6 flex items-center gap-3.5 border-t border-line pt-5">
+    <Image src={img(item.image)} alt={item.name} width={64} height={64} loading="lazy" class="h-16 w-16 shrink-0 rounded-full border-2 border-brand-tint object-cover" />
+    <div>
+      <p class="text-sm font-semibold text-ink">{item.name}</p>
+      <p class="text-xs text-ink-faint">{item.university}</p>
+      <p class="text-xs text-ink-faint">{item.country}</p>
+    </div>
+  </div>
+</div>

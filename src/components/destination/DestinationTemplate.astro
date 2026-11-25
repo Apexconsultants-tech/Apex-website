@@ -1,0 +1,232 @@
+---
+import { Image, Picture } from "astro:assets";
+import { img } from "@/lib/images";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import FaqAccordion from "@/components/FaqAccordion.astro";
+import PassportStamp from "@/components/PassportStamp.astro";
+import Reveal from "@/components/Reveal.astro";
+import SectionHeading from "@/components/SectionHeading.astro";
+import TiltCard from "@/components/TiltCard.astro";
+import type { Destination } from "@/lib/destinations-data";
+import { destinationPhoto } from "@/lib/destinations-data";
+import { destinationLifePhoto } from "@/lib/destination-photos.server";
+import { flagSize } from "@/lib/flags";
+import { contact } from "@/lib/site-config";
+
+interface Props { d: Destination }
+const { d } = Astro.props;
+
+function stampCode(dest: Destination) {
+  return dest.short.toUpperCase();
+}
+function firstClause(text: string) {
+  const match = text.match(/^[^.]+\./);
+  return match ? match[0] : text;
+}
+function lowerFirstItem(items: string[]) {
+  return items.map((item, i) => (i === 0 ? item.charAt(0).toLowerCase() + item.slice(1) : item));
+}
+function buildTimeline(dest: Destination) {
+  const uniNames = dest.universities.slice(0, 2).map((u) => u.name);
+  const uniLine = uniNames.length > 0
+    ? `institutions like ${uniNames.join(" and ")} (the exact shortlist depends on your grades, budget, and course)`
+    : `universities in ${dest.name} that genuinely fit your goals`;
+  const reqSample = lowerFirstItem(dest.requirements.slice(0, 2));
+  const reqLine = reqSample.length > 0
+    ? `Most ${dest.name} universities ask for ${reqSample.join(" and ")}, though the exact list and deadlines vary by institution and program`
+    : `Requirements vary by institution and program`;
+  const scholarshipCount = dest.scholarships.length;
+  const costClause = firstClause(dest.cost);
+  const visaSample = lowerFirstItem(dest.visaRequirements.slice(0, 2));
+  const visaLine = visaSample.length > 0 ? `including ${visaSample.join(" and ")}` : "and every required supporting document";
+  const postStudyClause = firstClause(dest.postStudyWork);
+
+  return [
+    { title: "Research & shortlisting", body: `We assess your academic profile and budget, then shortlist from ${uniLine}.` },
+    { title: "Admission requirements & applications", body: `${reqLine} — we confirm exactly what your shortlisted universities need before you apply, then prepare and track every application.` },
+    { title: "Offer & financial planning", body: `${costClause} Once you have an offer, we help you plan for it${scholarshipCount > 0 ? ` and check your eligibility across ${scholarshipCount} scholarship route${scholarshipCount > 1 ? "s" : ""} we track for ${dest.name}` : ""}.` },
+    { title: "Visa filing", body: `We prepare your ${dest.visaName} application ${visaLine}, staying current on requirements as they change.` },
+    { title: "Pre-departure preparation", body: `Guidance on accommodation, travel documentation, packing, and what to expect in your first weeks in ${dest.name}.` },
+    { title: "Arrival & after", body: `Support with local registration and settling in from day one. ${postStudyClause}` },
+  ];
+}
+
+const timeline = buildTimeline(d);
+const heroFlag = flagSize(d.flag, 20);
+const heroPhoto = img(destinationPhoto(d.slug));
+const lifePhotoPath = destinationLifePhoto(d.slug);
+const lifePhoto = img(lifePhotoPath);
+---
+<section class="relative overflow-hidden">
+  <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,var(--color-brand-tint),transparent_55%)]"></div>
+  <div class="mx-auto max-w-7xl px-5 pb-10 pt-10 lg:px-8 lg:pt-14">
+    <Breadcrumb current={d.name} />
+    <div class="mt-6 grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
+      <div class="animate-hero-in">
+        <p class="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">
+          <img src={`/images/flags/${d.flag}.svg`} alt="" width={flagSize(d.flag, 15).width} height="15" /> Study Abroad
+        </p>
+        <h1 class="mt-3 text-4xl font-semibold leading-[1.06] text-ink sm:text-5xl">
+          Study in <span class="text-brand">{d.name}</span>
+        </h1>
+        <div class="mt-5 flex flex-wrap gap-2">
+          {d.heroStats.map((s) => <span class="rounded-full border border-line bg-surface px-3.5 py-1.5 text-xs font-medium text-ink-soft">{s}</span>)}
+        </div>
+        <p class="mt-6 max-w-xl text-base leading-relaxed text-ink-soft">{d.intro}</p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/contact-us" class="rounded-full bg-gradient-to-b from-brand to-brand-deep px-6 py-3 text-sm font-semibold text-white shadow-md shadow-brand/20 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-brand/30">Book free consultation</a>
+          <a href={contact.whatsappHref} data-track="whatsapp_click" target="_blank" rel="noopener noreferrer" class="rounded-full border border-line px-6 py-3 text-sm font-semibold text-ink transition-all hover:-translate-y-0.5 hover:border-brand hover:text-brand">Chat on WhatsApp</a>
+        </div>
+      </div>
+      <div class="relative">
+        <TiltCard class="relative aspect-[4/3] overflow-hidden rounded-3xl border border-line shadow-lg shadow-ink/10" max={4}>
+          <Picture src={heroPhoto} formats={["avif", "webp"]} fallbackFormat="webp" alt={`${d.name} skyline`} loading="eager" fetchpriority="high" decoding="async" widths={[480, 768, 1024]} sizes="(min-width: 1024px) 45vw, 90vw" quality={42} class="h-full w-full object-cover" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent"></div>
+          <div class="absolute left-4 top-4 rotate-[-6deg] rounded-sm border border-ink/10 bg-white/95 p-1.5 shadow-sm">
+            <img src={`/images/flags/${d.flag}.svg`} alt="" width={heroFlag.width} height={heroFlag.height} class="block rounded-[1px]" />
+          </div>
+        </TiltCard>
+        <PassportStamp code={stampCode(d)} class="absolute -bottom-6 -right-4 h-24 w-24 drop-shadow-lg sm:-bottom-8 sm:-right-6 sm:h-28 sm:w-28" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="border-y border-line bg-surface-2/60 py-20">
+  <div class="mx-auto max-w-7xl px-5 lg:px-8">
+    <Reveal><SectionHeading eyebrow="Why this destination" title={`Why study in ${d.name}?`} /></Reveal>
+    <div class="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {d.whyPoints.map((w, i) => (
+        <Reveal delay={i * 80}>
+          <TiltCard class="h-full rounded-2xl border border-line bg-surface p-6" max={4}>
+            <h3 class="text-base font-semibold text-ink">{w.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink-soft">{w.body}</p>
+          </TiltCard>
+        </Reveal>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+  <Reveal class="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
+    <TiltCard class="overflow-hidden rounded-3xl border border-line shadow-lg shadow-ink/10" max={4}>
+      <Image src={lifePhoto} alt={`Students on campus in ${d.name}`} width={1000} height={667} loading="lazy" class="h-64 w-full object-cover object-center sm:h-80" />
+    </TiltCard>
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">Life as a student in {d.name}</p>
+      <p class="mt-3 text-xl font-semibold leading-snug text-ink sm:text-2xl">Beyond the classroom: campus life, new friendships, and a genuinely global environment.</p>
+      <p class="mt-4 text-ink-soft leading-relaxed">Every destination we support comes with real academic culture, student societies, and a community of international students navigating the same journey as you. We help you find the university where that fits best.</p>
+    </div>
+  </Reveal>
+</section>
+
+<section class="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+  <div class="grid grid-cols-1 gap-14 lg:grid-cols-2">
+    <Reveal>
+      <h2 class="text-2xl font-semibold text-ink">Admission requirements</h2>
+      <p class="mt-2 text-sm text-ink-soft">Requirements vary by university and program, but generally include:</p>
+      <ul class="mt-5 space-y-2.5">
+        {d.requirements.map((r) => (
+          <li class="flex gap-3 text-sm text-ink-soft">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="mt-0.5 shrink-0 text-brand" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            <span>{r}</span>
+          </li>
+        ))}
+      </ul>
+    </Reveal>
+    <Reveal delay={100}>
+      <h2 class="text-2xl font-semibold text-ink">Universities in {d.name}</h2>
+      <div class="mt-5 space-y-3">
+        {d.universities.map((u) => (
+          <div class="rounded-xl border border-line bg-surface px-5 py-4">
+            <p class="text-sm font-semibold text-ink">{u.name}</p>
+            {u.note && <p class="mt-0.5 text-xs text-ink-faint">{u.note}</p>}
+          </div>
+        ))}
+      </div>
+      <a href="/#partner-logos" class="mt-4 inline-flex text-sm font-semibold text-brand-text hover:underline">View all partner universities →</a>
+    </Reveal>
+  </div>
+</section>
+
+<section class="border-y border-line bg-surface-2/60 py-20">
+  <div class="mx-auto max-w-7xl px-5 lg:px-8">
+    <div class="grid grid-cols-1 gap-14 lg:grid-cols-2">
+      <Reveal>
+        <h2 class="text-2xl font-semibold text-ink">Cost of studying in {d.name}</h2>
+        <p class="mt-4 text-sm leading-relaxed text-ink-soft">{d.cost}</p>
+        <a href="/financial-assistance" class="mt-4 inline-flex text-sm font-semibold text-brand-text hover:underline">Explore Financial Assistance →</a>
+      </Reveal>
+      {d.scholarships.length > 0 && (
+        <Reveal delay={100}>
+          <h2 class="text-2xl font-semibold text-ink">Scholarships</h2>
+          <ul class="mt-5 space-y-2.5">
+            {d.scholarships.map((s) => (
+              <li class="flex gap-3 text-sm text-ink-soft">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="mt-0.5 shrink-0 text-brand" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                <span>{s}</span>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
+      )}
+    </div>
+  </div>
+</section>
+
+<section class="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+  <div class="grid grid-cols-1 gap-14 lg:grid-cols-2">
+    <Reveal>
+      <h2 class="text-2xl font-semibold text-ink">{d.visaName}</h2>
+      <ul class="mt-5 space-y-2.5">
+        {d.visaRequirements.map((r) => (
+          <li class="flex gap-3 text-sm text-ink-soft">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="mt-0.5 shrink-0 text-brand" aria-hidden="true"><path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+            <span>{r}</span>
+          </li>
+        ))}
+      </ul>
+      <a href="/student-visa-assistance" class="mt-4 inline-flex text-sm font-semibold text-brand-text hover:underline">See Student Visa Assistance →</a>
+    </Reveal>
+    <Reveal delay={100}>
+      <h2 class="text-2xl font-semibold text-ink">Post-study work opportunities</h2>
+      <p class="mt-4 text-sm leading-relaxed text-ink-soft">{d.postStudyWork}</p>
+      <a href="/career-counseling" class="mt-4 inline-flex text-sm font-semibold text-brand-text hover:underline">See Career Counseling →</a>
+    </Reveal>
+  </div>
+</section>
+
+<section class="border-y border-line bg-surface-2/60 py-20">
+  <div class="mx-auto max-w-7xl px-5 lg:px-8">
+    <Reveal><SectionHeading eyebrow="How it works" title={`Your application timeline for ${d.name}`} lead="A typical path from first consultation to arrival. Apex works alongside you at every step." /></Reveal>
+    <div class="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {timeline.map((step, i) => (
+        <Reveal delay={i * 70}>
+          <TiltCard class="h-full rounded-2xl border border-line bg-surface p-6" max={4}>
+            <span class="flex h-9 w-9 items-center justify-center rounded-full bg-brand-tint font-display text-sm font-bold text-brand-text">{i + 1}</span>
+            <h3 class="mt-4 text-base font-semibold text-ink">{step.title}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-ink-soft">{step.body}</p>
+          </TiltCard>
+        </Reveal>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section class="mx-auto max-w-3xl px-5 py-20 lg:px-8">
+  <Reveal><SectionHeading align="center" eyebrow="Common questions" title={`${d.name} Study Abroad FAQs`} /></Reveal>
+  <Reveal delay={100} class="mt-10"><FaqAccordion items={d.faqs} /></Reveal>
+</section>
+
+<section class="mx-auto max-w-7xl px-5 py-20 lg:px-8">
+  <Reveal>
+    <div class="flex flex-col items-start justify-between gap-8 rounded-3xl bg-brand px-8 py-12 sm:px-12 lg:flex-row lg:items-center">
+      <div>
+        <h2 class="text-3xl font-semibold text-white sm:text-4xl">Ready to start your {d.name} application?</h2>
+        <p class="mt-3 max-w-lg text-white">Book your free consultation today.</p>
+      </div>
+      <a href="/contact-us" class="rounded-full bg-white px-6 py-3 text-sm font-semibold text-brand-deep transition-all hover:-translate-y-0.5 hover:bg-white/90">Book free consultation</a>
+    </div>
+  </Reveal>
+</section>

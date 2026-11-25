@@ -1,0 +1,296 @@
+@import "tailwindcss";
+@import "./fonts.css";
+
+/*
+  One accent color (green) drives the UI; everything else is neutral
+  grey/white/ink. "amber" is reserved strictly for semantic warning/error
+  states (form validation, draft-content notices) — not a decorative accent.
+*/
+:root {
+  --color-paper: #f7f9f7;
+  --color-surface: #ffffff;
+  --color-surface-2: #f0f3f0;
+  --color-ink: #14181a;
+  --color-ink-soft: #454e55;
+  --color-ink-faint: #4f5a64;
+  --color-brand: #15803d;
+  --color-brand-deep: #166534;
+  --color-brand-tint: #dcfce7;
+  --color-brand-text: #0f6b31;
+  --color-amber: #dc2626;
+  --color-amber-tint: #fee2e2;
+  --color-line: #e2e6e3;
+}
+
+@theme inline {
+  --color-paper: var(--color-paper);
+  --color-surface: var(--color-surface);
+  --color-surface-2: var(--color-surface-2);
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+  --color-ink-faint: var(--color-ink-faint);
+  --color-brand: var(--color-brand);
+  --color-brand-deep: var(--color-brand-deep);
+  --color-brand-tint: var(--color-brand-tint);
+  --color-brand-text: var(--color-brand-text);
+  --color-amber: var(--color-amber);
+  --color-amber-tint: var(--color-amber-tint);
+  --color-line: var(--color-line);
+
+  --font-display: "Sora", sans-serif;
+  --font-sans: "Public Sans", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  text-wrap: balance;
+}
+
+::selection {
+  background: var(--color-brand);
+  color: #fff;
+}
+
+a, button, [role="button"], input, select, textarea, summary {
+  outline-offset: 2px;
+}
+
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 90s linear infinite;
+}
+
+.animate-marquee-slow {
+  animation: marquee 70s linear infinite;
+}
+
+.animate-marquee:hover,
+.animate-marquee-slow:hover,
+.animate-marquee-slow:focus-within {
+  animation-play-state: paused;
+}
+
+.marquee-paused {
+  animation-play-state: paused !important;
+}
+
+.card-left,
+.card-center,
+.card-right {
+  opacity: 0;
+  transition:
+    opacity 1.5s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 1.5s cubic-bezier(0.22, 0.61, 0.36, 1);
+  will-change: transform, opacity;
+}
+
+.card-left {
+  transform: translateY(40px);
+  transition-delay: 0ms;
+}
+
+.card-right {
+  transform: translateY(40px);
+  transition-delay: 120ms;
+}
+
+@media (min-width: 1024px) {
+  .card-left {
+    transform: translateX(clamp(-180px, -18vw, -80px));
+  }
+
+  .card-right {
+    transform: translateX(clamp(80px, 18vw, 180px));
+  }
+}
+
+.card-center {
+  transform: translateY(90px) scale(0.88);
+  transition-delay: 240ms;
+}
+
+.card-group-revealed .card-left,
+.card-group-revealed .card-center,
+.card-group-revealed .card-right {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+@keyframes float-slow {
+  0% { transform: translateY(0px); }
+  12.5% { transform: translateY(-1.5px); }
+  25% { transform: translateY(-5px); }
+  37.5% { transform: translateY(-8.5px); }
+  50% { transform: translateY(-10px); }
+  62.5% { transform: translateY(-8.5px); }
+  75% { transform: translateY(-5px); }
+  87.5% { transform: translateY(-1.5px); }
+  100% { transform: translateY(0px); }
+}
+
+.animate-float {
+  animation: float-slow 7s linear infinite;
+  will-change: transform;
+}
+
+@keyframes globe-in {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes orbit-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes orbit-spin-reverse {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+.animate-orbit {
+  animation: orbit-spin 40s linear infinite;
+}
+
+.animate-orbit-reverse {
+  animation: orbit-spin-reverse 55s linear infinite;
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.94); opacity: 0.5; }
+  70% { transform: scale(1.08); opacity: 0; }
+  100% { transform: scale(1.08); opacity: 0; }
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 3.5s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
+}
+
+/* transform-only (no left/top): animating left/top forces a full layout
+   recalc every frame for this animation's entire infinite run, which under
+   Lighthouse's mobile CPU throttle was costing over a second of main-thread
+   "Style & Layout" time during the pre-LCP window. cqw/cqh read the plane's
+   own positioned ancestor (which has container-type: size) so the path
+   matches the old left/top percentages exactly, but stays compositor-only. */
+@keyframes flight-plane {
+  0% { transform: translate(calc(8cqw - 50%), calc(72cqh - 50%)) rotate(-38deg); opacity: 0; }
+  8% { opacity: 1; }
+  25% { transform: translate(calc(29cqw - 50%), calc(40cqh - 50%)) rotate(-52deg); }
+  50% { transform: translate(calc(50cqw - 50%), calc(22.5cqh - 50%)) rotate(-8deg); }
+  75% { transform: translate(calc(71cqw - 50%), calc(19cqh - 50%)) rotate(18deg); }
+  92% { opacity: 1; }
+  100% { transform: translate(calc(92cqw - 50%), calc(30cqh - 50%)) rotate(28deg); opacity: 0; }
+}
+
+.animate-flight-plane {
+  animation: flight-plane 6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  will-change: transform;
+}
+
+@keyframes slide-in-right {
+  from { transform: translateX(calc(100% + 24px)); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-right 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* transform-only (no opacity): starting at opacity 0 means whatever this
+   wraps — on some templates that's the LCP element itself (a hero image,
+   or the h1 on image-less pages) — can't register as painted until the
+   animation ramps opacity back up, pushing out LCP for no visual gain. */
+@keyframes hero-in {
+  from { transform: translateY(16px); }
+  to { transform: translateY(0); }
+}
+
+.animate-hero-in {
+  animation: hero-in 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Skips layout/paint for below-the-fold sections until they're about to
+   scroll into view, so the browser doesn't spend main-thread time on them
+   while the hero is still painting. --cv-size is a rough pre-render height
+   guess (real sections are usually taller than one phone screen); `auto`
+   replaces it with the real measured height after first render, so later
+   reflows don't shift. Never apply this to anything above the fold. */
+.cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: auto var(--cv-size, 800px);
+}
+
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 0.85; }
+}
+
+.animate-skeleton-pulse {
+  animation: skeleton-pulse 1.8s ease-in-out infinite;
+}
+
+/* Reveal/ScrollPopGroup replacement (vanilla JS sets [data-revealed] once an
+   IntersectionObserver fires). Pre-JS and no-JS states render as fully
+   visible rather than invisible, so content a crawler or no-JS reader sees
+   is never permanently hidden behind a script that failed to run. */
+[data-reveal] {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+[data-reveal].js-armed {
+  opacity: 0;
+  transform: translate(var(--reveal-x, 0), var(--reveal-y, 16px)) scale(var(--reveal-scale, 1));
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--reveal-delay, 0ms);
+}
+
+[data-reveal].js-armed[data-revealed] {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .animate-marquee,
+  .animate-marquee-slow {
+    animation-play-state: paused !important;
+  }
+}

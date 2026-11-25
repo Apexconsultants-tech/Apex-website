@@ -1,0 +1,98 @@
+---
+// Ported 1:1 from the old React Globe: same circular panning satellite
+// image, same orbiting flag chips, same flight-path SVG. The circular mask,
+// map images, and first visible frame are plain HTML/CSS rendered straight
+// into the page (no hydration gap to cover with a skeleton, unlike the old
+// React version) — globe.ts only adds the drag/momentum pan on top, loaded
+// as a deferred module so it never blocks paint.
+import { Image } from "astro:assets";
+import { img } from "@/lib/images";
+import { flagSize } from "@/lib/flags";
+
+const FLAG_CODES = ["gb", "us", "ca", "au", "de", "cn", "fr", "ie"];
+const FLAG_RADIUS = 1.5;
+const FLAG_DURATION = 40;
+const FLAG_HEIGHT = 14;
+const ORBIT_FLAGS = FLAG_CODES.map((code, i) => ({
+  code,
+  radius: FLAG_RADIUS,
+  duration: FLAG_DURATION,
+  delay: -(i * (FLAG_DURATION / FLAG_CODES.length)),
+}));
+---
+<div class="relative aspect-square w-full">
+  <div class="pointer-events-none absolute -inset-10 rounded-full bg-[radial-gradient(circle,rgba(56,142,220,0.22),transparent_65%)] blur-2xl"></div>
+  <div class="pointer-events-none absolute -inset-6 rounded-full bg-[radial-gradient(circle_at_65%_70%,rgba(21,128,61,0.13),transparent_55%)] blur-2xl"></div>
+
+  <div class="pointer-events-none absolute -inset-[7%] animate-orbit rounded-full border border-dashed border-brand/25"></div>
+  <div class="pointer-events-none absolute -inset-[15%] animate-orbit-reverse rounded-full border border-dashed border-brand/15"></div>
+
+  <svg class="pointer-events-none absolute -inset-[6%] overflow-visible" viewBox="0 0 100 100" aria-hidden="true">
+    <path d="M8,72 Q50,-6 92,30" fill="none" stroke="var(--color-brand)" stroke-opacity="0.22" stroke-width="0.5" stroke-dasharray="1.2 2.6" stroke-linecap="round" />
+  </svg>
+  <div class="pointer-events-none absolute -inset-[6%] [container-type:size]" aria-hidden="true">
+    <div class="absolute h-4 w-4 animate-flight-plane">
+      <svg width="16" height="16" viewBox="-4 -4 8 8" class="h-4 w-4 opacity-70">
+        <path
+          d="M-2.6,0 L1.6,0 L3.2,-1 L3.2,-0.35 L0.9,0.55 L0.9,1.9 L2,2.6 L2,3.1 L0,2.6 L-2,3.1 L-2,2.6 L-0.9,1.9 L-0.9,0.55 L-3.2,-0.35 L-3.2,-1 Z"
+          fill="var(--color-brand-deep)"
+        />
+      </svg>
+    </div>
+  </div>
+
+  <div class="pointer-events-none absolute -inset-[2.5%] rounded-full bg-[radial-gradient(circle,transparent_92%,rgba(147,197,253,0.55)_97%,transparent_100%)]"></div>
+
+  <div
+    data-globe-wrap
+    class="absolute inset-0 cursor-grab touch-none overflow-hidden rounded-full shadow-[inset_0_0_40px_rgba(0,0,0,0.35)] animate-[globe-in_0.8s_ease-out]"
+    role="img"
+    aria-label="Satellite view of Earth highlighting Apex's study destinations, including the UK, USA, Canada, Australia, and Ireland"
+  >
+    <div data-globe-reel class="absolute inset-y-0 left-0 flex h-full" style="will-change: transform">
+      {[0, 1].map(() => (
+        <div class="relative h-full shrink-0">
+          <Image
+            src={img("/images/brand/earth-satellite.webp")}
+            alt=""
+            width={1600}
+            height={800}
+            loading="eager"
+            fetchpriority="high"
+            sizes="(min-width: 1024px) 620px, 420px"
+            class="h-full w-auto max-w-none select-none"
+            draggable="false"
+          />
+        </div>
+      ))}
+    </div>
+
+    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_62%_100%_at_50%_50%,transparent_52%,rgba(6,10,18,0.58)_100%)]"></div>
+    <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_32%_26%,rgba(255,255,255,0.4),transparent_52%)]"></div>
+    <div class="pointer-events-none absolute inset-0 rounded-full ring-1 ring-inset ring-white/15"></div>
+  </div>
+
+  {ORBIT_FLAGS.map((f) => {
+    const timing = `animation-duration: ${f.duration}s; animation-delay: ${f.delay}s; animation-timing-function: linear; animation-iteration-count: infinite`;
+    const fs = flagSize(f.code, FLAG_HEIGHT);
+    return (
+      <div class="pointer-events-none absolute" style={`inset: ${-f.radius}%; animation-name: orbit-spin; ${timing}`}>
+        <div class="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2">
+          <div style={`animation-name: orbit-spin-reverse; ${timing}`}>
+            <img
+              src={`/images/flags/${f.code}.svg`}
+              alt=""
+              width={fs.width}
+              height={fs.height}
+              class="block rounded-[2px] border border-white/95 shadow-[0_2px_6px_rgba(20,24,26,0.3)]"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  })}
+</div>
+
+<script>
+  import "@/scripts/globe";
+</script>

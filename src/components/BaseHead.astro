@@ -1,0 +1,53 @@
+---
+import { site } from "@/lib/site-config";
+import soraBold from "@fontsource/sora/files/sora-latin-700-normal.woff2?url";
+import soraSemibold from "@fontsource/sora/files/sora-latin-600-normal.woff2?url";
+import publicSansRegular from "@fontsource/public-sans/files/public-sans-latin-400-normal.woff2?url";
+import publicSansMedium from "@fontsource/public-sans/files/public-sans-latin-500-normal.woff2?url";
+import publicSansSemibold from "@fontsource/public-sans/files/public-sans-latin-600-normal.woff2?url";
+import publicSansBold from "@fontsource/public-sans/files/public-sans-latin-700-normal.woff2?url";
+
+import type { HeroPreload } from "@/lib/images";
+
+interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  ogImage?: string;
+  noindex?: boolean;
+  type?: "website" | "article";
+  heroPreload?: HeroPreload;
+}
+const { title, description, canonical, ogImage = "/opengraph-image.png", noindex = false, type = "website", heroPreload } = Astro.props;
+const canonicalUrl = new URL(canonical, site.url).toString();
+const ogImageUrl = new URL(ogImage, site.url).toString();
+---
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="icon" type="image/png" href="/icon.png" />
+
+<link rel="preload" as="font" type="font/woff2" href={soraBold} crossorigin="anonymous" />
+<link rel="preload" as="font" type="font/woff2" href={soraSemibold} crossorigin="anonymous" />
+<link rel="preload" as="font" type="font/woff2" href={publicSansRegular} crossorigin="anonymous" />
+<link rel="preload" as="font" type="font/woff2" href={publicSansMedium} crossorigin="anonymous" />
+<link rel="preload" as="font" type="font/woff2" href={publicSansSemibold} crossorigin="anonymous" />
+<link rel="preload" as="font" type="font/woff2" href={publicSansBold} crossorigin="anonymous" />
+
+{heroPreload && <link rel="preload" as="image" imagesrcset={heroPreload.srcset} imagesizes={heroPreload.sizes} fetchpriority="high" />}
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonicalUrl} />
+{noindex && <meta name="robots" content="noindex, follow" />}
+
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonicalUrl} />
+<meta property="og:image" content={ogImageUrl} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />

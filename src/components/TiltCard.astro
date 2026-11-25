@@ -1,0 +1,7 @@
+---
+interface Props { class?: string; max?: number }
+const { class: className = "", max = 6 } = Astro.props;
+---
+<div data-tilt data-tilt-max={max} class={className}>
+  <slot />
+</div>

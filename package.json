@@ -1,0 +1,30 @@
+{
+  "name": "apex-website",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build && node scripts/check-budgets.mjs",
+    "preview": "astro preview",
+    "check": "astro check",
+    "lighthouse": "node scripts/check-lighthouse.mjs",
+    "screenshot": "node scripts/screenshot.mjs"
+  },
+  "dependencies": {
+    "@fontsource/public-sans": "^5.1.1",
+    "@fontsource/sora": "^5.1.1",
+    "astro": "^5.2.5",
+    "sharp": "^0.33.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@tailwindcss/vite": "^4.0.6",
+    "chrome-launcher": "^1.1.2",
+    "lighthouse": "^12.4.0",
+    "puppeteer-core": "^24.1.1",
+    "svgo": "^4.1.0",
+    "tailwindcss": "^4.0.6",
+    "typescript": "^5.7.3"
+  }
+}

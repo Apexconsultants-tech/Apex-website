@@ -1,0 +1,70 @@
+---
+import { Image } from "astro:assets";
+import { heroPreload, img } from "@/lib/images";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import JsonLd from "@/components/JsonLd.astro";
+import Reveal from "@/components/Reveal.astro";
+import TiltCard from "@/components/TiltCard.astro";
+import { blogPosts } from "@/lib/blog-data";
+import { breadcrumbJsonLd } from "@/lib/structured-data";
+
+const title = "Study Abroad Blog & Visa Tips";
+const description = "Practical guides on student visas, financial documentation, and settling in abroad, from Apex Consulting Services.";
+const firstImage = blogPosts[0]?.image;
+const hero = firstImage
+  ? await heroPreload(firstImage, { widths: [320, 480, 600], sizes: "(min-width: 1024px) 32vw, (min-width: 640px) 45vw, 90vw", format: "webp", quality: 60 })
+  : undefined;
+---
+<BaseLayout title={title} description={description} canonical="/blogs" heroPreload={hero}>
+  <JsonLd data={breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "Blog", path: "/blogs" }])} />
+  <section class="mx-auto max-w-7xl px-5 pb-12 pt-10 lg:px-8 lg:pt-14">
+    <Breadcrumb current="Blog" />
+    <div class="mt-6 max-w-3xl animate-hero-in">
+      <p class="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">Insights &amp; guides</p>
+      <h1 class="mt-3 text-4xl font-semibold leading-[1.06] text-ink sm:text-5xl">Visa Tips &amp; <span class="text-brand">Study Abroad Guides</span></h1>
+    </div>
+  </section>
+
+  <section class="border-t border-line bg-surface-2/60 py-16">
+    <div class="mx-auto max-w-7xl px-5 lg:px-8">
+      <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {blogPosts.map((p, i) => {
+          const card = (
+            <TiltCard class="h-full" max={4}>
+              <a href={`/blogs/${p.slug}`} class="flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-surface transition-shadow hover:shadow-lg hover:shadow-ink/5">
+                {p.image && (
+                  <Image
+                    src={img(p.image)}
+                    alt={p.imageAlt ?? p.title}
+                    width={600}
+                    height={340}
+                    loading={i === 0 ? "eager" : "lazy"}
+                    fetchpriority={i === 0 ? "high" : undefined}
+                    decoding="async"
+                    widths={[320, 480, 600]}
+                    sizes="(min-width: 1024px) 32vw, (min-width: 640px) 45vw, 90vw"
+                    quality={60}
+                    class="h-40 w-full object-cover"
+                  />
+                )}
+                <div class="flex flex-1 flex-col p-6">
+                  <p class="text-xs font-medium text-ink-faint">{p.category} &middot; {p.date}</p>
+                  <h2 class="mt-2 text-lg font-semibold leading-snug text-ink">{p.title}</h2>
+                  <p class="mt-2 flex-1 text-sm leading-relaxed text-ink-soft">{p.excerpt}</p>
+                  <span class="mt-4 inline-flex text-sm font-semibold text-brand-text">Read more →</span>
+                </div>
+              </a>
+            </TiltCard>
+          );
+          {/* The first card holds the page's LCP image: Reveal forces
+              opacity:0 until its IntersectionObserver fires and a 700ms
+              transition completes, which would delay LCP for no reason on
+              content that's already visible at load. Only cards below the
+              fold get the scroll-reveal treatment. */}
+          return i === 0 ? card : <Reveal delay={i * 80}>{card}</Reveal>;
+        })}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

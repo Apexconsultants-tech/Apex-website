@@ -1,0 +1,21 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lead?: string;
+  align?: "left" | "center";
+  tone?: "ink" | "white";
+}
+const { eyebrow, title, lead, align = "left", tone = "ink" } = Astro.props;
+const isCenter = align === "center";
+const isWhite = tone === "white";
+---
+<div class={`max-w-2xl ${isCenter ? "mx-auto text-center" : ""}`}>
+  {eyebrow && (
+    <p class={`text-xs font-semibold uppercase tracking-[0.14em] ${isWhite ? "text-white/90" : "text-ink-faint"}`}>
+      {eyebrow}
+    </p>
+  )}
+  <h2 class={`mt-2 text-3xl font-semibold leading-tight sm:text-4xl ${isWhite ? "text-white" : "text-ink"}`} set:html={title} />
+  {lead && <p class={`mt-4 text-base leading-relaxed ${isWhite ? "text-white/90" : "text-ink-soft"}`}>{lead}</p>}
+</div>

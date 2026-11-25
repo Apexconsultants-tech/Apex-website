@@ -1,0 +1,29 @@
+---
+interface Props { name: string }
+const { name } = Astro.props;
+---
+{name === "admission" && (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M12 3 2 8l10 5 8-4v6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+    <path d="M6 10.5V16c0 1.5 2.7 3 6 3s6-1.5 6-3v-5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+  </svg>
+)}
+{name === "visa" && (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <rect x="4" y="3" width="16" height="18" rx="2" stroke="currentColor" stroke-width="2" />
+    <circle cx="12" cy="10" r="2.5" stroke="currentColor" stroke-width="1.8" />
+    <path d="M8 17c0-1.8 1.8-3 4-3s4 1.2 4 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+  </svg>
+)}
+{name === "travel" && (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+    <path d="M21 15v-2l-8-5V4.5a1.5 1.5 0 0 0-3 0V8l-8 5v2l8-2.5V17l-2.5 1.5V20l4-1 4 1v-1.5L13 17v-4.5l8 2.5Z" />
+  </svg>
+)}
+{name === "test-prep" && (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+    <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H12v18H6.5A2.5 2.5 0 0 1 4 18.5v-13Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+    <path d="M20 5.5A2.5 2.5 0 0 0 17.5 3H12v18h5.5a2.5 2.5 0 0 0 2.5-2.5v-13Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+    <path d="M15 8h3M15 12h3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" />
+  </svg>
+)}

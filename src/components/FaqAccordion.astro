@@ -1,0 +1,26 @@
+---
+// Native <details>/<summary> disclosure: zero JS, first item open by
+// default, same visual result as the old React toggle (a plus icon that
+// rotates 45deg into an "x" via CSS using the [open] state).
+import { faqs as defaultFaqs } from "@/lib/site-config";
+
+type FaqItem = { q: string; a: string };
+interface Props { items?: readonly FaqItem[] }
+const { items } = Astro.props;
+const faqs = items ?? defaultFaqs;
+---
+<div class="divide-y divide-line rounded-2xl border border-line bg-surface shadow-sm shadow-ink/[0.03]">
+  {faqs.map((item, index) => (
+    <details class="group" open={index === 0}>
+      <summary class="flex w-full cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-left text-sm font-semibold text-ink marker:content-none sm:px-6 sm:py-5 sm:text-base [&::-webkit-details-marker]:hidden">
+        {item.q}
+        <span class="shrink-0 text-ink-faint transition-transform duration-200 group-open:rotate-45" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </span>
+      </summary>
+      <div class="px-5 pb-5 text-sm leading-relaxed text-ink-soft sm:px-6">{item.a}</div>
+    </details>
+  ))}
+</div>

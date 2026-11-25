@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="168" height="52" viewBox="0 0 168 52" role="img" aria-label="ICEF Agency Status certified">
+  <rect width="168" height="52" rx="10" fill="#ffffff"/>
+  <rect x="1" y="1" width="166" height="50" rx="9" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+  <circle cx="26" cy="26" r="16" fill="#c8102e"/>
+  <path d="M20 26.5l4 4 8-9" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="48" y="22" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="700" fill="#c8102e">ICEF</text>
+  <text x="48" y="36" font-family="Arial, Helvetica, sans-serif" font-size="9.5" font-weight="700" fill="#1d438d" letter-spacing="0.04em">AGENCY STATUS (IAS)</text>
+</svg>

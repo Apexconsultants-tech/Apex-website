@@ -1,0 +1,28 @@
+---
+import { Image } from "astro:assets";
+import { img } from "@/lib/images";
+import Reveal from "@/components/Reveal.astro";
+
+const accreditations = [
+  { name: "ICEF Accredited Agency", logo: "/images/brand/icef-accredited-lg.webp", width: 191, height: 220 },
+  { name: "British Council", logo: "/images/brand/british-council-lg.webp", width: 400, height: 142 },
+] as const;
+---
+<section class="cv-auto border-t border-line py-16" style="--cv-size: 885px">
+  <div class="mx-auto max-w-7xl px-5 lg:px-8">
+    <Reveal class="text-center">
+      <p class="text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">Trust &amp; recognition</p>
+      <h2 class="mt-1.5 text-xl font-semibold text-ink sm:text-2xl">Accredited &amp; Recognised By</h2>
+    </Reveal>
+    <Reveal delay={100} class="mt-8 flex flex-wrap items-center justify-center gap-6 sm:gap-10">
+      {accreditations.map((a) => (
+        <div class="flex h-52 w-80 items-center justify-center rounded-2xl border border-line bg-surface p-8 shadow-sm shadow-ink/[0.03]">
+          <Image src={img(a.logo)} alt={a.name} width={a.width} height={a.height} loading="lazy" class="h-full max-h-36 w-auto object-contain" />
+        </div>
+      ))}
+      <div class="flex h-52 w-80 items-center justify-center rounded-2xl border border-line bg-surface p-8 shadow-sm shadow-ink/[0.03]">
+        <img src="/images/brand/yedab-lg.svg" alt="YEDAB — Association of Overseas Education Consultants" width="320" height="220" loading="lazy" class="h-full max-h-36 w-auto object-contain" />
+      </div>
+    </Reveal>
+  </div>
+</section>
