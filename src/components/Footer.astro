@@ -62,7 +62,7 @@ const year = new Date().getFullYear();
       <div class="lg:col-span-3">
         <h3 class="text-xs font-semibold uppercase tracking-wide text-ink-faint">Contact Us</h3>
         <ul class="mt-4 space-y-3 text-sm text-ink-soft">
-          {offices.slice(0, 2).map((o) => (
+          {offices.slice(0, 3).map((o) => (
             <li>
               <strong class="block text-ink">{o.name}</strong>
               <span>{o.address}</span>
@@ -89,6 +89,7 @@ const year = new Date().getFullYear();
       <div class="flex gap-5">
         <a href="/privacy-policy" class="hover:text-brand">Privacy Policy</a>
         <a href="/terms" class="hover:text-brand">Terms of Service</a>
+        <a href="/student-guidance-ethics-complaints" class="hover:text-brand">Student Guidance & Complaints</a>
         <a href="/contact-us" class="hover:text-brand">Contact Us</a>
       </div>
     </div>

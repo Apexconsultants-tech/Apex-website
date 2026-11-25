@@ -35,6 +35,7 @@ export const GET: APIRoute = () => {
     { url: `${base}/success-stories`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
     { url: `${base}/blogs`, lastModified: now, changeFrequency: "weekly", priority: 0.6 },
     { url: `${base}/partner-universities`, lastModified: now, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${base}/student-guidance-ethics-complaints`, lastModified: now, changeFrequency: "yearly", priority: 0.5 },
   ];
 
   const destinationPages: Entry[] = destinations.map((d) => ({

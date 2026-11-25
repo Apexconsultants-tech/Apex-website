@@ -1,0 +1,173 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import JsonLd from "@/components/JsonLd.astro";
+import { breadcrumbJsonLd } from "@/lib/structured-data";
+
+const title = "Student Guidance, Ethics & Complaints";
+const description =
+  "Apex Consulting Services' commitment to ethical, transparent counselling: our accreditations, how to choose an education agent, and our student complaints process.";
+
+const usefulLinks = [
+  {
+    label: "National Code of Ethical Practice for UK Education Agents",
+    pdf: true,
+    href: "https://www.britishcouncil.org/sites/default/files/national-code-of-ethical-practice-for-uk-education-agents-2021.pdf",
+  },
+  {
+    label: "A Student and Parent Guide to Choosing an Education Agent",
+    pdf: true,
+    href: "https://www.britishcouncil.org/sites/default/files/student_and_parent_guide_to_choosing_an_education_agent.pdf",
+  },
+  {
+    label: "British Council database of certified agents and counsellors",
+    pdf: false,
+    href: "https://www.britishcouncil.org/education/agents-counsellors/database",
+  },
+  {
+    label: "Verify our ICEF Agency Status",
+    pdf: false,
+    href: "https://accreditations.icef.com/certificate?id=b75cc564-646f-423c-8a6d-273b864d5a92",
+  },
+];
+
+const agentChecklist = [
+  "Give you accurate, up-to-date information about courses, universities, costs and visa rules",
+  "Explain all of their fees clearly before you pay anything",
+  "Tell you which universities they represent and that you are free to apply elsewhere",
+  "Never ask you to provide false documents or information",
+  "Protect your personal data",
+];
+
+const complaintSteps = [
+  { title: "Talk to us first", body: "Speak to your counsellor or branch manager first. Most issues can be solved quickly." },
+  { title: "Make a formal complaint", body: "mail" as const },
+  { title: "Acknowledgement", body: "We will confirm receipt within 2 working days." },
+  { title: "Investigation and response", body: "A senior manager not involved in your case will review it and send you a written response within 14 working days." },
+  {
+    title: "Escalation",
+    body:
+      "If you are not satisfied, you may ask for a review by our Global CEO. If your complaint relates to an application to a UK institution, you may also contact that institution directly, as they monitor the conduct of their agents under the UK Agent Quality Framework.",
+  },
+];
+---
+<BaseLayout title={title} description={description} canonical="/student-guidance-ethics-complaints">
+  <JsonLd data={breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "Student Guidance, Ethics & Complaints", path: "/student-guidance-ethics-complaints" }])} />
+
+  <section class="mx-auto max-w-3xl px-5 pb-20 pt-10 lg:px-8 lg:pt-14">
+    <Breadcrumb current="Student Guidance, Ethics & Complaints" />
+    <div class="mt-6 animate-hero-in">
+      <h1 class="text-3xl font-semibold text-ink sm:text-4xl">Student Guidance, Ethics & Complaints</h1>
+      <p class="mt-4 text-base leading-relaxed text-ink-soft">
+        Apex Consulting Services / Apex Global Consulting Services Limited is committed to honest,
+        transparent and ethical counselling for every student and parent we work with.
+      </p>
+
+      <div class="mt-10 space-y-10 text-ink-soft leading-relaxed">
+        <div>
+          <h2 class="text-xl font-semibold text-ink">Our commitment to ethical practice</h2>
+          <p class="mt-2">
+            We follow the UK Agent Quality Framework (AQF) and the National Code of Ethical Practice
+            for UK Education Agents. Our counsellors are trained through the British Council UK Agent
+            and Counsellor Training programme, and we hold ICEF Agency Status (IAS ID #4511).
+          </p>
+          <ul class="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {usefulLinks.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="flex h-full items-start gap-3 rounded-xl border border-line bg-surface px-4 py-3.5 text-sm font-medium text-ink transition-colors hover:border-brand hover:text-brand"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" class="mt-0.5 shrink-0 text-brand" aria-hidden="true">
+                    <path d="M14 3h7v7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M21 3 10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M19 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  <span>{link.label}{link.pdf ? " (PDF)" : ""}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-semibold text-ink">Choosing an education agent</h2>
+          <p class="mt-2">
+            Before you choose any agent, including us, we encourage you and your family to read the
+            Student and Parent Guide to Choosing an Education Agent (link above). A good agent should:
+          </p>
+          <ul class="mt-3 list-disc space-y-1.5 pl-5">
+            {agentChecklist.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+
+        <div>
+          <h2 class="text-xl font-semibold text-ink">Student complaints process</h2>
+          <p class="mt-2">
+            If you are unhappy with any part of our service, please tell us so we can put it right.
+          </p>
+          <ol class="mt-5 space-y-4">
+            {complaintSteps.map((step, i) => (
+              <li class="flex gap-4">
+                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand-tint text-sm font-semibold text-brand-text">{i + 1}</span>
+                <div>
+                  <strong class="block text-ink">{step.title}</strong>
+                  {step.body === "mail" ? (
+                    <span>
+                      Make a formal complaint by emailing{" "}
+                      <a href="mailto:info@apexconsultants.org?subject=Complaint" class="font-semibold text-brand-text underline underline-offset-2 hover:decoration-2">
+                        info@apexconsultants.org
+                      </a>{" "}
+                      with the subject "Complaint", or by writing to our UK office (
+                      <a href="#contact" class="font-semibold text-brand-text underline underline-offset-2 hover:decoration-2">address below</a>
+                      ). Please include your name, student/application reference, the branch you dealt
+                      with, and a description of the issue.
+                    </span>
+                  ) : (
+                    <span>{step.body}</span>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ol>
+          <p class="mt-5">
+            Making a complaint will never affect the service you receive from us. All complaints are
+            handled confidentially.
+          </p>
+        </div>
+
+        <div id="contact">
+          <h2 class="text-xl font-semibold text-ink">Contact</h2>
+          <ul class="mt-3 space-y-3">
+            <li>
+              <strong class="block text-ink">UK Office</strong>
+              Office No. 79, Atlantic Business Centre, Atlantic Street, Broadheath, Altrincham, Greater
+              Manchester, WA14 5NQ, United Kingdom
+            </li>
+            <li>
+              <strong class="block text-ink">Head Office (Pakistan)</strong>
+              Office no. 601, 6th Floor, Business Centre, Shahrah-e-Faisal, PECHS Block 6, Karachi,
+              Pakistan
+            </li>
+            <li>
+              <strong class="block text-ink">Pakistan Offices</strong>
+              Karachi | Hyderabad
+            </li>
+            <li>
+              <strong class="block text-ink">Email</strong>
+              <a href="mailto:info@apexconsultants.org" class="font-semibold text-brand-text underline underline-offset-2 hover:decoration-2">info@apexconsultants.org</a>
+            </li>
+            <li>
+              <strong class="block text-ink">Phone / WhatsApp</strong>
+              <a href="tel:+447777622790" class="font-semibold text-brand-text underline underline-offset-2 hover:decoration-2">+44 7777 622790</a>
+              {" "}&middot;{" "}
+              <a href="https://wa.me/447777622790" target="_blank" rel="noopener noreferrer" class="font-semibold text-brand-text underline underline-offset-2 hover:decoration-2">WhatsApp</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

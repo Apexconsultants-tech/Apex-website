@@ -2,7 +2,7 @@ name: Check
 
 on:
   push:
-    branches: [astro-rebuild]
+    branches-ignore: [main]
 
 jobs:
   check:

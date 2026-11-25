@@ -18,7 +18,7 @@ export function organizationJsonLd() {
       identifier: icef.iasId,
       url: icef.certificateUrl,
     },
-    address: offices.slice(0, 2).map((o) => ({
+    address: offices.slice(0, 3).map((o) => ({
       "@type": "PostalAddress",
       name: o.name,
       streetAddress: o.address,

@@ -46,9 +46,15 @@
   back into a hard gate; shared-runner noise makes single-run pass/fail
   unreliable regardless of run count. Use real-world signal instead: PageSpeed
   Insights against the live URL, and Core Web Vitals in Search Console.
-- Commits on this repo: author is the repo owner only, no `Co-Authored-By`
-  trailer. Messages are short, plain, and in the past tense (e.g. "fixed
-  mobile nav overflow", not "Fix: Mobile Nav Overflow Issue").
+- Commits on this repo: always use the repo's own git identity
+  (`Apexconsultants-tech` / `317412941+Apexconsultants-tech@users.noreply.github.com`,
+  set locally for this repo only). Never change that identity, and never add
+  a `Co-Authored-By` trailer or any other Claude/AI line to a commit or PR.
+  Commit messages must read like a person wrote them: short, simple, past
+  tense, no prefixes (no "feat:", "fix:", etc.), no emojis. Good: "Changed
+  hero image", "Fixed contact form", "Updated phone number". Bad: anything
+  long, technical, or AI-sounding, like "Refactored hero component to
+  optimize LCP performance".
 
 ## Stack
 
